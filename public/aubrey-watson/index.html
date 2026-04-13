@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aubrey Watson Funeral Directors — Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --cream2: #F3EDE4;
+    --warm: #E8DFD1;
+    --brown: #6B5B4E;
+    --brown-dark: #4A3F35;
+    --brown-deep: #2E2520;
+    --sage: #7A8B6F;
+    --sage-light: #E8EDE4;
+    --sage-dark: #5C6B52;
+    --gold: #B8963E;
+    --gold-light: #D4B86A;
+    --text: #2E2520;
+    --text2: #6B5B4E;
+    --text3: #9B8E82;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(122,139,111,0.25); }
+  img { max-width: 100%; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes gentlePulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 clamp(24px, 5vw, 80px); height: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: all 0.5s ease;
+  }
+  .navbar.scrolled {
+    background: rgba(250,247,242,0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 1px 0 rgba(107,91,78,0.1);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px; font-weight: 700; color: var(--brown-deep);
+    text-decoration: none; letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--sage); }
+  .nav-links { display: flex; align-items: center; gap: 36px; }
+  .nav-links a {
+    font-size: 13px; font-weight: 500; color: var(--text2);
+    text-decoration: none; letter-spacing: 0.04em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--brown-deep); }
+  .nav-phone {
+    display: flex; align-items: center; gap: 8;
+    font-size: 13px; font-weight: 600; color: var(--brown-deep);
+    text-decoration: none;
+  }
+  .nav-phone svg { width: 16px; height: 16px; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    text-align: center; position: relative; overflow: hidden;
+    padding: 120px clamp(24px, 5vw, 80px) 80px;
+    background: linear-gradient(175deg, var(--cream) 0%, var(--cream2) 40%, var(--sage-light) 100%);
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(122,139,111,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(184,150,62,0.04) 0%, transparent 60%);
+  }
+  .hero-content { position: relative; max-width: 760px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 600; color: var(--sage-dark);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+  .hero-badge::before, .hero-badge::after {
+    content: ''; width: 32px; height: 1px; background: var(--sage);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(40px, 7vw, 72px); font-weight: 700;
+    line-height: 1.1; color: var(--brown-deep);
+    letter-spacing: -0.02em; margin-bottom: 28px;
+    animation: fadeUp 1s ease 0.4s both;
+  }
+  .hero h1 em {
+    font-style: italic; color: var(--sage-dark);
+  }
+  .hero p {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(18px, 2.2vw, 24px); color: var(--text2);
+    line-height: 1.7; max-width: 520px; margin: 0 auto 48px;
+    animation: fadeUp 1s ease 0.6s both;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 1s ease 0.8s both;
+  }
+  .btn-primary {
+    padding: 18px 40px; background: var(--sage-dark); color: var(--white);
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: all 0.4s ease;
+  }
+  .btn-primary:hover { background: var(--brown-deep); transform: translateY(-2px); }
+  .btn-secondary {
+    padding: 18px 40px; background: transparent;
+    border: 1px solid var(--brown); color: var(--brown-deep);
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; cursor: pointer;
+    transition: all 0.4s ease;
+  }
+  .btn-secondary:hover { border-color: var(--brown-deep); transform: translateY(-2px); }
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8;
+    animation: fadeUp 1s ease 1.2s both;
+  }
+  .hero-scroll span {
+    font-size: 10px; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .hero-scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--sage), transparent);
+    animation: gentlePulse 2.5s ease-in-out infinite;
+  }
+
+  /* ── 24HR BANNER ── */
+  .banner-24hr {
+    background: var(--brown-deep); padding: 20px;
+    text-align: center; display: flex; align-items: center;
+    justify-content: center; gap: 16; flex-wrap: wrap;
+  }
+  .banner-24hr .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--sage); display: inline-block;
+    animation: gentlePulse 2s ease-in-out infinite;
+  }
+  .banner-24hr span {
+    font-size: 14px; color: rgba(250,247,242,0.9); letter-spacing: 0.03em;
+  }
+  .banner-24hr a {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px; color: var(--white); text-decoration: none;
+    font-weight: 600; letter-spacing: 0.02em;
+  }
+
+  /* ── SECTION SHARED ── */
+  .section { padding: 120px clamp(24px, 5vw, 80px); }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; font-weight: 600; color: var(--sage-dark);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 20px; display: flex; align-items: center;
+    justify-content: center; gap: 14;
+  }
+  .section-label::before {
+    content: ''; width: 32px; height: 1px; background: var(--sage);
+  }
+  .section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(32px, 4.5vw, 52px); font-weight: 700;
+    color: var(--brown-deep); text-align: center;
+    letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 20px;
+  }
+  .section-subtitle {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px; color: var(--text2); text-align: center;
+    line-height: 1.7; max-width: 540px; margin: 0 auto 72px;
+  }
+
+  /* ── SERVICES ── */
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .service-card {
+    background: var(--white); padding: clamp(32px, 3vw, 48px);
+    position: relative; overflow: hidden;
+    border: 1px solid rgba(107,91,78,0.08);
+    transition: all 0.5s ease; cursor: default;
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(46,37,32,0.06);
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: linear-gradient(90deg, var(--sage), var(--gold));
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--sage-light); display: flex;
+    align-items: center; justify-content: center;
+    margin-bottom: 24px; font-size: 20px;
+  }
+  .service-card h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px; font-weight: 600; color: var(--brown-deep);
+    margin-bottom: 12px;
+  }
+  .service-card p {
+    font-size: 14px; color: var(--text2); line-height: 1.75;
+  }
+
+  /* ── ABOUT ── */
+  .about-section { background: var(--white); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(48px, 6vw, 100px); align-items: center;
+  }
+  .about-image {
+    aspect-ratio: 4/5; background: var(--cream2);
+    position: relative; overflow: hidden;
+  }
+  .about-image::after {
+    content: 'Photo of the funeral home & team';
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    color: var(--text3); font-style: italic;
+    background: linear-gradient(135deg, var(--cream2), var(--warm));
+  }
+  .about-content .section-label { justify-content: flex-start; }
+  .about-content h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(28px, 3.5vw, 42px); font-weight: 700;
+    color: var(--brown-deep); line-height: 1.2;
+    letter-spacing: -0.02em; margin-bottom: 24px;
+  }
+  .about-content h2 em { font-style: italic; color: var(--sage-dark); }
+  .about-content p {
+    font-size: 15px; color: var(--text2); line-height: 1.85; margin-bottom: 20px;
+  }
+  .about-credentials {
+    display: flex; gap: 24px; margin-top: 32px; flex-wrap: wrap;
+  }
+  .credential {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 500; color: var(--brown-deep);
+  }
+  .credential .check {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--sage-light); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 11px; color: var(--sage-dark);
+  }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .pricing-card {
+    background: var(--white); padding: clamp(36px, 3vw, 52px);
+    border: 1px solid rgba(107,91,78,0.08);
+    position: relative; transition: all 0.5s ease;
+  }
+  .pricing-card.featured {
+    border-color: var(--sage);
+    box-shadow: 0 20px 60px rgba(46,37,32,0.08);
+  }
+  .pricing-card.featured::before {
+    content: 'Most chosen'; position: absolute; top: 0; left: 0; right: 0;
+    background: var(--sage-dark); color: var(--white);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; text-align: center; padding: 8px;
+  }
+  .pricing-card.featured { padding-top: calc(clamp(36px,3vw,52px) + 28px); }
+  .pricing-card h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px; font-weight: 600; color: var(--brown-deep);
+    margin-bottom: 8px;
+  }
+  .pricing-card .price {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 36px; font-weight: 700; color: var(--sage-dark);
+    margin-bottom: 8px;
+  }
+  .pricing-card .price-note {
+    font-size: 13px; color: var(--text3); margin-bottom: 28px;
+    padding-bottom: 28px; border-bottom: 1px solid rgba(107,91,78,0.1);
+  }
+  .pricing-card ul {
+    list-style: none; padding: 0;
+  }
+  .pricing-card li {
+    font-size: 14px; color: var(--text2); line-height: 1.6;
+    padding: 8px 0; display: flex; align-items: flex-start; gap: 12px;
+  }
+  .pricing-card li::before {
+    content: '✓'; color: var(--sage-dark); font-weight: 600;
+    min-width: 16px;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section { background: var(--brown-deep); }
+  .testimonials-section .section-label { color: var(--gold-light); }
+  .testimonials-section .section-label::before { background: var(--gold); }
+  .testimonials-section .section-title { color: var(--cream); }
+  .testimonials-section .section-subtitle { color: rgba(250,247,242,0.6); }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .testimonial-card {
+    background: rgba(250,247,242,0.05);
+    border: 1px solid rgba(250,247,242,0.08);
+    padding: clamp(28px, 3vw, 40px);
+  }
+  .testimonial-stars {
+    color: var(--gold); font-size: 14px; letter-spacing: 4px;
+    margin-bottom: 20px;
+  }
+  .testimonial-card blockquote {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px; font-style: italic;
+    color: rgba(250,247,242,0.85); line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .testimonial-author {
+    font-size: 13px; font-weight: 500;
+    color: rgba(250,247,242,0.5);
+  }
+
+  /* ── PROCESS ── */
+  .process-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px; counter-reset: step;
+  }
+  .process-step {
+    text-align: center; padding: 32px 24px;
+    counter-increment: step;
+  }
+  .process-step::before {
+    content: counter(step, decimal-leading-zero);
+    display: block; font-family: 'Playfair Display', Georgia, serif;
+    font-size: 42px; font-weight: 700; color: var(--sage);
+    opacity: 0.3; margin-bottom: 16px;
+  }
+  .process-step h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px; font-weight: 600; color: var(--brown-deep);
+    margin-bottom: 12px;
+  }
+  .process-step p {
+    font-size: 13px; color: var(--text2); line-height: 1.7;
+  }
+
+  /* ── FUNERAL PLANS ── */
+  .plans-section { background: var(--sage-light); }
+  .plans-content {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(48px, 6vw, 100px); align-items: center;
+  }
+  .plans-text h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(28px, 3.5vw, 42px); font-weight: 700;
+    color: var(--brown-deep); line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .plans-text p {
+    font-size: 15px; color: var(--text2); line-height: 1.85;
+    margin-bottom: 16px;
+  }
+  .plans-benefits {
+    display: flex; flex-direction: column; gap: 16px; margin-top: 32px;
+  }
+  .plans-benefit {
+    display: flex; align-items: flex-start; gap: 14;
+  }
+  .plans-benefit .icon {
+    width: 32px; height: 32px; min-width: 32px; border-radius: 50%;
+    background: var(--white); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 14px; color: var(--sage-dark);
+  }
+  .plans-benefit div h4 {
+    font-size: 14px; font-weight: 600; color: var(--brown-deep);
+    margin-bottom: 4px;
+  }
+  .plans-benefit div p {
+    font-size: 13px; color: var(--text2); line-height: 1.6;
+    margin: 0;
+  }
+  .plans-card {
+    background: var(--white); padding: clamp(36px, 3vw, 56px);
+    border: 1px solid rgba(107,91,78,0.08);
+    text-align: center;
+  }
+  .plans-card .from {
+    font-size: 13px; color: var(--text3); text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .plans-card .price {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 48px; font-weight: 700; color: var(--sage-dark);
+    margin-bottom: 8px;
+  }
+  .plans-card .note {
+    font-size: 14px; color: var(--text2); margin-bottom: 32px;
+  }
+
+  /* ── CONTACT ── */
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(48px, 6vw, 100px);
+  }
+  .contact-info h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px; font-weight: 600; color: var(--brown-deep);
+    margin-bottom: 24px;
+  }
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 16;
+    margin-bottom: 24px;
+  }
+  .contact-detail .icon {
+    width: 40px; height: 40px; min-width: 40px; border-radius: 50%;
+    background: var(--sage-light); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .contact-detail h4 {
+    font-size: 13px; font-weight: 600; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+  .contact-detail p, .contact-detail a {
+    font-size: 15px; color: var(--brown-deep); text-decoration: none;
+    line-height: 1.5;
+  }
+  .contact-form input, .contact-form textarea {
+    width: 100%; padding: 16px 20px;
+    background: var(--white); border: 1px solid rgba(107,91,78,0.15);
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    color: var(--text); outline: none; margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+  .contact-form input:focus, .contact-form textarea:focus {
+    border-color: var(--sage);
+  }
+  .contact-form input::placeholder, .contact-form textarea::placeholder {
+    color: var(--text3);
+  }
+  .contact-form textarea { resize: vertical; min-height: 120px; }
+  .contact-form .form-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+
+  /* ── CHATBOT DEMO ── */
+  .chatbot-section { background: var(--cream2); }
+  .chatbot-demo {
+    max-width: 400px; margin: 0 auto;
+    background: var(--white); border-radius: 16px;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(46,37,32,0.1);
+    border: 1px solid rgba(107,91,78,0.08);
+  }
+  .chatbot-header {
+    padding: 18px 24px; background: var(--brown-deep);
+    display: flex; align-items: center; gap: 12;
+  }
+  .chatbot-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--sage-dark); display: flex;
+    align-items: center; justify-content: center;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 12px; font-weight: 700; color: var(--white);
+  }
+  .chatbot-header-text h4 {
+    font-size: 14px; font-weight: 600; color: var(--cream);
+  }
+  .chatbot-header-text span {
+    font-size: 11px; color: rgba(250,247,242,0.5);
+  }
+  .chatbot-messages { padding: 24px; min-height: 300px; }
+  .chat-msg {
+    max-width: 85%; margin-bottom: 16px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .chat-msg.bot { }
+  .chat-msg.bot .bubble {
+    background: var(--cream); padding: 14px 18px;
+    border-radius: 16px 16px 16px 4px;
+    font-size: 13px; color: var(--text); line-height: 1.6;
+  }
+  .chat-msg.user { text-align: right; margin-left: auto; }
+  .chat-msg.user .bubble {
+    background: var(--sage-dark); padding: 14px 18px;
+    border-radius: 16px 16px 4px 16px;
+    font-size: 13px; color: var(--white); line-height: 1.6;
+    display: inline-block; text-align: left;
+  }
+  .chat-options {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+  }
+  .chat-option {
+    padding: 8px 16px; background: transparent;
+    border: 1px solid rgba(107,91,78,0.2); border-radius: 20px;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+    font-weight: 500; color: var(--text2); cursor: pointer;
+    transition: all 0.3s;
+  }
+  .chat-option:hover {
+    border-color: var(--sage); color: var(--sage-dark);
+    background: var(--sage-light);
+  }
+  .chatbot-input {
+    padding: 16px 24px; border-top: 1px solid rgba(107,91,78,0.1);
+    display: flex; gap: 12px;
+  }
+  .chatbot-input input {
+    flex: 1; padding: 10px 16px; border: 1px solid rgba(107,91,78,0.15);
+    border-radius: 8px; font-family: 'Inter', sans-serif;
+    font-size: 13px; color: var(--text); outline: none;
+  }
+  .chatbot-input button {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--sage-dark); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s;
+  }
+  .chatbot-input button:hover { background: var(--brown-deep); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--brown-deep); padding: 80px clamp(24px, 5vw, 80px) 40px;
+  }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px; margin-bottom: 64px;
+  }
+  .footer-brand h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px; color: var(--cream); margin-bottom: 16px;
+  }
+  .footer-brand p {
+    font-size: 14px; color: rgba(250,247,242,0.5); line-height: 1.7;
+  }
+  .footer h4 {
+    font-size: 12px; font-weight: 600; color: rgba(250,247,242,0.4);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .footer a {
+    display: block; font-size: 14px; color: rgba(250,247,242,0.7);
+    text-decoration: none; margin-bottom: 12px;
+    transition: color 0.3s;
+  }
+  .footer a:hover { color: var(--cream); }
+  .footer-bottom {
+    padding-top: 32px; border-top: 1px solid rgba(250,247,242,0.08);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-bottom span {
+    font-size: 12px; color: rgba(250,247,242,0.3);
+  }
+  .footer-bottom .powered {
+    font-size: 12px; color: rgba(250,247,242,0.3);
+  }
+  .footer-bottom .powered a { display: inline; color: var(--sage); }
+
+  /* ── DEMO BANNER ── */
+  .demo-banner {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: var(--sage-dark); padding: 10px 24px;
+    text-align: center; font-size: 13px; color: var(--white);
+    font-weight: 500; animation: slideDown 0.5s ease;
+  }
+  .demo-banner strong { font-weight: 700; }
+  .navbar { top: 38px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .about-grid, .plans-content, .contact-grid, .footer-top {
+      grid-template-columns: 1fr;
+    }
+    .nav-links { display: none; }
+    .contact-form .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Demo banner -->
+<div class="demo-banner">
+  <strong>Design Mockup</strong> — Built by Asher Price for Aubrey Watson Funeral Directors
+</div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="nav-logo">Aubrey <span>Watson</span></a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#about">About Us</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#plans">Funeral Plans</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="tel:01495528852" class="nav-phone">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    01495 528852
+  </a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Independent & Family-Run</div>
+    <h1>Caring for families<br />with <em>dignity</em></h1>
+    <p>Providing calm, personal support to families across Blackwood and the surrounding Valleys. Every farewell, handled with care.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Speak With Us</a>
+      <a href="#services" class="btn-secondary">Our Services</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- 24hr banner -->
+<div class="banner-24hr">
+  <span class="dot"></span>
+  <span>Available 24 hours a day, 7 days a week</span>
+  <span>—</span>
+  <a href="tel:01495528852">01495 528852</a>
+</div>
+
+<!-- Services -->
+<section class="section" id="services">
+  <div class="section-inner">
+    <div class="section-label">Our Services</div>
+    <h2 class="section-title">Every detail, taken care of</h2>
+    <p class="section-subtitle">We guide you through every step with patience and understanding, ensuring your loved one's farewell is exactly as you wish.</p>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">🕊</div>
+        <h3>Full Funeral Service</h3>
+        <p>A complete, personalised funeral with a service at the church or chapel, a procession, and all the support you need throughout. Shaped entirely around your loved one's life.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🌿</div>
+        <h3>Cremation Services</h3>
+        <p>Whether you'd like a full service followed by cremation or a simpler, more private arrangement, we'll handle every detail with the same care and respect.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🤍</div>
+        <h3>Unattended Funeral</h3>
+        <p>A simple, dignified cremation without a formal service. A gentle option for families who prefer something quieter, at a lower cost. Sometimes called a direct cremation.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">📋</div>
+        <h3>Pre-Paid Funeral Plans</h3>
+        <p>Arrange and pay for your funeral in advance, protecting your family from future cost increases and giving everyone peace of mind.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🌸</div>
+        <h3>Personalised Tributes</h3>
+        <p>From bespoke floral arrangements to memory tables and personalised order of service booklets — we help you create a farewell that truly reflects a life lived.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🕐</div>
+        <h3>24-Hour Support</h3>
+        <p>When someone passes, time doesn't wait. We're available around the clock to guide you through those first difficult steps, whenever you need us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="section about-section" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-image reveal"></div>
+      <div class="about-content reveal">
+        <div class="section-label">Our Story</div>
+        <h2>Named with love,<br />built on <em>experience</em></h2>
+        <p>Aubrey Watson is named after our founder's grandfather, Herbert Aubrey Watson, whose love of gardening and nature inspires the calm, natural feel you'll find throughout our funeral home.</p>
+        <p>With years of experience caring for families across South East Wales, we opened our doors in Blackwood to offer something different — unhurried, honest, personal support without pressure or fuss.</p>
+        <p>We're a qualified embalmer and proud member of the British Institute of Embalmers, committed to the highest standards of care for your loved one.</p>
+        <div class="about-credentials">
+          <div class="credential">
+            <div class="check">✓</div>
+            Independent & family-run
+          </div>
+          <div class="credential">
+            <div class="check">✓</div>
+            British Institute of Embalmers
+          </div>
+          <div class="credential">
+            <div class="check">✓</div>
+            24-hour availability
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section" style="background: var(--white);">
+  <div class="section-inner">
+    <div class="section-label">What to Expect</div>
+    <h2 class="section-title">We're with you every step</h2>
+    <p class="section-subtitle">If you've never arranged a funeral before, it can feel overwhelming. Here's how we make it simpler.</p>
+    <div class="process-grid">
+      <div class="process-step reveal">
+        <h3>Get in Touch</h3>
+        <p>Call us any time, day or night. We'll gently guide you through the immediate steps and arrange to bring your loved one into our care.</p>
+      </div>
+      <div class="process-step reveal">
+        <h3>Arrangement Meeting</h3>
+        <p>We'll sit down together — at our funeral home or in your own home — and talk through your wishes. No rush, no pressure.</p>
+      </div>
+      <div class="process-step reveal">
+        <h3>We Handle Everything</h3>
+        <p>From paperwork and registrations to flowers, music, and transport — we take care of every detail so you don't have to.</p>
+      </div>
+      <div class="process-step reveal">
+        <h3>The Day</h3>
+        <p>On the day, we'll be by your side. Everything runs smoothly because we've planned it carefully together.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="section" id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Transparent Pricing</div>
+    <h2 class="section-title">Honest, clear pricing</h2>
+    <p class="section-subtitle">We believe you should know exactly what a funeral costs. No hidden fees, no surprises. Here's a clear guide to our services.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <h3>Unattended Funeral</h3>
+        <div class="price">£1,495</div>
+        <div class="price-note">A simple, dignified farewell</div>
+        <ul>
+          <li>Collection and care of your loved one</li>
+          <li>Simple coffin included</li>
+          <li>All necessary paperwork</li>
+          <li>Direct cremation, no service</li>
+          <li>Ashes returned to family</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured reveal">
+        <h3>Full Funeral Service</h3>
+        <div class="price">From £2,850</div>
+        <div class="price-note">A complete, personalised farewell</div>
+        <ul>
+          <li>Everything in the unattended service</li>
+          <li>Use of our chapel of rest</li>
+          <li>Hearse and one limousine</li>
+          <li>Funeral service at church or chapel</li>
+          <li>Professional guidance throughout</li>
+          <li>Personalised order of service</li>
+        </ul>
+      </div>
+      <div class="pricing-card reveal">
+        <h3>Cremation Service</h3>
+        <div class="price">From £2,200</div>
+        <div class="price-note">Service followed by cremation</div>
+        <ul>
+          <li>Collection and care of your loved one</li>
+          <li>Use of our chapel of rest</li>
+          <li>Hearse to crematorium</li>
+          <li>Crematorium service</li>
+          <li>All paperwork and arrangements</li>
+          <li>Ashes returned to family</li>
+        </ul>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top: 40px; font-size: 14px; color: var(--text3);">
+      Prices shown are our fees only. Third-party costs (crematorium fees, clergy, flowers) are listed separately and explained in full before you commit. <br />
+      <strong style="color: var(--text2);">No obligation. No pressure. Ever.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials-section">
+  <div class="section-inner">
+    <div class="section-label">Kind Words</div>
+    <h2 class="section-title">What families say</h2>
+    <p class="section-subtitle">These words mean everything to us.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <blockquote>"From our very first phone call, we felt looked after. Nothing was too much trouble. They made an incredibly difficult time so much easier for our whole family."</blockquote>
+        <div class="testimonial-author">— Example review (replace with real testimonials)</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <blockquote>"The care and attention to detail was wonderful. Everything was handled so calmly and professionally. We couldn't have asked for more."</blockquote>
+        <div class="testimonial-author">— Example review (replace with real testimonials)</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <blockquote>"We didn't know where to start when Mam passed. They guided us through everything with such kindness and patience. Truly grateful."</blockquote>
+        <div class="testimonial-author">— Example review (replace with real testimonials)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Funeral Plans -->
+<section class="section plans-section" id="plans">
+  <div class="section-inner">
+    <div class="plans-content">
+      <div class="plans-text reveal">
+        <div class="section-label" style="justify-content: flex-start;">Plan Ahead</div>
+        <h2>Pre-paid funeral plans</h2>
+        <p>Arranging your funeral in advance is one of the kindest things you can do for your family. It removes the financial worry and ensures your wishes are carried out exactly as you'd like.</p>
+        <p>We partner with Westerleigh, the UK's largest independent cremation provider, to offer plans that are financially protected and fully guaranteed.</p>
+        <div class="plans-benefits">
+          <div class="plans-benefit">
+            <div class="icon">🔒</div>
+            <div>
+              <h4>Price guaranteed</h4>
+              <p>Lock in today's prices. Your family will never pay more.</p>
+            </div>
+          </div>
+          <div class="plans-benefit">
+            <div class="icon">🛡</div>
+            <div>
+              <h4>Financially protected</h4>
+              <p>Funds held in an independent trust, covered by the FSCS.</p>
+            </div>
+          </div>
+          <div class="plans-benefit">
+            <div class="icon">💚</div>
+            <div>
+              <h4>Peace of mind</h4>
+              <p>Your wishes are documented. Your family is protected.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="plans-card reveal">
+        <div class="from">Plans from</div>
+        <div class="price">£2,499</div>
+        <div class="note">Flexible payment options available</div>
+        <a href="#contact" class="btn-primary" style="display: inline-block;">Enquire About Plans</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI Chatbot Demo -->
+<section class="section chatbot-section" id="chatbot">
+  <div class="section-inner">
+    <div class="section-label">Always Available</div>
+    <h2 class="section-title">Help when you need it most</h2>
+    <p class="section-subtitle">Our online assistant can answer your questions any time of day or night — gently, privately, and at your own pace.</p>
+    <div class="chatbot-demo reveal">
+      <div class="chatbot-header">
+        <div class="chatbot-avatar">AW</div>
+        <div class="chatbot-header-text">
+          <h4>Aubrey Watson</h4>
+          <span>Online — here to help</span>
+        </div>
+      </div>
+      <div class="chatbot-messages">
+        <div class="chat-msg bot" style="animation-delay: 0.3s;">
+          <div class="bubble">Hello. I'm here to help answer any questions you might have. Please take your time — there's no rush.</div>
+          <div class="chat-options">
+            <button class="chat-option">What do I do first?</button>
+            <button class="chat-option">Your prices</button>
+            <button class="chat-option">Funeral plans</button>
+            <button class="chat-option">Speak to someone</button>
+          </div>
+        </div>
+        <div class="chat-msg user" style="animation-delay: 0.8s;">
+          <div class="bubble">What do I do first?</div>
+        </div>
+        <div class="chat-msg bot" style="animation-delay: 1.2s;">
+          <div class="bubble">I'm sorry for your loss. The first thing to do is call us on <strong>01495 528852</strong> — we're available 24 hours. We'll gently guide you through the next steps and arrange to bring your loved one into our care. There's no need to have anything prepared — just call when you're ready.</div>
+        </div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" placeholder="Type a message..." />
+        <button>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="section" id="contact" style="background: var(--white);">
+  <div class="section-inner">
+    <div class="section-label">Get in Touch</div>
+    <h2 class="section-title">We're here to help</h2>
+    <p class="section-subtitle">Whether you need immediate assistance or just want to ask a question, we're here. No obligation, no pressure.</p>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h3>Aubrey Watson<br />Funeral Directors</h3>
+        <div class="contact-detail">
+          <div class="icon">📍</div>
+          <div>
+            <h4>Visit Us</h4>
+            <p>79B High Street<br />Blackwood, South Wales<br />NP12 1AB</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">📞</div>
+          <div>
+            <h4>24-Hour Phone</h4>
+            <a href="tel:01495528852">01495 528852</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">✉</div>
+          <div>
+            <h4>Email</h4>
+            <a href="mailto:info@aubreywatson.co.uk">info@aubreywatson.co.uk</a>
+          </div>
+        </div>
+        <div style="margin-top: 32px; padding: 24px; background: var(--sage-light); font-size: 14px; color: var(--text2); line-height: 1.7;">
+          <strong style="color: var(--brown-deep);">Serving families across:</strong><br />
+          Blackwood, Cefn Fforest, Markham, Pontllanfraith, Caerphilly, Bargoed, Ystrad Mynach, Risca, Newbridge & the wider Valleys.
+        </div>
+      </div>
+      <div class="contact-form reveal">
+        <div class="form-row">
+          <input type="text" placeholder="Your name" />
+          <input type="text" placeholder="Phone number" />
+        </div>
+        <input type="email" placeholder="Email address" />
+        <textarea placeholder="How can we help? Please share as much or as little as you'd like..."></textarea>
+        <button class="btn-primary" style="width: 100%;">Send Message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h3>Aubrey Watson</h3>
+        <p>Independent funeral directors serving Blackwood and the surrounding Valleys with care, dignity, and respect. Available 24 hours a day.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <a href="#services">Our Services</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#plans">Funeral Plans</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="tel:01495528852">01495 528852</a>
+        <a href="mailto:info@aubreywatson.co.uk">info@aubreywatson.co.uk</a>
+        <a>79B High Street</a>
+        <a>Blackwood, NP12 1AB</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Aubrey Watson Funeral Directors</span>
+      <div class="powered">Website by <a href="https://asherprice.co.uk">Asher Price</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+</body>
+</html>

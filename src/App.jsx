@@ -661,15 +661,18 @@ function Contact() {
   const [name, setName] = useState("");
   const [biz, setBiz] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState("");
   const [msg, setMsg] = useState("");
   const handleSubmit = async () => {
-    if (!name.trim() || !email.trim()) return;
+    if (!name.trim() || (!email.trim() && !phone.trim())) return;
     setSending(true);
     try {
+      const contact = [email, phone].filter(Boolean).join(" | ");
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, business: biz, contact: email, message: msg, source: "form" }),
+        body: JSON.stringify({ name, business: biz, contact, website, message: msg, source: "form" }),
       });
       if (!res.ok) throw new Error("Request failed");
       setSent(true);
@@ -723,9 +726,17 @@ function Contact() {
                   value={biz} onChange={e => setBiz(e.target.value)}
                   onFocus={() => setFocused("biz")} onBlur={() => setFocused(null)} />
               </div>
-              <input placeholder="Email or phone number" style={inputStyle("email")}
-                value={email} onChange={e => setEmail(e.target.value)}
-                onFocus={() => setFocused("email")} onBlur={() => setFocused(null)} />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <input placeholder="Email address" style={inputStyle("email")}
+                  value={email} onChange={e => setEmail(e.target.value)}
+                  onFocus={() => setFocused("email")} onBlur={() => setFocused(null)} />
+                <input placeholder="Phone number" style={inputStyle("phone")}
+                  value={phone} onChange={e => setPhone(e.target.value)}
+                  onFocus={() => setFocused("phone")} onBlur={() => setFocused(null)} />
+              </div>
+              <input placeholder="Website or Facebook page (optional)" style={inputStyle("website")}
+                value={website} onChange={e => setWebsite(e.target.value)}
+                onFocus={() => setFocused("website")} onBlur={() => setFocused(null)} />
               <textarea placeholder="Tell me about your business and what you need..." rows={5}
                 style={{ ...inputStyle("msg"), resize: "vertical" }}
                 value={msg} onChange={e => setMsg(e.target.value)}

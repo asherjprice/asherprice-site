@@ -65,7 +65,7 @@ export async function onRequestPost(context) {
     return json({ success: false, error: "Invalid JSON body." }, 400);
   }
 
-  const { name, business, contact, message, source } = body;
+  const { name, business, contact, website, message, source } = body;
 
   if (!name || !name.trim()) {
     return json({ success: false, error: "Name is required." }, 400);
@@ -92,6 +92,10 @@ export async function onRequestPost(context) {
           <td style="padding: 8px 0; color: #888; vertical-align: top;">Contact</td>
           <td style="padding: 8px 0; color: #F0EDEA;">${escapeHtml(contact)}</td>
         </tr>
+        ${website ? `<tr>
+          <td style="padding: 8px 0; color: #888; vertical-align: top;">Website</td>
+          <td style="padding: 8px 0; color: #F0EDEA;">${escapeHtml(website)}</td>
+        </tr>` : ""}
         ${message ? `<tr>
           <td style="padding: 8px 0; color: #888; vertical-align: top;">Message</td>
           <td style="padding: 8px 0; color: #F0EDEA; white-space: pre-wrap;">${escapeHtml(message)}</td>
