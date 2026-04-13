@@ -170,14 +170,14 @@ function Bubble({ msg }) {
         border: isUser ? "none" : `1px solid ${C.border}`,
       }}>
         <p style={{
-          fontFamily: "'Syne',sans-serif", fontSize: 13, color: isUser ? "#fff" : C.t2,
+          fontFamily: "'Inter',sans-serif", fontSize: 13, color: isUser ? "#fff" : C.t2,
           lineHeight: 1.6, margin: 0, whiteSpace: "pre-wrap",
         }}>{formatText(msg.text)}</p>
         {msg.bullets && (
           <div style={{ marginTop: 10 }}>
             {msg.bullets.map((b, i) => (
               <p key={i} style={{
-                fontFamily: "'Syne',sans-serif", fontSize: 12.5, color: C.t2,
+                fontFamily: "'Inter',sans-serif", fontSize: 12.5, color: C.t2,
                 lineHeight: 1.6, margin: "6px 0", paddingLeft: 4,
               }}>{formatText(b)}</p>
             ))}
@@ -185,7 +185,7 @@ function Bubble({ msg }) {
         )}
         {msg.followUp && (
           <p style={{
-            fontFamily: "'Syne',sans-serif", fontSize: 13, color: C.t2,
+            fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t2,
             lineHeight: 1.6, margin: "10px 0 0 0",
           }}>{msg.followUp}</p>
         )}
@@ -201,7 +201,7 @@ function ChatForm({ onSubmit }) {
 
   const inputStyle = {
     background: C.bg, border: `1px solid ${C.border}`, color: C.t1,
-    fontFamily: "'Syne',sans-serif", fontSize: 13, padding: "10px 14px",
+    fontFamily: "'Inter',sans-serif", fontSize: 13, padding: "10px 14px",
     outline: "none", width: "100%", boxSizing: "border-box",
     borderRadius: 6, transition: "border-color 0.3s",
   };
@@ -214,10 +214,10 @@ function ChatForm({ onSubmit }) {
         animation: "chatFadeIn 0.3s ease-out",
       }}>
         <div style={{ fontSize: 24, marginBottom: 8, color: "#1B6B3A" }}>✓</div>
-        <p style={{ fontFamily: "'Syne',sans-serif", fontSize: 13, color: C.t1, margin: 0, fontWeight: 600 }}>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t1, margin: 0, fontWeight: 600 }}>
           Message sent — diolch!
         </p>
-        <p style={{ fontFamily: "'Syne',sans-serif", fontSize: 12, color: C.t2, margin: "4px 0 0 0" }}>
+        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: 12, color: C.t2, margin: "4px 0 0 0" }}>
           Asher will get back to you within 24 hours.
         </p>
       </div>
@@ -251,7 +251,7 @@ function ChatForm({ onSubmit }) {
         }
       }} style={{
         padding: "12px 20px", background: C.red, color: "#fff",
-        fontFamily: "'Syne',sans-serif", fontSize: 12, fontWeight: 700,
+        fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
         letterSpacing: "0.06em", textTransform: "uppercase",
         border: "none", cursor: "pointer", borderRadius: 6,
         transition: "all 0.3s", opacity: form.name && form.contact ? 1 : 0.5,
@@ -387,10 +387,10 @@ export default function Chatbot() {
               }}>AP</div>
               <div>
                 <div style={{
-                  fontFamily: "'Syne',sans-serif", fontSize: 13, fontWeight: 700, color: C.t1,
+                  fontFamily: "'Inter',sans-serif", fontSize: 13, fontWeight: 700, color: C.t1,
                 }}>Asher Price</div>
                 <div style={{
-                  fontFamily: "'Syne',sans-serif", fontSize: 10, color: "#1B6B3A",
+                  fontFamily: "'Inter',sans-serif", fontSize: 10, color: "#1B6B3A",
                   display: "flex", alignItems: "center", gap: 5,
                 }}>
                   <span style={{
@@ -453,7 +453,7 @@ export default function Chatbot() {
                   <button key={i} onClick={() => handleOption(opt)} style={{
                     padding: "8px 16px", background: "transparent",
                     border: `1px solid ${C.border2}`, borderRadius: 20,
-                    color: C.t2, fontFamily: "'Syne',sans-serif",
+                    color: C.t2, fontFamily: "'Inter',sans-serif",
                     fontSize: 12, fontWeight: 600, cursor: "pointer",
                     transition: "all 0.3s", whiteSpace: "nowrap",
                   }}
@@ -485,7 +485,7 @@ export default function Chatbot() {
               placeholder="Type a message..."
               style={{
                 flex: 1, background: C.bg, border: `1px solid ${C.border}`,
-                color: C.t1, fontFamily: "'Syne',sans-serif", fontSize: 13,
+                color: C.t1, fontFamily: "'Inter',sans-serif", fontSize: 13,
                 padding: "10px 14px", outline: "none", borderRadius: 8,
                 transition: "border-color 0.3s",
               }}

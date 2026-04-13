@@ -111,7 +111,7 @@ function Dragon({ size = 32, color = C.red, style = {} }) {
 function Label({ children }) {
   return (
     <div style={{
-      fontFamily: "'Syne',sans-serif", fontSize: 11, fontWeight: 700,
+      fontFamily: "'Inter',sans-serif", fontSize: 11, fontWeight: 700,
       color: C.red, letterSpacing: "0.22em", textTransform: "uppercase",
       marginBottom: 20, display: "flex", alignItems: "center", gap: 14,
     }}>
@@ -153,7 +153,7 @@ function Navbar() {
           }}>Asher Price</span>
           <span style={{ width: 1, height: 16, background: C.border2, display: "inline-block" }} />
           <span style={{
-            fontFamily: "'Syne',sans-serif", fontSize: 9, fontWeight: 600,
+            fontFamily: "'Inter',sans-serif", fontSize: 9, fontWeight: 600,
             color: C.t3, letterSpacing: "0.15em", textTransform: "uppercase",
           }}>AI & Web</span>
         </div>
@@ -161,7 +161,7 @@ function Navbar() {
       <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
         {["Services", "Process", "Contact"].map(t => (
           <a key={t} href={`#${t.toLowerCase()}`} style={{
-            fontFamily: "'Syne',sans-serif", fontSize: 12, fontWeight: 600,
+            fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 600,
             color: C.t2, textDecoration: "none", letterSpacing: "0.08em",
             textTransform: "uppercase", transition: "color 0.3s",
             display: window.innerWidth < 640 ? "none" : "block",
@@ -172,7 +172,7 @@ function Navbar() {
         ))}
         <a href="#contact" style={{
           padding: "11px 28px", background: C.red, color: "#fff",
-          fontFamily: "'Syne',sans-serif", fontSize: 12, fontWeight: 700,
+          fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
           letterSpacing: "0.08em", textTransform: "uppercase",
           textDecoration: "none", transition: "all 0.3s",
           boxShadow: "0 0 30px rgba(200,16,46,0.15)",
@@ -236,19 +236,19 @@ function Hero() {
           supercharged.
         </h1>
         <p style={{
-          fontFamily: "'Syne',sans-serif",
+          fontFamily: "'Inter',sans-serif",
           fontSize: "clamp(15px,1.8vw,19px)", color: C.t2,
           lineHeight: 1.8, maxWidth: 500, margin: "0 0 52px 0",
           fontWeight: 400, ...a(0.8),
         }}>
           AI-powered websites, chatbots, and automation
-          for businesses across the Valleys. Built locally
-          by someone who actually turns up.
+          for businesses across South Wales. Professional
+          results, personal service, honest advice.
         </p>
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", ...a(0.95) }}>
           <a href="#services" style={{
             padding: "18px 40px", background: C.red, color: "#fff",
-            fontFamily: "'Syne',sans-serif", fontSize: 14, fontWeight: 700,
+            fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
             letterSpacing: "0.04em", textDecoration: "none",
             textTransform: "uppercase", transition: "all 0.4s",
             boxShadow: "0 4px 30px rgba(200,16,46,0.2)",
@@ -260,7 +260,7 @@ function Hero() {
           <a href="#contact" style={{
             padding: "18px 40px", background: "transparent",
             border: `1px solid ${C.border2}`, color: C.t1,
-            fontFamily: "'Syne',sans-serif", fontSize: 14, fontWeight: 600,
+            fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 600,
             letterSpacing: "0.04em", textDecoration: "none",
             textTransform: "uppercase", transition: "all 0.4s",
           }}
@@ -277,7 +277,7 @@ function Hero() {
         display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
         ...a(1.3),
       }}>
-        <span style={{ fontFamily: "'Syne',sans-serif", fontSize: 10, color: C.t3, letterSpacing: "0.15em", textTransform: "uppercase" }}>Scroll</span>
+        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 10, color: C.t3, letterSpacing: "0.15em", textTransform: "uppercase" }}>Scroll</span>
         <div style={{
           width: 1, height: 40,
           background: `linear-gradient(to bottom, ${C.red}, transparent)`,
@@ -338,7 +338,7 @@ function Services() {
           <span style={{ color: C.t3 }}>Nothing missing.</span>
         </h2>
         <p style={{
-          fontFamily: "'Syne',sans-serif", fontSize: 16, color: C.t2,
+          fontFamily: "'Inter',sans-serif", fontSize: 16, color: C.t2,
           lineHeight: 1.7, maxWidth: 480, margin: "0 0 72px 0",
         }}>
           Everything a modern business needs to compete online —
@@ -385,7 +385,7 @@ function Services() {
                 margin: "0 0 14px 0", position: "relative",
               }}>{s.title}</h3>
               <p style={{
-                fontFamily: "'Syne',sans-serif", fontSize: 14,
+                fontFamily: "'Inter',sans-serif", fontSize: 14,
                 color: C.t2, lineHeight: 1.75, margin: 0, position: "relative",
               }}>{s.desc}</p>
             </div>
@@ -424,7 +424,7 @@ function Stats() {
                 {s.prefix || ""}{s.end > 0 ? <Counter end={s.end} suffix={s.suffix} /> : `0${s.suffix}`}
               </div>
               <div style={{
-                fontFamily: "'Syne',sans-serif", fontSize: 12,
+                fontFamily: "'Inter',sans-serif", fontSize: 12,
                 color: C.t2, letterSpacing: "0.06em", fontWeight: 500,
               }}>{s.label}</div>
             </div>
@@ -438,7 +438,7 @@ function Stats() {
 /* ═══════════════ PROCESS ═══════════════ */
 const steps = [
   { n: "01", t: "Chat", d: "A free, no-pressure conversation. Tell me about your business — I'll tell you exactly what would help and what wouldn't." },
-  { n: "02", t: "Build", d: "I build your website, chatbot, or automation system. You see progress throughout — no disappearing for weeks." },
+  { n: "02", t: "Build", d: "I build your website, chatbot, or automation system. You'll see progress throughout with regular updates at every stage." },
   { n: "03", t: "Launch", d: "We go live. I handle the technical setup, DNS, hosting — everything. You just watch it start working." },
   { n: "04", t: "Grow", d: "Ongoing support, updates, and improvements. Your monthly retainer keeps everything running and evolving." },
 ];
@@ -472,7 +472,7 @@ function Process() {
                 width: 48, height: 48,
                 border: `2px solid ${C.red}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: "'Syne',sans-serif", fontSize: 14, fontWeight: 700,
+                fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
                 color: C.red, position: "relative", zIndex: 2,
                 background: C.bg,
               }}>{s.n}</div>
@@ -483,7 +483,7 @@ function Process() {
                   margin: "0 0 10px 0",
                 }}>{s.t}</h3>
                 <p style={{
-                  fontFamily: "'Syne',sans-serif", fontSize: 15,
+                  fontFamily: "'Inter',sans-serif", fontSize: 15,
                   color: C.t2, lineHeight: 1.75, margin: 0, maxWidth: 520,
                 }}>{s.d}</p>
               </div>
@@ -521,24 +521,24 @@ function WhyLocal() {
             color: C.t1, margin: "0 0 28px 0",
             letterSpacing: "-0.025em", lineHeight: 1.08,
           }}>
-            Not another agency<br />
-            you'll never<br />
-            <span style={{ color: C.red }}>actually meet.</span>
+            A local partner<br />
+            who understands<br />
+            <span style={{ color: C.red }}>your business.</span>
           </h2>
           <div style={{
             width: 60, height: 3, background: C.red, marginBottom: 28,
           }} />
           <p style={{
-            fontFamily: "'Syne',sans-serif", fontSize: 16,
+            fontFamily: "'Inter',sans-serif", fontSize: 16,
             color: C.t2, lineHeight: 1.85, margin: "0 0 24px 0",
           }}>
-            I'm based in Blackwood. I know the Valleys. I'll sit down with
-            you, face to face, and understand your business before I touch
-            a line of code. That's something no London agency or offshore
-            freelancer can offer.
+            Based in Blackwood, I work with businesses across the Valleys
+            and beyond. I take the time to sit down with you, understand
+            your goals, and build solutions that genuinely fit — not
+            off-the-shelf packages that miss the mark.
           </p>
           <p style={{
-            fontFamily: "'Syne',sans-serif", fontSize: 14,
+            fontFamily: "'Inter',sans-serif", fontSize: 14,
             color: C.t3, lineHeight: 1.7, margin: 0, fontStyle: "italic",
             borderLeft: `2px solid ${C.border2}`, paddingLeft: 16,
           }}>
@@ -560,15 +560,15 @@ function WhyLocal() {
               fontSize: 22, fontWeight: 700, color: C.t1,
               marginBottom: 32, lineHeight: 1.3,
             }}>
-              What you get that big agencies<br />
-              <span style={{ color: C.red }}>can't offer:</span>
+              What working with us<br />
+              <span style={{ color: C.red }}>looks like:</span>
             </div>
             {[
-              "A real person. On the phone. Same day.",
-              "Someone who'll walk into your shop.",
-              "No 12-month contracts or hidden fees.",
-              "Pricing that respects your margins.",
-              "Tech that's explained in plain English.",
+              "Direct access — a real person, same day.",
+              "Face-to-face meetings whenever you need.",
+              "Flexible terms — no long contracts or hidden fees.",
+              "Fair, transparent pricing.",
+              "Everything explained in plain English.",
             ].map((item, i) => (
               <div key={i} style={{
                 display: "flex", alignItems: "flex-start", gap: 14,
@@ -581,7 +581,7 @@ function WhyLocal() {
                   fontSize: 11, color: C.red, marginTop: 1,
                 }}>✓</span>
                 <span style={{
-                  fontFamily: "'Syne',sans-serif", fontSize: 14.5,
+                  fontFamily: "'Inter',sans-serif", fontSize: 14.5,
                   color: C.t2, lineHeight: 1.5,
                 }}>{item}</span>
               </div>
@@ -599,7 +599,7 @@ function Contact() {
   const [focused, setFocused] = useState(null);
   const inputStyle = (name) => ({
     background: C.card, border: `1px solid ${focused === name ? C.red : C.border}`,
-    color: C.t1, fontFamily: "'Syne',sans-serif",
+    color: C.t1, fontFamily: "'Inter',sans-serif",
     fontSize: 15, padding: "18px 22px", outline: "none",
     transition: "all 0.3s", width: "100%", boxSizing: "border-box",
     boxShadow: focused === name ? `0 0 20px ${C.redFaint}` : "none",
@@ -624,7 +624,7 @@ function Contact() {
             color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.025em",
           }}>Let's talk<span style={{ color: C.red }}>.</span></h2>
           <p style={{
-            fontFamily: "'Syne',sans-serif", fontSize: 16,
+            fontFamily: "'Inter',sans-serif", fontSize: 16,
             color: C.t2, lineHeight: 1.7, marginBottom: 56,
           }}>
             Free, no-obligation conversation. Tell me what your business needs
@@ -647,7 +647,7 @@ function Contact() {
                 onFocus={() => setFocused("msg")} onBlur={() => setFocused(null)} />
               <button onClick={() => setSent(true)} style={{
                 padding: "20px 40px", background: C.red, color: "#fff",
-                fontFamily: "'Syne',sans-serif", fontSize: 14, fontWeight: 700,
+                fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
                 letterSpacing: "0.06em", textTransform: "uppercase",
                 border: "none", cursor: "pointer", marginTop: 8,
                 transition: "all 0.4s",
@@ -673,7 +673,7 @@ function Contact() {
                 fontSize: 24, color: C.t1, margin: "0 0 8px 0", fontWeight: 700,
               }}>Message received — diolch!</p>
               <p style={{
-                fontFamily: "'Syne',sans-serif", fontSize: 15,
+                fontFamily: "'Inter',sans-serif", fontSize: 15,
                 color: C.t2, margin: 0,
               }}>I'll get back to you within 24 hours.</p>
             </div>
@@ -702,12 +702,12 @@ function Footer() {
           opacity: 0.6,
         }}>AP</div>
         <span style={{
-          fontFamily: "'Syne',sans-serif", fontSize: 12,
+          fontFamily: "'Inter',sans-serif", fontSize: 12,
           color: C.t3, letterSpacing: "0.04em",
         }}>© 2026 Asher Price · Blackwood, South Wales</span>
       </div>
       <a href="mailto:hello@asherprice.co.uk" style={{
-        fontFamily: "'Syne',sans-serif", fontSize: 12,
+        fontFamily: "'Inter',sans-serif", fontSize: 12,
         color: C.t3, textDecoration: "none", letterSpacing: "0.04em",
         transition: "color 0.3s",
       }}
@@ -723,7 +723,7 @@ export default function App() {
   return (
     <div style={{ background: C.bg, color: C.t1, minHeight: "100vh", overflowX: "hidden" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;800&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth}
         body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
