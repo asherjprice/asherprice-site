@@ -263,6 +263,24 @@ function ChatForm({ onSubmit }) {
   );
 }
 
+/* ── Analytics logging ── */
+function logInteraction(type, data) {
+  try {
+    const logs = JSON.parse(localStorage.getItem("ap_chat_logs") || "[]");
+    logs.push({
+      type,
+      ...data,
+      timestamp: new Date().toISOString(),
+      session: sessionId,
+    });
+    localStorage.setItem("ap_chat_logs", JSON.stringify(logs));
+  } catch (e) { /* storage full or unavailable — fail silently */ }
+}
+
+const sessionId = typeof crypto !== "undefined"
+  ? crypto.randomUUID?.() || Math.random().toString(36).slice(2)
+  : Math.random().toString(36).slice(2);
+
 /* ═══════════════ CHATBOT WIDGET ═══════════════ */
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -308,12 +326,6 @@ export default function Chatbot() {
     }, 600 + Math.random() * 400);
   }
 
-  function handleOption(opt) {
-    setMessages(prev => [...prev, { from: "user", text: opt }]);
-    const key = opt.toLowerCase();
-    addBotMessage(key);
-  }
-
   function handleTextInput() {
     if (!input.trim()) return;
     const text = input.trim();
@@ -321,12 +333,23 @@ export default function Chatbot() {
     setMessages(prev => [...prev, { from: "user", text }]);
 
     const match = matchIntent(text);
+    logInteraction("message", {
+      input: text,
+      matchedIntent: match || "fallback",
+      missed: !match,
+    });
     addBotMessage(match || "fallback");
   }
 
+  function handleOption(opt) {
+    setMessages(prev => [...prev, { from: "user", text: opt }]);
+    logInteraction("button", { option: opt });
+    const key = opt.toLowerCase();
+    addBotMessage(key);
+  }
+
   function handleFormSubmit(form) {
-    console.log("Lead captured:", form);
-    // In future: send to email/API
+    logInteraction("lead", form);
   }
 
   return (
