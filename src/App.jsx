@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import Chatbot from "./Chatbot";
 
 /* ── palette ── */
 const C = {
@@ -745,6 +746,7 @@ export default function App() {
       <WhyLocal />
       <Contact />
       <Footer />
+      <Chatbot />
     </div>
   );
 }
