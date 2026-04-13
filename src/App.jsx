@@ -113,7 +113,7 @@ function Label({ children }) {
     <div style={{
       fontFamily: "'Inter',sans-serif", fontSize: 11, fontWeight: 700,
       color: C.red, letterSpacing: "0.22em", textTransform: "uppercase",
-      marginBottom: 20, display: "flex", alignItems: "center", gap: 14,
+      marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "center", gap: 14,
     }}>
       <span style={{ width: 32, height: 2, background: C.red, display: "block" }} />
       {children}
@@ -159,8 +159,8 @@ function Navbar() {
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-        {["Services", "Process", "Contact"].map(t => (
-          <a key={t} href={`#${t.toLowerCase()}`} style={{
+        {[{ label: "What We Do", href: "#services" }, { label: "Our Approach", href: "#process" }].map(t => (
+          <a key={t.label} href={t.href} style={{
             fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 600,
             color: C.t2, textDecoration: "none", letterSpacing: "0.08em",
             textTransform: "uppercase", transition: "color 0.3s",
@@ -168,7 +168,7 @@ function Navbar() {
           }}
             onMouseEnter={e => e.target.style.color = C.t1}
             onMouseLeave={e => e.target.style.color = C.t2}
-          >{t}</a>
+          >{t.label}</a>
         ))}
         <a href="#contact" style={{
           padding: "11px 28px", background: C.red, color: "#fff",
@@ -197,7 +197,8 @@ function Hero() {
   return (
     <section style={{
       minHeight: "100vh", display: "flex", flexDirection: "column",
-      justifyContent: "center", position: "relative", overflow: "hidden",
+      justifyContent: "center", alignItems: "center",
+      position: "relative", overflow: "hidden",
       padding: "140px clamp(24px,6vw,72px) 100px",
     }}>
       <Particles />
@@ -205,14 +206,8 @@ function Hero() {
       <div style={{ position: "absolute", right: "-5%", top: "15%", opacity: 0.018, transform: "rotate(12deg)" }}>
         <Dragon size={600} color={C.red} />
       </div>
-      {/* Angled line accent */}
-      <div style={{
-        position: "absolute", left: "clamp(24px,6vw,72px)", top: "50%", width: 1, height: 120,
-        background: `linear-gradient(to bottom, ${C.red}, transparent)`,
-        transform: "translateY(-100%)", ...a(0.3),
-      }} />
 
-      <div style={{ position: "relative", maxWidth: 820 }}>
+      <div style={{ position: "relative", maxWidth: 820, textAlign: "center" }}>
         <div style={a(0.3)}>
           <Label>Blackwood, South Wales</Label>
         </div>
@@ -238,14 +233,14 @@ function Hero() {
         <p style={{
           fontFamily: "'Inter',sans-serif",
           fontSize: "clamp(15px,1.8vw,19px)", color: C.t2,
-          lineHeight: 1.8, maxWidth: 500, margin: "0 0 52px 0",
+          lineHeight: 1.8, maxWidth: 540, margin: "0 auto 52px auto",
           fontWeight: 400, ...a(0.8),
         }}>
           AI-powered websites, chatbots, and automation
           for businesses across South Wales. Professional
           results, personal service, honest advice.
         </p>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap", ...a(0.95) }}>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", ...a(0.95) }}>
           <a href="#services" style={{
             padding: "18px 40px", background: C.red, color: "#fff",
             fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
@@ -327,7 +322,9 @@ const services = [
 function Services() {
   return (
     <section id="services" style={{ padding: "140px clamp(24px,6vw,72px)", position: "relative" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       <Reveal>
+        <div style={{ textAlign: "center" }}>
         <Label>What We Do</Label>
         <h2 style={{
           fontFamily: "'Playfair Display',Georgia,serif",
@@ -339,11 +336,12 @@ function Services() {
         </h2>
         <p style={{
           fontFamily: "'Inter',sans-serif", fontSize: 16, color: C.t2,
-          lineHeight: 1.7, maxWidth: 480, margin: "0 0 72px 0",
+          lineHeight: 1.7, maxWidth: 480, margin: "0 auto 72px auto",
         }}>
           Everything a modern business needs to compete online —
           built, managed, and maintained by one person you can actually talk to.
         </p>
+        </div>
       </Reveal>
       <div style={{
         display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 2,
@@ -392,6 +390,7 @@ function Services() {
           </Reveal>
         ))}
       </div>
+      </div>
     </section>
   );
 }
@@ -405,6 +404,7 @@ function Stats() {
       background: `linear-gradient(135deg, ${C.bg} 0%, ${C.bg2} 100%)`,
     }}>
       <div style={{
+        maxWidth: 1100, margin: "0 auto",
         display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))",
         gap: 40, textAlign: "center",
       }}>
@@ -446,50 +446,49 @@ const steps = [
 function Process() {
   return (
     <section id="process" style={{ padding: "140px clamp(24px,6vw,72px)", position: "relative" }}>
-      {/* Vertical line connector */}
-      <div style={{
-        position: "absolute", left: "clamp(44px, calc(6vw + 20px), 92px)",
-        top: 280, bottom: 140, width: 1,
-        background: `linear-gradient(to bottom, ${C.red}, ${C.border}, transparent)`,
-        display: window.innerWidth < 768 ? "none" : "block",
-      }} />
+      <div style={{ maxWidth: 800, margin: "0 auto" }}>
       <Reveal>
-        <Label>How It Works</Label>
+        <div style={{ textAlign: "center", marginBottom: 80 }}>
+        <Label>Our Approach</Label>
         <h2 style={{
           fontFamily: "'Playfair Display',Georgia,serif",
           fontSize: "clamp(32px,5vw,56px)", fontWeight: 800,
-          color: C.t1, margin: "0 0 80px 0", letterSpacing: "-0.025em", lineHeight: 1.1,
+          color: C.t1, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.1,
         }}>Four steps to<br /><span style={{ color: C.red }}>better business.</span></h2>
+        </div>
       </Reveal>
-      <div style={{ display: "flex", flexDirection: "column", gap: 48 }}>
+      <div className="process-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
         {steps.map((s, i) => (
           <Reveal key={i} delay={i * 0.12}>
             <div style={{
-              display: "grid", gridTemplateColumns: "60px 1fr",
-              gap: 32, alignItems: "start",
-            }}>
-              <div style={{
-                width: 48, height: 48,
-                border: `2px solid ${C.red}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
-                color: C.red, position: "relative", zIndex: 2,
-                background: C.bg,
-              }}>{s.n}</div>
-              <div style={{ paddingTop: 4 }}>
-                <h3 style={{
-                  fontFamily: "'Playfair Display',Georgia,serif",
-                  fontSize: 28, fontWeight: 700, color: C.t1,
-                  margin: "0 0 10px 0",
-                }}>{s.t}</h3>
-                <p style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 15,
-                  color: C.t2, lineHeight: 1.75, margin: 0, maxWidth: 520,
-                }}>{s.d}</p>
-              </div>
+              background: C.card, padding: "clamp(28px,3vw,40px)",
+              position: "relative", overflow: "hidden",
+              borderTop: `3px solid ${C.red}`,
+              transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.card2; e.currentTarget.style.transform = "translateY(-4px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.card; e.currentTarget.style.transform = "none"; }}
+            >
+              <span style={{
+                position: "absolute", top: -10, right: 12,
+                fontFamily: "'Playfair Display',Georgia,serif",
+                fontSize: 100, fontWeight: 800,
+                color: "rgba(200,16,46,0.04)",
+                lineHeight: 1, pointerEvents: "none",
+              }}>{s.n}</span>
+              <h3 style={{
+                fontFamily: "'Playfair Display',Georgia,serif",
+                fontSize: 24, fontWeight: 700, color: C.t1,
+                margin: "0 0 12px 0", position: "relative",
+              }}>{s.t}</h3>
+              <p style={{
+                fontFamily: "'Inter',sans-serif", fontSize: 14,
+                color: C.t2, lineHeight: 1.75, margin: 0, position: "relative",
+              }}>{s.d}</p>
             </div>
           </Reveal>
         ))}
+      </div>
       </div>
     </section>
   );
@@ -509,11 +508,9 @@ function WhyLocal() {
       }}>
         <Dragon size={500} color={C.red} />
       </div>
-      <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))",
-        gap: "clamp(48px,6vw,100px)", alignItems: "center",
-      }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <Reveal>
+          <div style={{ textAlign: "center", marginBottom: 64 }}>
           <Label>Why Local Matters</Label>
           <h2 style={{
             fontFamily: "'Playfair Display',Georgia,serif",
@@ -521,73 +518,89 @@ function WhyLocal() {
             color: C.t1, margin: "0 0 28px 0",
             letterSpacing: "-0.025em", lineHeight: 1.08,
           }}>
-            A local partner<br />
-            who understands<br />
+            A local partner who understands<br />
             <span style={{ color: C.red }}>your business.</span>
           </h2>
-          <div style={{
-            width: 60, height: 3, background: C.red, marginBottom: 28,
-          }} />
           <p style={{
             fontFamily: "'Inter',sans-serif", fontSize: 16,
-            color: C.t2, lineHeight: 1.85, margin: "0 0 24px 0",
+            color: C.t2, lineHeight: 1.85, maxWidth: 560, margin: "0 auto",
           }}>
             Based in Blackwood, I work with businesses across the Valleys
-            and beyond. I take the time to sit down with you, understand
-            your goals, and build solutions that genuinely fit — not
-            off-the-shelf packages that miss the mark.
+            and beyond. I take the time to understand your goals and build
+            solutions that genuinely fit.
           </p>
-          <p style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 14,
-            color: C.t3, lineHeight: 1.7, margin: 0, fontStyle: "italic",
-            borderLeft: `2px solid ${C.border2}`, paddingLeft: 16,
-          }}>
-            Serving businesses across Blackwood, Caerphilly, Bargoed,
-            Ystrad Mynach, Risca, Newbridge, Pontllanfraith, and the wider Valleys.
-          </p>
-        </Reveal>
-        <Reveal delay={0.2}>
-          <div style={{
-            background: C.card, padding: "clamp(32px,4vw,56px)",
-            position: "relative", overflow: "hidden",
-          }}>
-            <div style={{
-              position: "absolute", top: 0, left: 0, right: 0, height: 3,
-              background: `linear-gradient(90deg, ${C.red}, ${C.green})`,
-            }} />
-            <div style={{
-              fontFamily: "'Playfair Display',Georgia,serif",
-              fontSize: 22, fontWeight: 700, color: C.t1,
-              marginBottom: 32, lineHeight: 1.3,
-            }}>
-              What working with us<br />
-              <span style={{ color: C.red }}>looks like:</span>
-            </div>
-            {[
-              "Direct access — a real person, same day.",
-              "Face-to-face meetings whenever you need.",
-              "Flexible terms — no long contracts or hidden fees.",
-              "Fair, transparent pricing.",
-              "Everything explained in plain English.",
-            ].map((item, i) => (
-              <div key={i} style={{
-                display: "flex", alignItems: "flex-start", gap: 14,
-                marginBottom: i < 4 ? 18 : 0,
-              }}>
-                <span style={{
-                  width: 20, height: 20, minWidth: 20,
-                  border: `1.5px solid ${C.red}`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 11, color: C.red, marginTop: 1,
-                }}>✓</span>
-                <span style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 14.5,
-                  color: C.t2, lineHeight: 1.5,
-                }}>{item}</span>
-              </div>
-            ))}
           </div>
         </Reveal>
+        <div style={{
+          display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
+          gap: 24, alignItems: "start",
+        }}>
+          <Reveal delay={0.1}>
+            <div style={{
+              background: C.card, padding: "clamp(32px,4vw,48px)",
+              position: "relative", overflow: "hidden", textAlign: "center",
+            }}>
+              <div style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                background: `linear-gradient(90deg, ${C.red}, ${C.green})`,
+              }} />
+              <div style={{
+                fontFamily: "'Playfair Display',Georgia,serif",
+                fontSize: 22, fontWeight: 700, color: C.t1,
+                marginBottom: 32, lineHeight: 1.3,
+              }}>
+                What working with us<br />
+                <span style={{ color: C.red }}>looks like:</span>
+              </div>
+              {[
+                "Direct access — a real person, same day.",
+                "Face-to-face meetings whenever you need.",
+                "Flexible terms — no long contracts or hidden fees.",
+                "Fair, transparent pricing.",
+                "Everything explained in plain English.",
+              ].map((item, i) => (
+                <div key={i} style={{
+                  display: "flex", alignItems: "flex-start", gap: 14,
+                  marginBottom: i < 4 ? 18 : 0, textAlign: "left",
+                }}>
+                  <span style={{
+                    width: 20, height: 20, minWidth: 20,
+                    border: `1.5px solid ${C.red}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 11, color: C.red, marginTop: 1,
+                  }}>✓</span>
+                  <span style={{
+                    fontFamily: "'Inter',sans-serif", fontSize: 14.5,
+                    color: C.t2, lineHeight: 1.5,
+                  }}>{item}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <div style={{
+              background: C.card, padding: "clamp(32px,4vw,48px)",
+              position: "relative", overflow: "hidden",
+              borderTop: `3px solid ${C.red}`,
+            }}>
+              <p style={{
+                fontFamily: "'Inter',sans-serif", fontSize: 15,
+                color: C.t2, lineHeight: 1.85, margin: "0 0 24px 0",
+              }}>
+                "I take the time to sit down with you, understand your goals,
+                and build solutions that genuinely fit — not off-the-shelf
+                packages that miss the mark."
+              </p>
+              <p style={{
+                fontFamily: "'Inter',sans-serif", fontSize: 13,
+                color: C.t3, lineHeight: 1.7, margin: 0, fontStyle: "italic",
+              }}>
+                Serving businesses across Blackwood, Caerphilly, Bargoed,
+                Ystrad Mynach, Risca, Newbridge, Pontllanfraith, and the wider Valleys.
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -690,9 +703,12 @@ function Footer() {
     <footer style={{
       padding: "48px clamp(24px,6vw,72px)",
       borderTop: `1px solid ${C.border}`,
-      display: "flex", justifyContent: "space-between",
-      alignItems: "center", flexWrap: "wrap", gap: 20,
     }}>
+      <div style={{
+        maxWidth: 1100, margin: "0 auto",
+        display: "flex", justifyContent: "space-between",
+        alignItems: "center", flexWrap: "wrap", gap: 20,
+      }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <div style={{
           width: 22, height: 22, border: `1.5px solid ${C.red}`,
@@ -714,6 +730,7 @@ function Footer() {
         onMouseEnter={e => e.target.style.color = C.red}
         onMouseLeave={e => e.target.style.color = C.t3}
       >hello@asherprice.co.uk</a>
+      </div>
     </footer>
   );
 }
@@ -735,6 +752,7 @@ export default function App() {
         input::placeholder,textarea::placeholder{color:${C.t3}}
         @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
         @keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+        @media(max-width:640px){.process-grid{grid-template-columns:1fr !important}}
       `}</style>
       <Grain />
       <Navbar />
