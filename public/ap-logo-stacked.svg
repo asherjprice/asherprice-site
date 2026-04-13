@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200">
+  <rect x="80" y="10" width="80" height="80" rx="0" fill="none" stroke="#C8102E" stroke-width="3"/>
+  <text x="120" y="64" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="44" font-weight="800" fill="#F0EDEA" letter-spacing="3">AP</text>
+  <text x="120" y="124" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="28" font-weight="800" fill="#F0EDEA" letter-spacing="1">Asher Price</text>
+  <line x1="60" y1="138" x2="180" y2="138" stroke="#252830" stroke-width="0.5"/>
+  <text x="120" y="158" text-anchor="middle" font-family="'Syne', sans-serif" font-size="10" font-weight="600" fill="#7C7F86" letter-spacing="3">AI &amp; WEB SOLUTIONS</text>
+  <text x="120" y="178" text-anchor="middle" font-family="'Syne', sans-serif" font-size="9" font-weight="400" fill="#5C5F68" letter-spacing="2">BLACKWOOD, SOUTH WALES</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80">
+  <rect x="4" y="4" width="72" height="72" rx="0" fill="none" stroke="#C8102E" stroke-width="2.8"/>
+  <text x="40" y="53" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="38" font-weight="800" fill="#F0EDEA" letter-spacing="2">AP</text>
+  <line x1="92" y1="14" x2="92" y2="66" stroke="#252830" stroke-width="1"/>
+  <text x="108" y="40" font-family="'Playfair Display', Georgia, serif" font-size="26" font-weight="800" fill="#F0EDEA" letter-spacing="-0.5">Asher Price</text>
+  <text x="108" y="60" font-family="'Syne', sans-serif" font-size="10" font-weight="600" fill="#7C7F86" letter-spacing="3">AI &amp; WEB SOLUTIONS</text>
+</svg>
