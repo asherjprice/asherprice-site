@@ -1,0 +1,7 @@
+name = "asherprice-email"
+main = "index.js"
+compatibility_date = "2024-09-01"
+
+send_email = [
+  { name = "SEND_EMAIL", destination_address = "asherjprice@gmail.com" }
+]
