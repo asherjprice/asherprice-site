@@ -62,10 +62,78 @@ const RESPONSES = {
     showForm: true,
   },
   fallback: {
-    text: "I'm not sure about that one — I'm a simple assistant with pre-set answers! Here's what I can help with:",
+    text: "I'm not quite sure what you mean — but I'm here to help! Here's what I can tell you about:",
     options: ["Services", "How it works", "Pricing", "Get in touch"],
   },
 };
+
+/* ── Intent matching ── */
+const INTENTS = [
+  { key: "get in touch", patterns: [
+    "contact", "get in touch", "reach", "speak", "talk", "call", "phone", "email",
+    "message", "enquir", "inquir", "book", "consultation", "free chat", "arrange",
+    "meet", "appointment", "quote", "interested", "sign up", "start",
+    "how can i", "how do i", "get started", "reach out", "drop a message",
+    "want to work", "hire", "need help",
+  ]},
+  { key: "services", patterns: [
+    "services", "what do you do", "what do you offer", "what can you",
+    "what you do", "offerings", "help with", "provide", "do you do",
+    "tell me about", "what's available", "full package",
+  ]},
+  { key: "websites", patterns: [
+    "website", "web site", "site", "landing page", "web design", "web dev",
+    "build a site", "build me a", "new site", "redesign",
+  ]},
+  { key: "ai chatbots", patterns: [
+    "chatbot", "chat bot", "bot", "ai assistant", "virtual assistant",
+    "live chat", "customer support bot", "whatsapp",
+  ]},
+  { key: "automation", patterns: [
+    "automat", "workflow", "invoice", "booking system", "follow up",
+    "lead capture", "crm", "repetitive", "save time", "streamline",
+  ]},
+  { key: "social & content", patterns: [
+    "social media", "social", "content", "instagram", "facebook", "tiktok",
+    "posting", "schedule", "feed", "marketing",
+  ]},
+  { key: "how it works", patterns: [
+    "how does it work", "how it work", "how do you work", "process",
+    "what's the process", "what happens", "steps", "how long", "timeline",
+    "turnaround", "how quick", "how fast", "what to expect",
+  ]},
+  { key: "pricing", patterns: [
+    "price", "pricing", "cost", "how much", "expensive", "cheap", "afford",
+    "budget", "rates", "fees", "pay", "charge", "package", "plan", "money",
+    "investment", "worth", "value",
+  ]},
+  { key: "greeting", patterns: [
+    "hello", "hi ", "hey", "hiya", "morning", "afternoon", "evening",
+    "alright", "sup", "yo ",
+  ]},
+];
+
+function matchIntent(text) {
+  const lower = text.toLowerCase().trim();
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const intent of INTENTS) {
+    let score = 0;
+    for (const pattern of intent.patterns) {
+      if (lower.includes(pattern)) {
+        // Longer pattern matches are more specific = higher score
+        score += pattern.length;
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = intent.key;
+    }
+  }
+
+  return bestMatch;
+}
 
 /* ── Simple markdown-like bold ── */
 function formatText(text) {
@@ -252,10 +320,7 @@ export default function Chatbot() {
     setInput("");
     setMessages(prev => [...prev, { from: "user", text }]);
 
-    const lower = text.toLowerCase();
-    const match = Object.keys(RESPONSES).find(k =>
-      k !== "greeting" && k !== "fallback" && lower.includes(k)
-    );
+    const match = matchIntent(text);
     addBotMessage(match || "fallback");
   }
 
