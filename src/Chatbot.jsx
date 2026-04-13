@@ -350,6 +350,11 @@ export default function Chatbot() {
 
   function handleFormSubmit(form) {
     logInteraction("lead", form);
+    fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: form.name, contact: form.contact, message: form.message, source: "chatbot" }),
+    }).catch(() => {});
   }
 
   return (

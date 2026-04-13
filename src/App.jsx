@@ -124,11 +124,14 @@ function Label({ children }) {
 /* ═══════════════ NAVBAR ═══════════════ */
 function Navbar() {
   const [s, setS] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const h = () => setS(window.scrollY > 60);
     window.addEventListener("scroll", h); return () => window.removeEventListener("scroll", h);
   }, []);
+  const navLinks = [{ label: "What We Do", href: "#services" }, { label: "Our Approach", href: "#process" }];
   return (
+    <>
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
       padding: "0 clamp(24px,6vw,72px)", height: 76,
@@ -159,18 +162,17 @@ function Navbar() {
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-        {[{ label: "What We Do", href: "#services" }, { label: "Our Approach", href: "#process" }].map(t => (
-          <a key={t.label} href={t.href} style={{
+        {navLinks.map(t => (
+          <a key={t.label} href={t.href} className="desktop-nav" style={{
             fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 600,
             color: C.t2, textDecoration: "none", letterSpacing: "0.08em",
             textTransform: "uppercase", transition: "color 0.3s",
-            display: window.innerWidth < 640 ? "none" : "block",
           }}
             onMouseEnter={e => e.target.style.color = C.t1}
             onMouseLeave={e => e.target.style.color = C.t2}
           >{t.label}</a>
         ))}
-        <a href="#contact" style={{
+        <a href="#contact" className="desktop-nav" style={{
           padding: "11px 28px", background: C.red, color: "#fff",
           fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
           letterSpacing: "0.08em", textTransform: "uppercase",
@@ -180,8 +182,53 @@ function Navbar() {
           onMouseEnter={e => { e.target.style.background = C.redHov; e.target.style.boxShadow = "0 0 40px rgba(200,16,46,0.3)"; }}
           onMouseLeave={e => { e.target.style.background = C.red; e.target.style.boxShadow = "0 0 30px rgba(200,16,46,0.15)"; }}
         >Get Started</a>
+        {/* Hamburger button — hidden by default, shown via media query */}
+        <button className="mobile-menu-btn" onClick={() => setMenuOpen(true)} style={{
+          display: "none", alignItems: "center", justifyContent: "center",
+          background: "none", border: "none", cursor: "pointer", padding: 4,
+        }}>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect y="5" width="28" height="2.5" rx="1.25" fill={C.t2} />
+            <rect y="12.75" width="28" height="2.5" rx="1.25" fill={C.t2} />
+            <rect y="20.5" width="28" height="2.5" rx="1.25" fill={C.t2} />
+          </svg>
+        </button>
       </div>
     </nav>
+    {/* Mobile overlay menu */}
+    {menuOpen && (
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 300,
+        background: "rgba(8,9,11,0.98)", backdropFilter: "blur(20px)",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        gap: 32,
+      }}>
+        <button onClick={() => setMenuOpen(false)} style={{
+          position: "absolute", top: 22, right: 28,
+          background: "none", border: "none", cursor: "pointer", padding: 4,
+        }}>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <line x1="4" y1="4" x2="24" y2="24" stroke={C.t2} strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="24" y1="4" x2="4" y2="24" stroke={C.t2} strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        </button>
+        {navLinks.map(t => (
+          <a key={t.label} href={t.href} onClick={() => setMenuOpen(false)} style={{
+            fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 600,
+            color: C.t2, textDecoration: "none", letterSpacing: "0.08em",
+            textTransform: "uppercase", transition: "color 0.3s",
+          }}>{t.label}</a>
+        ))}
+        <a href="#contact" onClick={() => setMenuOpen(false)} style={{
+          padding: "14px 36px", background: C.red, color: "#fff",
+          fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
+          letterSpacing: "0.08em", textTransform: "uppercase",
+          textDecoration: "none", marginTop: 8,
+          boxShadow: "0 0 30px rgba(200,16,46,0.15)",
+        }}>Get Started</a>
+      </div>
+    )}
+    </>
   );
 }
 
@@ -609,13 +656,34 @@ function WhyLocal() {
 /* ═══════════════ CONTACT ═══════════════ */
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [focused, setFocused] = useState(null);
-  const inputStyle = (name) => ({
-    background: C.card, border: `1px solid ${focused === name ? C.red : C.border}`,
+  const [name, setName] = useState("");
+  const [biz, setBiz] = useState("");
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState("");
+  const handleSubmit = async () => {
+    if (!name.trim() || !email.trim()) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, business: biz, contact: email, message: msg, source: "form" }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setSent(true);
+    } catch {
+      setSending(false);
+      alert("Something went wrong. Please try again or email hello@asherprice.co.uk directly.");
+    }
+  };
+  const inputStyle = (field) => ({
+    background: C.card, border: `1px solid ${focused === field ? C.red : C.border}`,
     color: C.t1, fontFamily: "'Inter',sans-serif",
     fontSize: 15, padding: "18px 22px", outline: "none",
     transition: "all 0.3s", width: "100%", boxSizing: "border-box",
-    boxShadow: focused === name ? `0 0 20px ${C.redFaint}` : "none",
+    boxShadow: focused === field ? `0 0 20px ${C.redFaint}` : "none",
   });
   return (
     <section id="contact" style={{
@@ -649,26 +717,31 @@ function Contact() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16, textAlign: "left" }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <input placeholder="Your name" style={inputStyle("name")}
+                  value={name} onChange={e => setName(e.target.value)}
                   onFocus={() => setFocused("name")} onBlur={() => setFocused(null)} />
                 <input placeholder="Business name" style={inputStyle("biz")}
+                  value={biz} onChange={e => setBiz(e.target.value)}
                   onFocus={() => setFocused("biz")} onBlur={() => setFocused(null)} />
               </div>
               <input placeholder="Email or phone number" style={inputStyle("email")}
+                value={email} onChange={e => setEmail(e.target.value)}
                 onFocus={() => setFocused("email")} onBlur={() => setFocused(null)} />
               <textarea placeholder="Tell me about your business and what you need..." rows={5}
                 style={{ ...inputStyle("msg"), resize: "vertical" }}
+                value={msg} onChange={e => setMsg(e.target.value)}
                 onFocus={() => setFocused("msg")} onBlur={() => setFocused(null)} />
-              <button onClick={() => setSent(true)} style={{
+              <button onClick={handleSubmit} disabled={sending} style={{
                 padding: "20px 40px", background: C.red, color: "#fff",
                 fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
                 letterSpacing: "0.06em", textTransform: "uppercase",
-                border: "none", cursor: "pointer", marginTop: 8,
+                border: "none", cursor: sending ? "default" : "pointer", marginTop: 8,
                 transition: "all 0.4s",
+                opacity: sending ? 0.7 : 1,
                 boxShadow: "0 4px 30px rgba(200,16,46,0.2)",
               }}
-                onMouseEnter={e => { e.target.style.background = C.redHov; e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 8px 40px rgba(200,16,46,0.3)"; }}
+                onMouseEnter={e => { if (!sending) { e.target.style.background = C.redHov; e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 8px 40px rgba(200,16,46,0.3)"; } }}
                 onMouseLeave={e => { e.target.style.background = C.red; e.target.style.transform = "none"; e.target.style.boxShadow = "0 4px 30px rgba(200,16,46,0.2)"; }}
-              >Send Message</button>
+              >{sending ? "Sending..." : "Send Message"}</button>
             </div>
           ) : (
             <div style={{
@@ -753,6 +826,8 @@ export default function App() {
         @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
         @keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
         @media(max-width:640px){.process-grid{grid-template-columns:1fr !important}}
+        @media(max-width:640px){.desktop-nav{display:none !important}.mobile-menu-btn{display:flex !important}}
+        @media(min-width:641px){.mobile-menu-btn{display:none !important}}
       `}</style>
       <Grain />
       <Navbar />
