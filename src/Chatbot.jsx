@@ -10,7 +10,7 @@ const C = {
 /* ── Knowledge base ── */
 const RESPONSES = {
   greeting: {
-    text: "Hi! I'm AP — Asher's virtual assistant. I can help you with anything about our services, pricing, or show you what we've built. What would you like to know?",
+    text: "Hi! I'm AP — Asher's virtual assistant. I can help you with anything about Asher's services, pricing, or show you what he's built. What would you like to know?",
     options: ["Services", "Founding Local", "See examples", "Pricing", "Get in touch"],
   },
   services: {
@@ -27,7 +27,7 @@ const RESPONSES = {
     options: ["Websites", "AI Assistants", "Ordering & Booking", "Founding Local", "See examples", "Get in touch"],
   },
   websites: {
-    text: "Every site is designed and coded from scratch — no WordPress, no templates, no themes. Built to be fast, mobile-first, and optimised for Google.\n\nI've built 60+ demo sites across every industry you can think of — cafés, barbers, pubs, plumbers, nail salons, photographers, and more. Plus a live client site for **The Westgate Bar** in Abertillery.\n\nAverage build time is 1–2 weeks. I handle design, build, hosting, domain, and DNS.",
+    text: "Every site is designed and coded from scratch — no WordPress, no templates, no themes. Built to be fast, mobile-first, and optimised for Google.\n\nI've built 60+ demo sites across every industry you can think of — cafés, barbers, pubs, plumbers, nail salons, photographers, and more. Plus a live client site for **The Westgate Bar** in Blackwood.\n\nAverage build time is 1–2 weeks. I handle design, build, hosting, domain, and DNS.",
     options: ["See examples", "Founding Local", "Pricing", "Get in touch"],
   },
   "ai assistants": {
@@ -35,7 +35,7 @@ const RESPONSES = {
     options: ["See showcase", "Pricing", "Get in touch", "Back to services"],
   },
   "ordering & booking": {
-    text: "Two of the most popular add-ons:\n\n**Online Ordering** — customers browse your menu, build their order, and submit it. No commission fees like Deliveroo or Just Eat. It lives on your own website.\n\n**Booking Systems** — customers pick a service, choose a time, and book instantly. Works for barbers, salons, trades, anyone with appointments.\n\nBoth are available as add-ons to any website. You can try live demos on our Showcase page.",
+    text: "Two of the most popular add-ons:\n\n**Online Ordering** — customers browse your menu, build their order, and submit it. No commission fees like Deliveroo or Just Eat. It lives on your own website.\n\n**Booking Systems** — customers pick a service, choose a time, and book instantly. Works for barbers, salons, trades, anyone with appointments.\n\nBoth are available as add-ons to any website. You can try live demos on the Showcase page.",
     options: ["See showcase", "Pricing", "Get in touch", "Back to services"],
   },
   "loyalty cards": {
@@ -59,7 +59,7 @@ const RESPONSES = {
     options: ["Services", "Founding Local", "Get in touch"],
   },
   "the westgate": {
-    text: "The Westgate Bar in Abertillery is my first live client — a real, paying customer with a website I built and maintain.\n\nIt's proof this isn't just demos — I build and run real sites for real businesses. Their site is live and getting customers through the door.",
+    text: "The Westgate Bar in Blackwood is my first live client — a real, paying customer with a website I built and maintain.\n\nIt's proof this isn't just demos — I build and run real sites for real businesses. Their site is live and getting customers through the door.",
     options: ["See examples", "Founding Local", "Get in touch"],
   },
   "how it works": {
@@ -67,7 +67,7 @@ const RESPONSES = {
     bullets: [
       "**1. Drop me a message** — email or Facebook. A quick chat about your business — what you do, who you serve, what you need. No jargon.",
       "**2. I design and build** — a working draft within 1–2 weeks. You'll see it before anyone else does.",
-      "**3. You review** — we tweak until it's right. Colours, wording, layout — it's your business, it has to feel like yours.",
+      "**3. You review** — I tweak until it's right. Colours, wording, layout — it's your business, it has to feel like yours.",
       "**4. Go live** — £100 setup, then £50/month from month two. Your site is live, monitored, and maintained.",
     ],
     followUp: "That's for Founding Local. For custom projects, the process is similar but pricing is quoted individually.",

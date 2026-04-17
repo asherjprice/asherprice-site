@@ -176,11 +176,11 @@ const FAQS = [
   },
   {
     q: "What counts as an 'update'?",
-    a: "One update per month means a reasonable change — new menu, updated prices, a new photo gallery, seasonal banner, that sort of thing. Not a full redesign. If you need more than one change a month, we can arrange that separately.",
+    a: "One update per month means a reasonable change — new menu, updated prices, a new photo gallery, seasonal banner, that sort of thing. Not a full redesign. If you need more than one change a month, I can arrange that separately.",
   },
   {
     q: "What if I need something more complex later?",
-    a: "AI assistants, booking systems, loyalty cards, online ordering — all available as paid add-ons. We'll talk about what makes sense for your business once the website is earning its keep. No pressure to add anything.",
+    a: "AI assistants, booking systems, loyalty cards, online ordering — all available as paid add-ons. I'll talk you through what makes sense for your business once the website is earning its keep. No pressure to add anything.",
   },
   {
     q: "Why so cheap?",
@@ -188,7 +188,7 @@ const FAQS = [
   },
   {
     q: "How long does it take?",
-    a: "Most sites go live within 1–2 weeks of our first conversation. You'll see a draft before anything goes public, and we tweak until you're happy with it.",
+    a: "Most sites go live within 1–2 weeks of your first message. You'll see a draft before anything goes public, and I tweak until you're happy with it.",
   },
 ];
 
@@ -569,7 +569,7 @@ export default function FoundingLocal() {
             {[
               { n: "01", title: "Drop me a message", desc: "Email me or message me on Facebook. A quick chat about your business — what you do, who you serve, what you need. No jargon, no sales pitch." },
               { n: "02", title: "I design and build", desc: "I'll have a working draft within 1–2 weeks. You'll see it before anyone else does." },
-              { n: "03", title: "You review", desc: "We tweak until it's right. Colours, wording, layout — it's your business, it has to feel like yours." },
+              { n: "03", title: "You review", desc: "I tweak until it's right. Colours, wording, layout — it's your business, it has to feel like yours." },
               { n: "04", title: "Go live", desc: "£100 setup, then £50/month from month two. Your site is live, monitored, and maintained." },
             ].map((step, i) => (
               <Reveal key={i} delay={0.08 * i}>

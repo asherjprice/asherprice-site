@@ -124,7 +124,7 @@ function Label({ children }) {
 }
 
 /* ═══════════════ NAVBAR ═══════════════ */
-function Navbar() {
+function Navbar({ topOffset = 0 }) {
   const [s, setS] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -140,7 +140,7 @@ function Navbar() {
   return (
     <>
     <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
+      position: "fixed", top: topOffset, left: 0, right: 0, zIndex: 200,
       padding: "0 clamp(24px,6vw,72px)", height: 76,
       display: "flex", alignItems: "center", justifyContent: "space-between",
       background: s ? "rgba(8,9,11,0.92)" : "transparent",
@@ -292,7 +292,7 @@ function Hero() {
           results, personal service, honest advice.
         </p>
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", ...a(0.95) }}>
-          <a href="#services" style={{
+          <a href="/founding-local" style={{
             padding: "18px 36px", background: C.red, color: "#fff",
             fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
             letterSpacing: "0.04em", textDecoration: "none",
@@ -302,8 +302,8 @@ function Hero() {
           }}
             onMouseEnter={e => { e.target.style.background = C.redHov; e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 8px 40px rgba(200,16,46,0.3)"; }}
             onMouseLeave={e => { e.target.style.background = C.red; e.target.style.transform = "none"; e.target.style.boxShadow = "0 4px 30px rgba(200,16,46,0.2)"; }}
-          >View Services</a>
-          <a href="/showcase" style={{
+          >From £100 — See the Deal</a>
+          <a href="/examples" style={{
             padding: "18px 36px", background: "transparent",
             border: `1px solid ${C.red}`, color: C.t1,
             fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
@@ -312,7 +312,7 @@ function Hero() {
           }}
             onMouseEnter={e => { e.target.style.background = C.red; e.target.style.transform = "translateY(-2px)"; }}
             onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.transform = "none"; }}
-          >See Showcase</a>
+          >See Example Sites</a>
           <a href="#contact" style={{
             padding: "18px 36px", background: "transparent",
             border: `1px solid ${C.border2}`, color: C.t1,
@@ -344,125 +344,190 @@ function Hero() {
   );
 }
 
-/* ═══════════════ MARQUEE ═══════════════ */
-function Marquee() {
-  const items = ["Websites", "AI Assistants", "Automation", "Social Media", "Lead Generation", "24/7 Support"];
+/* ═══════════════ PROOF STRIP ═══════════════ */
+function ProofStrip() {
+  const items = [
+    { value: "1", label: "Live client site" },
+    { value: "9", label: "Full website demos" },
+    { value: "60+", label: "Mockups built" },
+    { value: "£100", label: "To get started" },
+  ];
   return (
     <div style={{
       borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
-      padding: "20px 0", overflow: "hidden", position: "relative",
+      padding: "28px clamp(24px,6vw,72px)",
+      background: C.bg2,
     }}>
       <div style={{
-        display: "flex", gap: 60, animation: "marquee 25s linear infinite",
-        whiteSpace: "nowrap", width: "max-content",
-      }}>
-        {[...items, ...items, ...items].map((item, i) => (
-          <span key={i} style={{
-            fontFamily: "'Playfair Display',Georgia,serif",
-            fontSize: 18, fontWeight: 600,
-            color: i % 2 === 0 ? C.t3 : C.red,
-            display: "flex", alignItems: "center", gap: 16,
-          }}>
-            <span style={{ width: 6, height: 6, background: C.red, transform: "rotate(45deg)", display: "block", opacity: 0.4 }} />
-            {item}
-          </span>
+        maxWidth: 900, margin: "0 auto",
+        display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24,
+        textAlign: "center",
+      }} className="proof-strip-grid">
+        {items.map((item, i) => (
+          <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+            <span style={{
+              fontFamily: "'Playfair Display',Georgia,serif",
+              fontSize: "clamp(24px,3vw,32px)", fontWeight: 800,
+              color: i === 3 ? C.green : C.red, lineHeight: 1,
+            }}>{item.value}</span>
+            <span style={{
+              fontFamily: "'Inter',sans-serif", fontSize: 11, fontWeight: 500,
+              color: C.t3, letterSpacing: "0.04em",
+            }}>{item.label}</span>
+          </div>
         ))}
       </div>
     </div>
   );
 }
 
-/* ═══════════════ SERVICES ═══════════════ */
-const services = [
-  { icon: "01", title: "Websites", desc: "Fast, mobile-first websites that turn visitors into paying customers. No templates — every build is bespoke to your business.", accent: C.red, link: { href: "/why-a-website.html", label: "Why your business needs one" } },
-  { icon: "02", title: "AI Assistants", desc: "Intelligent assistants trained on your business. They answer enquiries, book appointments, and capture leads — all while you sleep.", accent: C.red },
-  { icon: "03", title: "Automation", desc: "Automated booking, invoicing, follow-ups, and lead capture. Stop doing the same task twice and focus on what pays.", accent: C.red },
-  { icon: "04", title: "Custom Tools", desc: "Online ordering, booking systems, digital loyalty cards — tools your customers use straight from your website. No App Store required.", accent: C.red },
-  { icon: "05", title: "Social & Content", desc: "Consistent, on-brand social media content created and scheduled by AI. Your feeds stay active without eating your evenings.", accent: C.green },
+/* ═══════════════ SERVICES (everything in one section) ═══════════════ */
+const SERVICE_ITEMS = [
+  { title: "Websites", desc: "Bespoke, mobile-first, built to convert. No templates.", link: { href: "/why-a-website.html", label: "Why you need one" } },
+  { title: "AI Assistants", desc: "Trained on your business. Answer enquiries and capture leads 24/7." },
+  { title: "Online Ordering", desc: "Customers order from your site. No Deliveroo commission." },
+  { title: "Booking Systems", desc: "Pick a service, pick a time, done. Works for any appointment business." },
+  { title: "Loyalty Cards", desc: "Digital stamp cards from your website. No app download needed." },
+  { title: "Automation", desc: "Invoicing, follow-ups, lead capture — if you do it twice, I automate it." },
+];
+
+const PROCESS_STEPS = [
+  { n: "01", t: "Chat", d: "Free, no-pressure conversation about your business." },
+  { n: "02", t: "Build", d: "I design and build. You see progress throughout." },
+  { n: "03", t: "Launch", d: "I handle DNS, hosting — everything. You watch it go live." },
+  { n: "04", t: "Grow", d: "Ongoing support, updates, and improvements." },
 ];
 
 function Services() {
   return (
-    <section id="services" style={{ padding: "140px clamp(24px,6vw,72px)", position: "relative" }}>
+    <section id="services" style={{ padding: "120px clamp(24px,6vw,72px) 80px", position: "relative" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       <Reveal>
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
         <Label>What I Do</Label>
         <h2 style={{
           fontFamily: "'Playfair Display',Georgia,serif",
-          fontSize: "clamp(32px,5vw,56px)", fontWeight: 800,
-          color: C.t1, margin: "0 0 20px 0", letterSpacing: "-0.025em", lineHeight: 1.1,
+          fontSize: "clamp(32px,5vw,52px)", fontWeight: 800,
+          color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.025em", lineHeight: 1.1,
         }}>
-          The full package.<br />
-          <span style={{ color: C.t3 }}>Nothing missing.</span>
+          Everything your business needs.<br />
+          <span style={{ color: C.t3 }}>One person to talk to.</span>
         </h2>
-        <p style={{
-          fontFamily: "'Inter',sans-serif", fontSize: 16, color: C.t2,
-          lineHeight: 1.7, maxWidth: 480, margin: "0 auto 72px auto",
-        }}>
-          Everything a modern business needs to compete online —
-          built, managed, and maintained by one person you can actually talk to.
-        </p>
         </div>
       </Reveal>
+
+      {/* Services — 6 items, 3x2 grid, no dead cell */}
       <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 2,
-      }}>
-        {services.map((s, i) => (
-          <Reveal key={i} delay={i * 0.1}>
+        display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2,
+      }} className="services-grid">
+        {SERVICE_ITEMS.map((s, i) => (
+          <Reveal key={i} delay={i * 0.06}>
             <div style={{
-              background: C.card, padding: "clamp(32px,3vw,48px)",
-              height: "100%", position: "relative", overflow: "hidden",
-              transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
-              cursor: "default", borderBottom: `3px solid transparent`,
+              background: C.card, padding: "clamp(24px,2.5vw,36px)",
+              height: "100%", position: "relative",
+              transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+              borderBottom: `2px solid transparent`,
             }}
               onMouseEnter={e => {
                 e.currentTarget.style.background = C.card2;
-                e.currentTarget.style.borderBottomColor = s.accent;
-                e.currentTarget.style.transform = "translateY(-4px)";
+                e.currentTarget.style.borderBottomColor = C.red;
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.background = C.card;
                 e.currentTarget.style.borderBottomColor = "transparent";
-                e.currentTarget.style.transform = "none";
               }}
             >
-              {/* Big faded number */}
-              <span style={{
-                position: "absolute", top: -10, right: 12,
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: 120, fontWeight: 800,
-                color: "rgba(200,16,46,0.04)",
-                lineHeight: 1, pointerEvents: "none",
-              }}>{s.icon}</span>
-              <div style={{
-                width: 40, height: 3, background: s.accent,
-                marginBottom: 28, transition: "width 0.4s",
-              }} />
               <h3 style={{
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: 24, fontWeight: 700, color: C.t1,
-                margin: "0 0 14px 0", position: "relative",
+                fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700,
+                color: C.t1, margin: "0 0 8px 0",
               }}>{s.title}</h3>
               <p style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 14,
-                color: C.t2, lineHeight: 1.75, margin: 0, position: "relative",
+                fontFamily: "'Inter',sans-serif", fontSize: 13,
+                color: C.t2, lineHeight: 1.7, margin: 0,
               }}>{s.desc}</p>
               {s.link && (
                 <a href={s.link.href} style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  marginTop: 20, fontFamily: "'Inter',sans-serif", fontSize: 12,
-                  fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-                  color: s.accent, textDecoration: "none", position: "relative",
-                  transition: "gap 0.3s",
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  marginTop: 12, fontFamily: "'Inter',sans-serif", fontSize: 11,
+                  fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                  color: C.red, textDecoration: "none", transition: "gap 0.3s",
                 }}
-                  onMouseEnter={e => { e.currentTarget.style.gap = "12px"; }}
-                  onMouseLeave={e => { e.currentTarget.style.gap = "8px"; }}
+                  onMouseEnter={e => e.currentTarget.style.gap = "10px"}
+                  onMouseLeave={e => e.currentTarget.style.gap = "6px"}
                 >{s.link.label} <span aria-hidden="true">→</span></a>
               )}
             </div>
           </Reveal>
         ))}
+      </div>
+
+      {/* Process strip + differentiators — all one visual block */}
+      <div style={{ marginTop: 2 }}>
+        {/* 4-step process */}
+        <Reveal delay={0.2}>
+          <div id="process" style={{
+            padding: "32px clamp(20px,3vw,40px)",
+            background: C.card,
+            display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0,
+          }} className="process-grid">
+            {PROCESS_STEPS.map((s, i) => (
+              <div key={i} style={{
+                padding: "0 clamp(12px,2vw,24px)",
+                borderLeft: i > 0 ? `1px solid ${C.border}` : "none",
+                textAlign: "center",
+              }}>
+                <span style={{
+                  fontFamily: "'Playfair Display',Georgia,serif",
+                  fontSize: 24, fontWeight: 800, color: C.red, opacity: 0.3,
+                  display: "block", marginBottom: 6,
+                }}>{s.n}</span>
+                <h4 style={{
+                  fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
+                  color: C.t1, marginBottom: 4, letterSpacing: "0.02em",
+                }}>{s.t}</h4>
+                <p style={{
+                  fontFamily: "'Inter',sans-serif", fontSize: 11,
+                  color: C.t3, lineHeight: 1.5,
+                }}>{s.d}</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Why me */}
+        <Reveal delay={0.1}>
+          <div style={{
+            background: C.card, marginTop: 2,
+            padding: "clamp(28px,3vw,40px)",
+          }}>
+            <div style={{
+              fontFamily: "'Inter',sans-serif", fontSize: 10, fontWeight: 700,
+              color: C.red, letterSpacing: "0.15em", textTransform: "uppercase",
+              marginBottom: 20,
+            }}>Why work with me</div>
+            <div className="why-me-grid" style={{
+              display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20,
+            }}>
+              {[
+                { t: "One person, not a department", d: "You deal with me from first chat to finished site and every update after. No handoffs, no account managers, no repeating yourself to someone new." },
+                { t: "Built in Blackwood, not outsourced", d: "I'm based in the Valleys. If you need me, I'm a text or a short drive away — not a support ticket in a queue." },
+                { t: "Fast turnaround, honest timelines", d: "Most sites go live within 1–2 weeks. If something needs fixing, it's done same day or next — not buried in a backlog." },
+                { t: "No lock-in, no surprises", d: "Month-to-month. Fixed pricing agreed upfront. 1 month's notice to cancel. I keep clients by doing good work, not with contracts." },
+              ].map((item, i) => (
+                <div key={i}>
+                  <div style={{
+                    fontFamily: "'Inter',sans-serif", fontSize: 14,
+                    fontWeight: 700, color: C.t1, marginBottom: 6,
+                  }}>{item.t}</div>
+                  <div style={{
+                    fontFamily: "'Inter',sans-serif", fontSize: 13,
+                    color: C.t2, lineHeight: 1.7,
+                  }}>{item.d}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
       </div>
     </section>
@@ -563,267 +628,271 @@ function ShowcaseTeaser() {
   );
 }
 
-/* ═══════════════ STATS ═══════════════ */
-function Stats() {
-  return (
-    <section style={{
-      padding: "80px clamp(24px,6vw,72px)",
-      borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
-      background: `linear-gradient(135deg, ${C.bg} 0%, ${C.bg2} 100%)`,
-    }}>
-      <div style={{
-        maxWidth: 1100, margin: "0 auto",
-        display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))",
-        gap: 40, textAlign: "center",
-      }}>
-        {[
-          { end: 24, suffix: "/7", label: "Your AI never clocks off", color: C.red },
-          { end: 5, suffix: " days", label: "Average build time", color: C.red },
-          { end: 0, suffix: "£", label: "For an initial chat", color: C.green, prefix: "£" },
-          { end: 100, suffix: "%", label: "Locally owned & run", color: C.red },
-        ].map((s, i) => (
-          <Reveal key={i} delay={i * 0.1}>
-            <div>
-              <div style={{
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: "clamp(36px,5vw,52px)", fontWeight: 800,
-                color: s.color, lineHeight: 1, marginBottom: 8,
-              }}>
-                {s.prefix || ""}{s.end > 0 ? <Counter end={s.end} suffix={s.suffix} /> : `0${s.suffix}`}
-              </div>
-              <div style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 12,
-                color: C.t2, letterSpacing: "0.06em", fontWeight: 500,
-              }}>{s.label}</div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════ PROCESS ═══════════════ */
-const steps = [
-  { n: "01", t: "Chat", d: "A free, no-pressure conversation. Tell me about your business — I'll tell you exactly what would help and what wouldn't." },
-  { n: "02", t: "Build", d: "I build your website, AI assistant, or automation system. You'll see progress throughout with regular updates at every stage." },
-  { n: "03", t: "Launch", d: "I handle the technical setup, DNS, hosting — everything. You just watch it start working." },
-  { n: "04", t: "Grow", d: "Ongoing support, updates, and improvements. Your monthly retainer keeps everything running and evolving." },
+/* ═══════════════ EXAMPLES TEASER ═══════════════ */
+const EXAMPLE_PREVIEWS = [
+  { slug: "cafe", label: "Café" },
+  { slug: "barber", label: "Barber" },
+  { slug: "pub", label: "Pub" },
+  { slug: "plumber", label: "Plumber" },
+  { slug: "salon", label: "Nail Salon" },
+  { slug: "pizza", label: "Pizza Shop" },
 ];
 
-function Process() {
+function ExamplesTeaser() {
   return (
-    <section id="process" style={{ padding: "140px clamp(24px,6vw,72px)", position: "relative" }}>
-      <div style={{ maxWidth: 800, margin: "0 auto" }}>
-      <Reveal>
-        <div style={{ textAlign: "center", marginBottom: 80 }}>
-        <Label>My Approach</Label>
-        <h2 style={{
-          fontFamily: "'Playfair Display',Georgia,serif",
-          fontSize: "clamp(32px,5vw,56px)", fontWeight: 800,
-          color: C.t1, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.1,
-        }}>Four steps to<br /><span style={{ color: C.red }}>better business.</span></h2>
+    <section style={{
+      padding: "120px clamp(24px,6vw,72px)",
+      borderTop: `1px solid ${C.border}`,
+    }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <Reveal>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Label>Built from Scratch</Label>
+            <h2 style={{
+              fontFamily: "'Playfair Display',Georgia,serif",
+              fontSize: "clamp(30px,4.5vw,52px)", fontWeight: 800,
+              color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.025em", lineHeight: 1.1,
+            }}>
+              Not templates.<br />
+              <span style={{ color: C.red }}>Real websites.</span>
+            </h2>
+            <p style={{
+              fontFamily: "'Inter',sans-serif", fontSize: 15, color: C.t2,
+              lineHeight: 1.7, maxWidth: 500, margin: "0 auto",
+            }}>
+              Every site is designed and built bespoke. Here are a few — click through and use them yourself.
+            </p>
+          </div>
+        </Reveal>
+        <div className="examples-teaser-grid" style={{
+          display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2,
+        }}>
+          {EXAMPLE_PREVIEWS.map((ex, i) => (
+            <Reveal key={ex.slug} delay={0.06 * i}>
+              <a href={`/examples/${ex.slug}/index.html`} style={{
+                display: "block", textDecoration: "none",
+                background: C.card, overflow: "hidden",
+                transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+                borderBottom: "3px solid transparent",
+              }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = C.card2;
+                  e.currentTarget.style.borderBottomColor = C.red;
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = C.card;
+                  e.currentTarget.style.borderBottomColor = "transparent";
+                  e.currentTarget.style.transform = "none";
+                }}
+              >
+                {/* Live iframe preview */}
+                <div style={{
+                  height: 180, position: "relative", overflow: "hidden",
+                  borderBottom: `1px solid ${C.border}`,
+                }}>
+                  <iframe
+                    src={`/examples/${ex.slug}/site.html`}
+                    title={`${ex.label} preview`}
+                    style={{
+                      width: "200%", height: "200%",
+                      border: "none", transform: "scale(0.5)",
+                      transformOrigin: "top left", pointerEvents: "none",
+                    }}
+                    loading="lazy" tabIndex={-1}
+                  />
+                  <div style={{ position: "absolute", inset: 0, cursor: "pointer" }} />
+                  <div style={{
+                    position: "absolute", top: 10, left: 10,
+                    padding: "4px 10px", background: C.red,
+                    fontFamily: "'Inter',sans-serif", fontSize: 9, fontWeight: 700,
+                    color: "#fff", letterSpacing: "0.1em", textTransform: "uppercase",
+                  }}>{ex.label}</div>
+                </div>
+              </a>
+            </Reveal>
+          ))}
         </div>
-      </Reveal>
-      <div className="process-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
-        {steps.map((s, i) => (
-          <Reveal key={i} delay={i * 0.12}>
-            <div style={{
-              background: C.card, padding: "clamp(28px,3vw,40px)",
-              position: "relative", overflow: "hidden",
-              borderTop: `3px solid ${C.red}`,
-              transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
+        <Reveal delay={0.3}>
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <a href="/examples" style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              fontFamily: "'Inter',sans-serif", fontSize: 13, fontWeight: 700,
+              color: C.red, textDecoration: "none", letterSpacing: "0.08em",
+              textTransform: "uppercase", transition: "gap 0.3s",
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.card2; e.currentTarget.style.transform = "translateY(-4px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = C.card; e.currentTarget.style.transform = "none"; }}
+              onMouseEnter={e => e.currentTarget.style.gap = "12px"}
+              onMouseLeave={e => e.currentTarget.style.gap = "8px"}
             >
-              <span style={{
-                position: "absolute", top: -10, right: 12,
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: 100, fontWeight: 800,
-                color: "rgba(200,16,46,0.04)",
-                lineHeight: 1, pointerEvents: "none",
-              }}>{s.n}</span>
-              <h3 style={{
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: 24, fontWeight: 700, color: C.t1,
-                margin: "0 0 12px 0", position: "relative",
-              }}>{s.t}</h3>
-              <p style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 14,
-                color: C.t2, lineHeight: 1.75, margin: 0, position: "relative",
-              }}>{s.d}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
+              See all 9 examples <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-/* ═══════════════ WHY LOCAL ═══════════════ */
-function WhyLocal() {
+/* ═══════════════ FOUNDING LOCAL CALLOUT ═══════════════ */
+const FL_AMBER = "#B8860B";
+const FL_AMBER_FAINT = "rgba(184,134,11,0.08)";
+const FL_AMBER_BORDER = "rgba(184,134,11,0.25)";
+
+function FoundingLocalCallout() {
   return (
     <section style={{
-      padding: "140px clamp(24px,6vw,72px)",
+      padding: "100px clamp(24px,6vw,72px)",
       borderTop: `1px solid ${C.border}`,
-      position: "relative", overflow: "hidden",
+      background: C.bg2, position: "relative",
     }}>
-      <div style={{
-        position: "absolute", right: "-3%", top: "50%", transform: "translateY(-50%) rotate(15deg)",
-        opacity: 0.015,
-      }}>
-        <Dragon size={500} color={C.red} />
-      </div>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <Label>Why Local Matters</Label>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            padding: "8px 18px", borderRadius: 40,
+            background: FL_AMBER_FAINT, border: `1px solid ${FL_AMBER_BORDER}`,
+            marginBottom: 28,
+          }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: "50%", background: FL_AMBER,
+              boxShadow: `0 0 8px ${FL_AMBER}`,
+            }} />
+            <span style={{
+              fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 600,
+              color: FL_AMBER, letterSpacing: "0.02em",
+            }}>Places remaining</span>
+          </div>
+
           <h2 style={{
             fontFamily: "'Playfair Display',Georgia,serif",
-            fontSize: "clamp(32px,4.5vw,52px)", fontWeight: 800,
-            color: C.t1, margin: "0 0 28px 0",
-            letterSpacing: "-0.025em", lineHeight: 1.08,
+            fontSize: "clamp(28px,4vw,44px)", fontWeight: 800,
+            color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.02em", lineHeight: 1.15,
           }}>
-            A local partner who understands<br />
-            <span style={{ color: C.red }}>your business.</span>
+            Founding Local.<br />
+            <span style={{ color: C.red }}>£100 setup. £50/month.</span>
           </h2>
+
           <p style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 16,
-            color: C.t2, lineHeight: 1.85, maxWidth: 560, margin: "0 auto",
+            fontFamily: "'Inter',sans-serif", fontSize: 15, color: C.t2,
+            lineHeight: 1.8, maxWidth: 520, margin: "0 auto 12px",
           }}>
-            Based in Blackwood, I work with businesses across the Valleys,
-            South Wales and beyond. I take the time to understand your goals
-            and build solutions that genuinely fit.
+            A properly built website, hosted and maintained, for the first 10 local businesses
+            in Blackwood and the Valleys. The price is locked in for life.
           </p>
+
+          <p style={{
+            fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t3,
+            lineHeight: 1.7, maxWidth: 460, margin: "0 auto 32px", fontStyle: "italic",
+          }}>
+            Custom site, your own domain, hosting, monthly update, monitoring, and a check-in call.
+            No lock-in. Cancel any time.
+          </p>
+
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="/founding-local" style={{
+              padding: "16px 32px", background: C.red, color: "#fff",
+              fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+              textDecoration: "none", transition: "all 0.4s",
+              boxShadow: "0 4px 30px rgba(200,16,46,0.2)",
+            }}
+              onMouseEnter={e => { e.target.style.background = C.redHov; e.target.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { e.target.style.background = C.red; e.target.style.transform = "none"; }}
+            >Learn More</a>
+            <a href="mailto:hello@asherprice.co.uk?subject=Founding%20Local%20%E2%80%94%20interested" style={{
+              padding: "16px 32px", background: "transparent",
+              border: `1px solid ${C.border2}`, color: C.t1,
+              fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
+              letterSpacing: "0.04em", textTransform: "uppercase",
+              textDecoration: "none", transition: "all 0.4s",
+            }}
+              onMouseEnter={e => { e.target.style.borderColor = C.t2; e.target.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { e.target.style.borderColor = C.border2; e.target.style.transform = "none"; }}
+            >Claim a Place</a>
           </div>
         </Reveal>
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
-          gap: 24, alignItems: "start",
-        }}>
-          <Reveal delay={0.1}>
-            <div style={{
-              background: C.card, padding: "clamp(32px,4vw,48px)",
-              position: "relative", overflow: "hidden",
-            }}>
-              <div style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: 3,
-                background: `linear-gradient(90deg, ${C.red}, ${C.green})`,
-              }} />
-              <div style={{
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: 22, fontWeight: 700, color: C.t1,
-                marginBottom: 12, lineHeight: 1.3,
-              }}>
-                What working with me<br />
-                <span style={{ color: C.red }}>looks like:</span>
-              </div>
-              <p style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 14,
-                color: C.t3, lineHeight: 1.6, margin: "0 0 28px 0", fontStyle: "italic",
-              }}>
-                When something breaks on a Friday at 5pm, you're not raising a support ticket. You're texting me.
-              </p>
-              {[
-                {
-                  title: "Same-Day Response",
-                  body: "My number, not a ticket system. You'll have it on day one.",
-                },
-                {
-                  title: "Face-to-Face First",
-                  body: "Blackwood-based. A 20-minute drive, if needed, beats a 3-day email chain.",
-                },
-                {
-                  title: "No Lock-In",
-                  body: "Month-to-month agreements. Just 1 month's notice to cancel — most clients never do.",
-                },
-                {
-                  title: "Upfront Costs",
-                  body: "Fixed quotes, always. You'll know the cost before anything starts.",
-                },
-                {
-                  title: "No Tech-Speak",
-                  body: "Just clear answers and straight talking.",
-                },
-              ].map((item, i, arr) => (
-                <div key={i} style={{
-                  display: "flex", alignItems: "flex-start", gap: 14,
-                  marginBottom: i < arr.length - 1 ? 22 : 0, textAlign: "left",
-                  paddingBottom: i < arr.length - 1 ? 22 : 0,
-                  borderBottom: i < arr.length - 1 ? `1px solid ${C.border}` : "none",
-                }}>
-                  <span style={{
-                    width: 20, height: 20, minWidth: 20,
-                    border: `1.5px solid ${C.red}`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 11, color: C.red, marginTop: 2,
-                  }}>✓</span>
-                  <div>
-                    <div style={{
-                      fontFamily: "'Inter',sans-serif", fontSize: 14,
-                      fontWeight: 600, color: C.t1, marginBottom: 3,
-                    }}>{item.title}</div>
-                    <div style={{
-                      fontFamily: "'Inter',sans-serif", fontSize: 13.5,
-                      color: C.t2, lineHeight: 1.55,
-                    }}>{item.body}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <div style={{
-              background: C.card, padding: "clamp(32px,4vw,48px)",
-              position: "relative", overflow: "hidden",
-              borderTop: `3px solid ${C.red}`,
-            }}>
-              <div style={{
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: 18, fontWeight: 700, color: C.t1,
-                marginBottom: 20, lineHeight: 1.4,
-              }}>
-                AP vs. the big agencies
-              </div>
-              {[
-                ["Account manager changes every 6 months", "Same person, start to finish"],
-                ["3-week turnaround on a small fix", "Done same day or next"],
-                ["You're a line item", "You're a name I know"],
-                ["Locked into 12-month contracts", "Just 1 month's notice, any time"],
-              ].map(([them, us], i, arr) => (
-                <div key={i} style={{
-                  display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
-                  marginBottom: i < arr.length - 1 ? 12 : 0,
-                  paddingBottom: i < arr.length - 1 ? 12 : 0,
-                  borderBottom: i < arr.length - 1 ? `1px solid ${C.border}` : "none",
-                }}>
-                  <div style={{
-                    fontFamily: "'Inter',sans-serif", fontSize: 13,
-                    color: C.t3, lineHeight: 1.5,
-                    paddingRight: 12, borderRight: `1px solid ${C.border}`,
-                  }}>{them}</div>
-                  <div style={{
-                    fontFamily: "'Inter',sans-serif", fontSize: 13,
-                    color: C.t1, lineHeight: 1.5, paddingLeft: 4,
-                  }}>{us}</div>
-                </div>
-              ))}
-              <p style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 13,
-                color: C.t3, lineHeight: 1.7, margin: "28px 0 0 0", fontStyle: "italic",
-              }}>
-                Serving businesses across Blackwood, Caerphilly, Bargoed,
-                Ystrad Mynach, Risca, Newbridge, Pontllanfraith, and the wider Valleys.
-              </p>
-            </div>
-          </Reveal>
-        </div>
       </div>
     </section>
   );
 }
+
+/* ═══════════════ CLIENT PROOF ═══════════════ */
+function ClientProof() {
+  return (
+    <section style={{
+      padding: "100px clamp(24px,6vw,72px)",
+      borderTop: `1px solid ${C.border}`,
+    }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+        <Reveal>
+          <Label>Live Work</Label>
+          <h2 style={{
+            fontFamily: "'Playfair Display',Georgia,serif",
+            fontSize: "clamp(26px,4vw,40px)", fontWeight: 800,
+            color: C.t1, margin: "0 0 20px 0", letterSpacing: "-0.02em", lineHeight: 1.15,
+          }}>
+            Not just demos.<br />
+            <span style={{ color: C.red }}>Real businesses.</span>
+          </h2>
+          <p style={{
+            fontFamily: "'Inter',sans-serif", fontSize: 15, color: C.t2,
+            lineHeight: 1.8, maxWidth: 480, margin: "0 auto 40px",
+          }}>
+            The Westgate Bar in Blackwood is my first live client — a real
+            business with a website I built and maintain. More launching soon
+            through Founding Local.
+          </p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div style={{
+            background: C.card, border: `1px solid ${C.border}`,
+            padding: "clamp(28px,4vw,44px)", position: "relative", overflow: "hidden",
+          }}>
+            <div style={{
+              position: "absolute", top: 0, left: 0, right: 0, height: 3,
+              background: `linear-gradient(90deg, ${C.red}, ${C.green})`,
+            }} />
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 32,
+              flexWrap: "wrap",
+            }}>
+              <div style={{ textAlign: "left" }}>
+                <div style={{
+                  fontFamily: "'Playfair Display',Georgia,serif",
+                  fontSize: 22, fontWeight: 700, color: C.t1, marginBottom: 6,
+                }}>The Westgate Bar</div>
+                <div style={{
+                  fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t2, lineHeight: 1.6,
+                }}>
+                  Blackwood · Live since 2026<br />
+                  Custom website · Built and maintained by AP
+                </div>
+              </div>
+              <div style={{
+                width: 1, height: 48, background: C.border, flexShrink: 0,
+              }} />
+              <div style={{ textAlign: "center" }}>
+                <div style={{
+                  fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
+                  color: C.t3, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8,
+                }}>Coming next</div>
+                <div style={{
+                  fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t2, lineHeight: 1.6,
+                }}>
+                  Founding Local clients launching soon
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* (Process section merged into Services above) */
+
+/* (WhyLocal merged into Services section above) */
 
 /* ═══════════════ CONTACT ═══════════════ */
 function Contact() {
@@ -1008,16 +1077,15 @@ function Footer() {
 }
 
 /* ═══════════════ ANNOUNCEMENT BAR ═══════════════ */
-function AnnouncementBar() {
-  const [dismissed, setDismissed] = useState(() => {
-    try { return localStorage.getItem("fl-banner-dismissed") === "1"; } catch { return false; }
-  });
-  if (dismissed) return null;
+const BAR_HEIGHT = 38;
+
+function AnnouncementBar({ onDismiss }) {
   return (
     <div style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 250,
-      padding: "9px clamp(16px,4vw,48px)",
-      background: "rgba(184,134,11,0.1)", borderBottom: "1px solid rgba(184,134,11,0.18)",
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 300,
+      height: BAR_HEIGHT,
+      padding: "0 clamp(16px,4vw,48px)",
+      background: "rgba(184,134,11,0.12)", borderBottom: "1px solid rgba(184,134,11,0.18)",
       backdropFilter: "blur(12px)",
       display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
     }}>
@@ -1029,7 +1097,7 @@ function AnnouncementBar() {
         Founding Local: £100 setup + £50/mo for the first 10 local businesses — places left
         <span aria-hidden="true" style={{ fontSize: 14 }}>→</span>
       </a>
-      <button onClick={() => { setDismissed(true); try { localStorage.setItem("fl-banner-dismissed", "1"); } catch {} }} style={{
+      <button onClick={onDismiss} style={{
         background: "none", border: "none", cursor: "pointer", padding: 2,
         color: "rgba(184,134,11,0.5)", fontSize: 16, lineHeight: 1,
         position: "absolute", right: "clamp(12px,3vw,36px)", top: "50%", transform: "translateY(-50%)",
@@ -1040,8 +1108,15 @@ function AnnouncementBar() {
 
 /* ═══════════════ APP ═══════════════ */
 export default function App() {
+  const [barVisible, setBarVisible] = useState(() => {
+    try { return localStorage.getItem("fl-banner-dismissed") !== "1"; } catch { return true; }
+  });
+  const dismissBar = () => {
+    setBarVisible(false);
+    try { localStorage.setItem("fl-banner-dismissed", "1"); } catch {}
+  };
   return (
-    <div style={{ background: C.bg, color: C.t1, minHeight: "100vh", overflowX: "hidden" }}>
+    <div style={{ background: C.bg, color: C.t1, minHeight: "100vh", overflowX: "hidden", paddingTop: barVisible ? BAR_HEIGHT : 0 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;800&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -1055,20 +1130,26 @@ export default function App() {
         input::placeholder,textarea::placeholder{color:${C.t3}}
         @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
         @keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
-        @media(max-width:640px){.process-grid{grid-template-columns:1fr !important}}
+        @media(max-width:640px){.process-grid{grid-template-columns:repeat(2,1fr) !important}}
+        @media(max-width:640px){.examples-teaser-grid{grid-template-columns:1fr !important}}
+        @media(max-width:640px){.proof-strip-grid{grid-template-columns:repeat(2,1fr) !important}}
+        @media(max-width:640px){.why-me-grid{grid-template-columns:1fr !important}}
+        @media(max-width:640px){.services-grid{grid-template-columns:1fr !important}}
+        @media(min-width:641px) and (max-width:900px){.services-grid{grid-template-columns:repeat(2,1fr) !important}}
+        @media(max-width:900px){.examples-teaser-grid{grid-template-columns:repeat(2,1fr) !important}}
         @media(max-width:640px){.desktop-nav{display:none !important}.mobile-menu-btn{display:flex !important}}
         @media(min-width:641px){.mobile-menu-btn{display:none !important}}
       `}</style>
       <Grain />
-      <AnnouncementBar />
-      <Navbar />
+      {barVisible && <AnnouncementBar onDismiss={dismissBar} />}
+      <Navbar topOffset={barVisible ? BAR_HEIGHT : 0} />
       <Hero />
-      <Marquee />
+      <ProofStrip />
       <Services />
+      <ExamplesTeaser />
       <ShowcaseTeaser />
-      <Stats />
-      <Process />
-      <WhyLocal />
+      <FoundingLocalCallout />
+      <ClientProof />
       <Contact />
       <Footer />
       <Chatbot />
