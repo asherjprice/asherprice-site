@@ -67,7 +67,7 @@ const EXAMPLES = [
 ];
 
 /* ═══════════════ NAVBAR ═══════════════ */
-function Navbar() {
+function Navbar({ topOffset = 0 }) {
   const [s, setS] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -83,7 +83,7 @@ function Navbar() {
   return (
     <>
     <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
+      position: "fixed", top: topOffset, left: 0, right: 0, zIndex: 200,
       padding: "0 clamp(24px,6vw,72px)", height: 76,
       display: "flex", alignItems: "center", justifyContent: "space-between",
       background: s ? "rgba(8,9,11,0.92)" : "transparent",
@@ -291,16 +291,15 @@ function ExampleCard({ example, index }) {
 }
 
 /* ═══════════════ ANNOUNCEMENT BAR ═══════════════ */
-function AnnouncementBar() {
-  const [dismissed, setDismissed] = useState(() => {
-    try { return localStorage.getItem("fl-banner-dismissed") === "1"; } catch { return false; }
-  });
-  if (dismissed) return null;
+const BAR_HEIGHT = 38;
+
+function AnnouncementBar({ onDismiss }) {
   return (
     <div style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 250,
-      padding: "9px clamp(16px,4vw,48px)",
-      background: "rgba(184,134,11,0.1)", borderBottom: "1px solid rgba(184,134,11,0.18)",
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 300,
+      height: BAR_HEIGHT,
+      padding: "0 clamp(16px,4vw,48px)",
+      background: "rgba(184,134,11,0.12)", borderBottom: "1px solid rgba(184,134,11,0.18)",
       backdropFilter: "blur(12px)",
       display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
     }}>
@@ -312,7 +311,7 @@ function AnnouncementBar() {
         Founding Local: £100 setup + £50/mo — 10 of 10 places remaining
         <span aria-hidden="true" style={{ fontSize: 14 }}>→</span>
       </a>
-      <button onClick={() => { setDismissed(true); try { localStorage.setItem("fl-banner-dismissed", "1"); } catch {} }} style={{
+      <button onClick={onDismiss} style={{
         background: "none", border: "none", cursor: "pointer", padding: 2,
         color: "rgba(184,134,11,0.5)", fontSize: 16, lineHeight: 1,
         position: "absolute", right: "clamp(12px,3vw,36px)", top: "50%", transform: "translateY(-50%)",
@@ -323,8 +322,15 @@ function AnnouncementBar() {
 
 /* ═══════════════ MAIN PAGE ═══════════════ */
 export default function ExamplesPage() {
+  const [barVisible, setBarVisible] = useState(() => {
+    try { return localStorage.getItem("fl-banner-dismissed") !== "1"; } catch { return true; }
+  });
+  const dismissBar = () => {
+    setBarVisible(false);
+    try { localStorage.setItem("fl-banner-dismissed", "1"); } catch {}
+  };
   return (
-    <div style={{ background: C.bg, color: C.t1, minHeight: "100vh", overflowX: "hidden" }}>
+    <div style={{ background: C.bg, color: C.t1, minHeight: "100vh", overflowX: "hidden", paddingTop: barVisible ? BAR_HEIGHT : 0 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;800&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -341,8 +347,8 @@ export default function ExamplesPage() {
       `}</style>
 
       <Grain />
-      <AnnouncementBar />
-      <Navbar />
+      {barVisible && <AnnouncementBar onDismiss={dismissBar} />}
+      <Navbar topOffset={barVisible ? BAR_HEIGHT : 0} />
 
       {/* ═══ HERO ═══ */}
       <section style={{
