@@ -309,7 +309,7 @@ function AnnouncementBar() {
         color: "#B8860B", textDecoration: "none", letterSpacing: "0.02em",
         display: "inline-flex", alignItems: "center", gap: 6,
       }}>
-        Founding Local: £100 setup + £50/mo for the first 10 local businesses — places left
+        Founding Local: £100 setup + £50/mo — 10 of 10 places remaining
         <span aria-hidden="true" style={{ fontSize: 14 }}>→</span>
       </a>
       <button onClick={() => { setDismissed(true); try { localStorage.setItem("fl-banner-dismissed", "1"); } catch {} }} style={{
