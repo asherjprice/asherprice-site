@@ -8,13 +8,13 @@
     <link rel="canonical" href="https://asherprice.co.uk/why-a-website.html" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <title>Why Your Business Needs a Website in 2026 | Asher Price, Blackwood</title>
-    <meta name="description" content="If you're a local business relying on Facebook alone, you're invisible to most of your customers. Here's the real cost of not having a website — and what it fixes." />
+    <title>Why Your Business Needs a Website in 2026 | Asher Price</title>
+    <meta name="description" content="If you're a local business in South Wales relying on Facebook alone, you're invisible to most of your customers. Here's the real cost of not having a website — and what it fixes." />
     <meta name="author" content="Asher Price" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="theme-color" content="#08090B" />
     <meta name="geo.region" content="GB-CAY" />
     <meta name="geo.placename" content="Blackwood, Caerphilly" />
 
@@ -36,7 +36,7 @@
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": "Why Your Business Needs a Website in 2026",
-      "description": "The real cost of relying on Facebook alone — and what a website fixes for local businesses in South Wales.",
+      "description": "The real cost of relying on Facebook alone — and what a website fixes for local businesses in Blackwood, the Valleys and South Wales.",
       "author": { "@type": "Person", "name": "Asher Price" },
       "publisher": {
         "@type": "Organization",
@@ -51,89 +51,145 @@
 
     <style>
       :root {
-        --black: #0A0A0A;
-        --dark: #111111;
-        --card: #161616;
-        --border: #242424;
-        --red: #D93D3D;
-        --gold: #E8B84A;
+        --bg: #08090B;
+        --bg2: #0C0D10;
+        --card: #101218;
+        --card2: #14161D;
+        --border: #1B1E26;
+        --border2: #252830;
+        --red: #C8102E;
+        --redHov: #E01A38;
+        --redFaint: rgba(200,16,46,0.06);
+        --green: #1B6B3A;
+        --greenFaint: rgba(27,107,58,0.08);
         --cream: #F5F0E8;
-        --text: #E8E4DC;
-        --text2: #A09888;
-        --text3: #6B6358;
+        --t1: #E8E4DC;
+        --t2: #A09888;
+        --t3: #6B6358;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html { scroll-behavior: smooth; }
-      body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--text); -webkit-font-smoothing: antialiased; line-height: 1.6; }
-      ::selection { background: rgba(232,184,74,0.35); color: var(--cream); }
-      a { color: var(--gold); }
+      body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--t1); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+      ::selection { background: rgba(200,16,46,0.35); color: #fff; }
+      a { color: var(--red); }
 
       .wrap { max-width: 780px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 40px); }
 
       /* NAV */
-      .topnav { padding: 24px clamp(20px,5vw,40px); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-      .topnav .brand { font-family: 'DM Serif Display', serif; color: var(--cream); font-size: 20px; text-decoration: none; }
-      .topnav .brand em { color: var(--gold); font-style: italic; }
-      .topnav .back { font-size: 13px; color: var(--text2); text-decoration: none; letter-spacing: 0.05em; }
-      .topnav .back:hover { color: var(--gold); }
+      .topnav { padding: 0 clamp(24px,6vw,72px); height: 76px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+      .topnav .brand-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+      .topnav .ap-mark { width: 36px; height: 36px; border: 2px solid var(--red); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 800; color: var(--t1); letter-spacing: 1.5px; }
+      .topnav .brand-row { display: flex; align-items: center; gap: 10px; }
+      .topnav .brand-name { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 800; color: var(--t1); letter-spacing: -0.02em; }
+      .topnav .divider { width: 1px; height: 16px; background: var(--border2); display: inline-block; }
+      .topnav .eyebrow-tag { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600; color: var(--t3); letter-spacing: 0.15em; text-transform: uppercase; }
+      .topnav .back { font-size: 13px; color: var(--t2); text-decoration: none; letter-spacing: 0.05em; transition: color 0.3s; }
+      .topnav .back:hover { color: var(--red); }
+      @media(max-width:520px) { .topnav .eyebrow-tag, .topnav .divider { display: none; } }
 
       /* HERO */
       .hero { padding: clamp(80px, 14vw, 160px) 0 clamp(60px, 10vw, 100px); border-bottom: 1px solid var(--border); }
       .hero .eyebrow { font-size: 12px; font-weight: 600; color: var(--red); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 24px; }
-      .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(40px, 7vw, 72px); color: var(--cream); line-height: 1.05; margin-bottom: 28px; }
-      .hero h1 em { font-style: italic; color: var(--gold); }
-      .hero .lead { font-size: clamp(17px, 2vw, 20px); color: var(--text2); max-width: 620px; line-height: 1.55; }
+      .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(40px, 7vw, 72px); color: var(--cream); line-height: 1.05; margin-bottom: 28px; font-weight: 700; }
+      .hero h1 em { font-style: italic; color: var(--red); }
+      .hero .lead { font-size: clamp(17px, 2vw, 20px); color: var(--t2); max-width: 620px; line-height: 1.55; }
 
       /* CONTENT */
       section.body { padding: clamp(60px, 10vw, 100px) 0; border-bottom: 1px solid var(--border); }
-      section.body h2 { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4.5vw, 42px); color: var(--cream); line-height: 1.15; margin-bottom: 24px; }
-      section.body h2 em { color: var(--gold); font-style: italic; }
-      section.body h3 { font-family: 'DM Serif Display', serif; font-size: clamp(20px, 2.5vw, 24px); color: var(--cream); margin: 36px 0 12px; }
-      section.body p { font-size: 16px; color: var(--text2); margin-bottom: 18px; }
-      section.body p strong { color: var(--text); font-weight: 600; }
+      section.body h2 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4.5vw, 42px); color: var(--cream); line-height: 1.15; margin-bottom: 24px; font-weight: 700; }
+      section.body h2 em { color: var(--red); font-style: italic; }
+      section.body h3 { font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.5vw, 24px); color: var(--cream); margin: 36px 0 12px; font-weight: 600; }
+      section.body p { font-size: 16px; color: var(--t2); margin-bottom: 18px; }
+      section.body p strong { color: var(--t1); font-weight: 600; }
       section.body ul { list-style: none; padding: 0; margin: 20px 0; }
-      section.body ul li { position: relative; padding: 10px 0 10px 28px; color: var(--text2); font-size: 16px; border-bottom: 1px solid var(--border); }
+      section.body ul li { position: relative; padding: 10px 0 10px 28px; color: var(--t2); font-size: 16px; border-bottom: 1px solid var(--border); }
       section.body ul li:last-child { border: none; }
-      section.body ul li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-weight: 600; }
+      section.body ul li::before { content: '→'; position: absolute; left: 0; color: var(--red); font-weight: 600; }
 
       /* STAT CALLOUT */
-      .stat { margin: 40px 0; padding: 32px; background: var(--dark); border-left: 3px solid var(--gold); }
-      .stat .big { font-family: 'DM Serif Display', serif; font-size: clamp(36px, 6vw, 56px); color: var(--gold); line-height: 1; margin-bottom: 10px; }
-      .stat .label { font-size: 14px; color: var(--text); font-weight: 500; margin-bottom: 8px; }
-      .stat .source { font-size: 12px; color: var(--text3); }
+      .stat { margin: 40px 0; padding: 32px; background: var(--bg2); border-left: 3px solid var(--red); }
+      .stat .big { font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 56px); color: var(--red); line-height: 1; margin-bottom: 10px; font-weight: 800; }
+      .stat .label { font-size: 14px; color: var(--t1); font-weight: 500; margin-bottom: 8px; }
+      .stat .source { font-size: 12px; color: var(--t3); }
 
       /* PULL QUOTE */
-      .pullquote { margin: 40px 0; padding: 28px 32px; font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3vw, 28px); color: var(--cream); line-height: 1.35; border-left: 3px solid var(--red); }
+      .pullquote { margin: 40px 0; padding: 28px 32px; font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(20px, 3vw, 28px); color: var(--cream); line-height: 1.35; border-left: 3px solid var(--green); font-weight: 500; }
 
       /* COMPARE TABLE */
-      .compare { margin: 32px 0; border: 1px solid var(--border); }
-      .compare-row { display: grid; grid-template-columns: 1fr 1fr 1fr; font-size: 14px; }
-      .compare-row.head { background: var(--dark); font-weight: 600; color: var(--cream); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
-      .compare-row > div { padding: 16px 18px; border-bottom: 1px solid var(--border); }
+      .compare { margin: 32px 0; border: 1px solid var(--border); background: var(--card); }
+      .compare-row { display: grid; grid-template-columns: 1.1fr 1fr 1fr; font-size: 14px; }
+      .compare-row.head { background: var(--bg2); font-weight: 700; color: var(--cream); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+      .compare-row.head > div { padding: 18px 20px; }
+      .compare-row > div { padding: 20px; border-bottom: 1px solid var(--border); }
       .compare-row:last-child > div { border-bottom: none; }
       .compare-row > div + div { border-left: 1px solid var(--border); }
-      .compare-row .yes { color: var(--gold); }
-      .compare-row .no { color: var(--red); opacity: 0.85; }
-      @media(max-width:640px) { .compare-row { grid-template-columns: 1.2fr 1fr 1fr; font-size: 13px; } }
+      .compare-row .label-col { color: var(--t1); font-weight: 600; }
+      .compare-row .label-col .sub { display: block; color: var(--t3); font-size: 12px; font-weight: 400; margin-top: 4px; line-height: 1.4; }
+      .compare-row .verdict { font-weight: 600; margin-bottom: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+      .compare-row .verdict.yes { color: var(--green); }
+      .compare-row .verdict.no { color: var(--red); opacity: 0.9; }
+      .compare-row .detail { color: var(--t2); font-size: 13px; line-height: 1.5; }
+      @media(max-width:720px) {
+        .compare-row { grid-template-columns: 1fr; }
+        .compare-row > div + div { border-left: none; border-top: 1px solid var(--border); }
+        .compare-row.head { display: none; }
+        .compare-row .label-col { background: var(--bg2); }
+        .compare-row .fb-col::before { content: 'Facebook only — '; color: var(--t3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px; }
+        .compare-row .web-col::before { content: 'Your own website — '; color: var(--t3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px; }
+      }
+
+      /* FORM */
+      .form-block { margin-top: 48px; text-align: left; }
+      .form-grid { display: flex; flex-direction: column; gap: 14px; }
+      .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      @media(max-width:560px) { .form-row-2 { grid-template-columns: 1fr; } }
+      .form-block input, .form-block textarea {
+        background: var(--card); border: 1px solid var(--border); color: var(--t1);
+        font-family: 'Inter', sans-serif; font-size: 15px; padding: 16px 20px;
+        outline: none; transition: border-color 0.3s, box-shadow 0.3s; width: 100%;
+      }
+      .form-block input:focus, .form-block textarea:focus { border-color: var(--red); box-shadow: 0 0 18px var(--redFaint); }
+      .form-block textarea { resize: vertical; min-height: 120px; }
+      .form-block input::placeholder, .form-block textarea::placeholder { color: var(--t3); }
+      .form-submit {
+        padding: 18px 36px; background: var(--red); color: #fff; font-family: 'Inter', sans-serif;
+        font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+        border: none; cursor: pointer; margin-top: 6px; transition: all 0.3s;
+        box-shadow: 0 4px 30px rgba(200,16,46,0.2);
+      }
+      .form-submit:hover { background: var(--redHov); transform: translateY(-2px); box-shadow: 0 8px 40px rgba(200,16,46,0.3); }
+      .form-submit:disabled { opacity: 0.6; cursor: default; transform: none; }
+      .form-success { padding: 40px; background: var(--card); border: 1px solid var(--border); border-top: 3px solid var(--green); text-align: center; }
+      .form-success .check { font-size: 36px; color: var(--green); margin-bottom: 16px; }
+      .form-success h3 { font-family: 'Playfair Display', serif; color: var(--cream); margin-bottom: 8px; }
+      .form-success p { color: var(--t2); font-size: 15px; }
 
       /* CTA */
-      .cta { padding: clamp(80px, 12vw, 120px) 0; text-align: center; }
-      .cta h2 { font-family: 'DM Serif Display', serif; font-size: clamp(32px, 5vw, 48px); color: var(--cream); line-height: 1.1; margin-bottom: 18px; }
-      .cta h2 em { color: var(--gold); font-style: italic; }
-      .cta p { font-size: 16px; color: var(--text2); max-width: 540px; margin: 0 auto 32px; }
-      .cta-btn { display: inline-block; padding: 18px 40px; background: var(--gold); color: var(--black); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; }
-      .cta-btn:hover { background: #f0c75a; transform: translateY(-2px); }
-      .cta .sub { margin-top: 20px; font-size: 13px; color: var(--text3); }
+      .cta { padding: clamp(80px, 12vw, 120px) 0; }
+      .cta-inner { max-width: 620px; margin: 0 auto; text-align: center; }
+      .cta h2 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 48px); color: var(--cream); line-height: 1.1; margin-bottom: 18px; font-weight: 700; }
+      .cta h2 em { color: var(--red); font-style: italic; }
+      .cta .lead-p { font-size: 16px; color: var(--t2); margin: 0 auto 8px; }
+      .cta .sub { margin-top: 24px; font-size: 13px; color: var(--t3); }
+      .cta .sub a { color: var(--red); text-decoration: none; }
+      .cta .sub a:hover { text-decoration: underline; }
 
       /* FOOTER */
-      footer { padding: 40px clamp(20px,5vw,40px); border-top: 1px solid var(--border); text-align: center; font-size: 13px; color: var(--text3); }
-      footer a { color: var(--gold); text-decoration: none; }
+      footer { padding: 40px clamp(20px,5vw,40px); border-top: 1px solid var(--border); text-align: center; font-size: 13px; color: var(--t3); }
+      footer a { color: var(--red); text-decoration: none; }
     </style>
   </head>
   <body>
 
     <nav class="topnav">
-      <a class="brand" href="/">Asher <em>Price</em></a>
+      <a class="brand-wrap" href="/">
+        <div class="ap-mark">AP</div>
+        <div class="brand-row">
+          <span class="brand-name">Asher Price</span>
+          <span class="divider"></span>
+          <span class="eyebrow-tag">AI &amp; Web</span>
+        </div>
+      </a>
       <a class="back" href="/">← Back to home</a>
     </nav>
 
@@ -141,14 +197,14 @@
       <div class="wrap">
         <div class="eyebrow">The honest truth</div>
         <h1>If Google can't <em>find you</em>, neither can your next customer.</h1>
-        <p class="lead">Most local businesses in Blackwood — the pubs, cafés, barbers, takeaways — are running on a Facebook page and a prayer. It's not lazy. It's just how things happened. But it's costing you customers every single day, and here's exactly how.</p>
+        <p class="lead">Most local businesses across Blackwood, the Valleys and South Wales — the pubs, cafés, barbers, takeaways — are running on a Facebook page and a prayer. It's not lazy. It's just how things happened. But it's costing you customers every single day, and here's exactly how.</p>
       </div>
     </section>
 
     <section class="body">
       <div class="wrap">
         <h2>Your customers aren't scrolling <em>Facebook</em> to find you. They're searching Google.</h2>
-        <p>When someone moves to Blackwood, visits for the weekend, or just fancies a pint after work, they don't open Facebook and type "pub near me". They open Google. And whoever Google decides to show first is the business that gets the walk-in.</p>
+        <p>When someone moves to the area, visits for the weekend, or just fancies a pint after work, they don't open Facebook and type "pub near me". They open Google. And whoever Google decides to show first is the business that gets the walk-in.</p>
 
         <div class="stat">
           <div class="big">46%</div>
@@ -162,14 +218,14 @@
           <div class="source">— Think with Google</div>
         </div>
 
-        <p>Those aren't vanity numbers. That's your Friday night trade, your Saturday coffee rush, your walk-in haircut. It's happening every day on the High Street. The only question is whether <strong>you're</strong> the one Google shows them.</p>
+        <p>Those aren't vanity numbers. That's your Friday night trade, your Saturday coffee rush, your walk-in haircut. It's happening every day on every High Street in South Wales. The only question is whether <strong>you're</strong> the one Google shows them.</p>
       </div>
     </section>
 
     <section class="body">
       <div class="wrap">
         <h2>"But we have a <em>Facebook page.</em>"</h2>
-        <p>Right — and so does everyone else. The problem isn't that Facebook is bad. It's that Facebook was never designed to be the front door of your business, and Google treats it exactly that way.</p>
+        <p>Right — and so does everyone else. The problem isn't that Facebook is bad. It's that Facebook was never designed to be the front door of your business, and Google treats it exactly that way. Here's the honest side-by-side.</p>
 
         <div class="compare">
           <div class="compare-row head">
@@ -177,34 +233,77 @@
             <div>Facebook only</div>
             <div>Your own website</div>
           </div>
+
           <div class="compare-row">
-            <div>Ranks in Google search</div>
-            <div class="no">Barely</div>
-            <div class="yes">Yes, for local terms</div>
+            <div class="label-col">Shows up in Google search
+              <span class="sub">When someone types "barber in Blackwood" or "pub near me"</span>
+            </div>
+            <div class="fb-col">
+              <div class="verdict no">Barely</div>
+              <div class="detail">Facebook pages occasionally show up for a direct name search, but almost never rank for the phrases people actually type — like "Italian restaurant Caerphilly" or "best coffee in the Valleys". Google prefers real websites it can read and understand.</div>
+            </div>
+            <div class="web-col">
+              <div class="verdict yes">Yes — and for local terms</div>
+              <div class="detail">A proper website, structured correctly, is designed to be found on Google for the services you offer in the places you serve. That's how you end up on the first page when someone's deciding where to spend their money tonight.</div>
+            </div>
           </div>
+
           <div class="compare-row">
-            <div>You own the audience</div>
-            <div class="no">No — FB owns them</div>
-            <div class="yes">Yes</div>
+            <div class="label-col">Who owns the audience
+              <span class="sub">If the platform disappeared tomorrow, what's left?</span>
+            </div>
+            <div class="fb-col">
+              <div class="verdict no">Facebook does, not you</div>
+              <div class="detail">Your followers are Meta's users — they can throttle your reach, suspend your page, or change the rules overnight. Pages have been disabled by mistake with no warning and no easy recovery. You're a tenant, not the landlord.</div>
+            </div>
+            <div class="web-col">
+              <div class="verdict yes">You do — fully</div>
+              <div class="detail">Your own domain, your own content, your own visitor data. No one can take it away, suspend it, or change the reach rules. It's yours for as long as you want it, and every visit adds to an asset you actually own.</div>
+            </div>
           </div>
+
           <div class="compare-row">
-            <div>Posts reach your followers</div>
-            <div class="no">~2–5% organically</div>
-            <div class="yes">100% of visitors</div>
+            <div class="label-col">How many followers see your posts
+              <span class="sub">You post "live music this Saturday" — who actually sees it?</span>
+            </div>
+            <div class="fb-col">
+              <div class="verdict no">~2–5% organically</div>
+              <div class="detail">Facebook's algorithm only shows a typical organic post to a tiny slice of the people who already follow you. The other 95% miss it unless they happen to open the app at the exact right moment, or unless you pay to boost the post.</div>
+            </div>
+            <div class="web-col">
+              <div class="verdict yes">100% of every visitor</div>
+              <div class="detail">Anyone who lands on your website sees exactly what you want them to see — your events, your menu, your hours, your offers. No algorithm hiding it, no "boost this post for £20" pop-ups. What's on your site is what they read.</div>
+            </div>
           </div>
+
           <div class="compare-row">
-            <div>Info stays findable</div>
-            <div class="no">Buried in feed</div>
-            <div class="yes">Always one click</div>
+            <div class="label-col">Keeping important info findable
+              <span class="sub">New customer wants your menu, opening hours, prices</span>
+            </div>
+            <div class="fb-col">
+              <div class="verdict no">Buried under the feed</div>
+              <div class="detail">Your menu from three weeks ago is now four hundred posts down. Your opening hours are in the "About" tab most people never click. Customers end up messaging you to ask questions they shouldn't need to ask — or, more often, they just pick a competitor.</div>
+            </div>
+            <div class="web-col">
+              <div class="verdict yes">Always one click away</div>
+              <div class="detail">Menu, prices, hours, team, location, booking — each on their own page, clearly labelled, updated when things change. No scrolling, no guessing. Customers self-serve the answers instead of clogging up your inbox.</div>
+            </div>
           </div>
+
           <div class="compare-row">
-            <div>Builds Google trust signals</div>
-            <div class="no">No</div>
-            <div class="yes">Yes, compounding</div>
+            <div class="label-col">Building long-term Google trust
+              <span class="sub">Does it get better over time, or stay flat?</span>
+            </div>
+            <div class="fb-col">
+              <div class="verdict no">It doesn't compound</div>
+              <div class="detail">A Facebook page five years old ranks roughly the same as one five months old. Each post is a spike that fades within days. You're running on a treadmill — as soon as you stop posting, everything goes quiet again.</div>
+            </div>
+            <div class="web-col">
+              <div class="verdict yes">Compounds every month</div>
+              <div class="detail">Google rewards sites that have been around, are regularly updated, and get mentioned across the web. A website launched today is worth more in six months, and more still in twelve. Every week it's live is a week your ranking gets harder to beat.</div>
+            </div>
           </div>
         </div>
-
-        <p>Facebook's own algorithm only shows your post to roughly 2–5% of the people who follow you. The other 95% won't see that you've got live music on Saturday unless they happen to open the app at the exact right moment. A website isn't bound by an algorithm. When someone searches, it's there.</p>
 
         <div class="pullquote">"We already have a Facebook page" is the exact reason your competitor is outranking you — because they have one <em>and</em> a website.</div>
       </div>
@@ -215,7 +314,7 @@
         <h2>What a website <em>actually</em> does for a business like yours.</h2>
 
         <h3>1. It puts you on the map — literally.</h3>
-        <p>A proper website, paired with your Google Business Profile, is what tells Google "this is a real local business, here's what we do, here's where we are". That's what gets you into the map pack at the top of search — the three businesses shown with stars and directions. That's prime real estate, and it's earned, not bought.</p>
+        <p>A proper website is what tells Google "this is a real local business, here's what we do, here's where we are". Paired with your Google listing, that's what gets you into the map pack at the top of search — the three businesses shown with stars and directions. That's prime real estate, and it's earned, not bought.</p>
 
         <h3>2. It works while you sleep.</h3>
         <p>At 11pm on a Tuesday, someone's deciding where to go on Friday. Your Facebook is offline in their head. Your website isn't. It tells them you're open, what's on, how to find you, what you serve — without you lifting a finger.</p>
@@ -240,45 +339,87 @@
       <div class="wrap">
         <h2>A real example — <em>from down the road.</em></h2>
         <p>Before April 2026, if you searched "pub in Blackwood" on Google, The Westgate Bar — a proper local pub on the High Street, open every day, with regulars who've been going for years — was buried underneath pubs that aren't even in Blackwood. Places in the surrounding villages were ranking higher than an actual High Street local, purely because those places had websites and The Westgate didn't.</p>
-        <p>We launched <a href="https://westgateblackwood.co.uk" target="_blank">westgateblackwood.co.uk</a> in April 2026. Clean, fast, mobile-first, built with local SEO in mind from day one. Now they've got:</p>
+        <p>We launched <a href="https://westgateblackwood.co.uk" target="_blank" rel="noopener">westgateblackwood.co.uk</a> in April 2026. Clean, fast, mobile-first, built with local SEO in mind from day one. Since then:</p>
         <ul>
-          <li>A Google-indexable source of truth for their events, team, and opening hours</li>
-          <li>A Google Business Profile connected to a real website (a key trust signal)</li>
-          <li>A page that will climb the rankings every month from here on</li>
-          <li>A shareable link they can use in every future Facebook post</li>
+          <li>Their Google listing now links to a real website — a key trust signal they didn't have before</li>
+          <li>They're already climbing the Google rankings for local searches thanks to on-page SEO done properly from launch</li>
+          <li>Their events, team, and opening hours live in one place that won't scroll away tomorrow</li>
+          <li>They've got a shareable link for every Facebook post, poster, and flyer going forward</li>
+          <li>And the site will keep gaining authority every month it's live — the work done now pays compounding interest</li>
         </ul>
-        <p>And they paid £100 up front with £50 a month for hosting, care, and updates. No six-month contract, no surprise invoices, no agency overhead.</p>
-      </div>
-    </section>
-
-    <section class="body">
-      <div class="wrap">
-        <h2>So what do <em>you</em> actually get?</h2>
-        <p>When you work with me you're not buying a template off a marketplace or a £2,000 design that takes four months. You're getting a handmade website, built locally, launched in days not weeks, and maintained month-to-month.</p>
-        <ul>
-          <li>A proper custom website on your own domain</li>
-          <li>Mobile-first, fast, built the way Google likes (real SEO, not a checkbox)</li>
-          <li>Google Business Profile set up and linked</li>
-          <li>Sitemap submitted to Google and Bing so you get indexed</li>
-          <li>Hosting, security, backups, and updates handled every month</li>
-          <li>Small tweaks included — new events, new photos, changed hours</li>
-          <li>Direct line to me, not a ticket queue</li>
-        </ul>
-        <p>The Founding Local tier is <strong>£100 upfront</strong> and <strong>£50 a month</strong>, and it's capped at the first 10 Blackwood businesses — so the price stays fair and I can actually look after everyone properly.</p>
+        <p>That's the difference. Same pub, same regulars, same beer — but now findable by the people who don't know it exists yet.</p>
       </div>
     </section>
 
     <section class="cta">
-      <div class="wrap">
+      <div class="wrap cta-inner">
         <h2>Stop being <em>invisible.</em></h2>
-        <p>If you've read this far, you already know it's time. Message me on Facebook or drop an email and I'll show you what your site could look like — no obligation, no hard sell.</p>
-        <a class="cta-btn" href="mailto:hello@asherprice.co.uk">Start the conversation</a>
-        <div class="sub">Or call / message via <a href="https://www.facebook.com/asherpricedigital" target="_blank">Facebook</a></div>
+        <p class="lead-p">If you've read this far, you already know it's time. Drop your details below and I'll show you what your site could look like — no obligation, no hard sell.</p>
+
+        <div class="form-block" id="form-block">
+          <div class="form-grid" id="form-grid">
+            <div class="form-row-2">
+              <input id="f-name" placeholder="Your name" />
+              <input id="f-biz" placeholder="Business name" />
+            </div>
+            <div class="form-row-2">
+              <input id="f-email" placeholder="Email address" type="email" />
+              <input id="f-phone" placeholder="Phone number" />
+            </div>
+            <input id="f-website" placeholder="Website or Facebook page (optional)" />
+            <textarea id="f-msg" placeholder="Tell me about your business and what you need..." rows="5"></textarea>
+            <button id="f-submit" class="form-submit">Send message</button>
+          </div>
+          <div id="form-success" class="form-success" style="display:none;">
+            <div class="check">✓</div>
+            <h3>Message received — diolch!</h3>
+            <p>I'll get back to you within 24 hours.</p>
+          </div>
+        </div>
+
+        <div class="sub">Or call / message via <a href="https://www.facebook.com/asherprice.uk/" target="_blank" rel="noopener">Facebook</a></div>
       </div>
     </section>
 
     <footer>
-      <p>© 2026 <a href="/">Asher Price</a> · Blackwood, South Wales · Websites &amp; AI tools for local businesses</p>
+      <p>© 2026 <a href="/">Asher Price</a> · Blackwood, the Valleys &amp; South Wales · Websites &amp; AI tools for local businesses</p>
     </footer>
+
+    <script>
+      (function () {
+        var btn = document.getElementById('f-submit');
+        btn.addEventListener('click', async function () {
+          var name = document.getElementById('f-name').value.trim();
+          var biz = document.getElementById('f-biz').value.trim();
+          var email = document.getElementById('f-email').value.trim();
+          var phone = document.getElementById('f-phone').value.trim();
+          var website = document.getElementById('f-website').value.trim();
+          var msg = document.getElementById('f-msg').value.trim();
+
+          if (!name || !biz || (!email && !phone) || !msg) {
+            alert('Please fill in your name, business, a way to reach you, and a short message.');
+            return;
+          }
+
+          btn.disabled = true;
+          btn.textContent = 'Sending...';
+          var contact = [email, phone].filter(Boolean).join(' | ');
+          try {
+            var res = await fetch('/api/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: name, business: biz, contact: contact, website: website, message: msg, source: 'why-a-website' })
+            });
+            if (!res.ok) throw new Error('failed');
+            document.getElementById('form-grid').style.display = 'none';
+            document.getElementById('form-success').style.display = 'block';
+          } catch (e) {
+            btn.disabled = false;
+            btn.textContent = 'Send message';
+            alert('Something went wrong. Please try again or email hello@asherprice.co.uk directly.');
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

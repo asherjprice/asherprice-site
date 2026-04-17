@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Nail Salon Demo — Asher Price</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#08090B;overflow:hidden;height:100vh;display:flex;flex-direction:column}
+.demo-frame{flex:1;border:none;width:100%}
+.demo-bar{
+  flex-shrink:0;padding:10px 24px;background:rgba(8,9,11,0.95);backdrop-filter:blur(16px);
+  border-top:1px solid #1B1E26;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Inter',sans-serif;gap:16px;flex-wrap:wrap;z-index:100;
+}
+.demo-bar .info{font-size:12px;color:#9B9DA4;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-bar .info strong{color:#F0EDEA;font-weight:600}
+.demo-bar .dot{width:4px;height:4px;border-radius:50%;background:#5C5F68;flex-shrink:0}
+.demo-bar .warn{font-size:11px;color:#5C5F68;font-style:italic}
+.demo-bar a{font-size:12px;font-weight:700;color:#C8102E;text-decoration:none;letter-spacing:0.06em;
+  text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;transition:color 0.3s;flex-shrink:0}
+.demo-bar a:hover{color:#E01A38}
+</style>
+</head>
+<body>
+<iframe class="demo-frame" src="site.html"></iframe>
+<div class="demo-bar">
+  <div class="info">
+    <strong>Demonstration site by Asher Price</strong>
+    <span class="dot"></span>
+    <span class="warn">Not a real business</span>
+  </div>
+  <a href="/examples">← Back to examples</a>
+</div>
+</body>
+</html>

@@ -1,4 +1,20 @@
+# robots.txt for https://asherprice.co.uk
 User-agent: *
+Allow: /
+Disallow: /blackwood-prospects.html
+Disallow: /valleys-prospects.html
+
+# AI crawlers — allow for citation visibility
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
 Allow: /
 
 Sitemap: https://asherprice.co.uk/sitemap.xml

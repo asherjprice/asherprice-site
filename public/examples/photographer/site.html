@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!-- SITE_META {"business_type":"photographer","name":"Huw Griffiths Photography","palette":{"primary":"#0f0f0f","accent":"#c7a770","bg":"#0f0f0f"},"features":["dark theme","image gallery"],"experimental":["horizontal film strip drag navigation","full-viewport panels","no vertical scroll"]} -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Huw Griffiths Photography</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#0f0f0f;--film:#1a1a1a;--perf:#0a0a0a;--gold:#c7a770;--cream:#e8dcc8;--grey:#555;--dim:#333}
+body{background:var(--black);color:var(--cream);font-family:'Inter',sans-serif;font-weight:300;
+  overflow:hidden;height:100vh;cursor:grab;user-select:none;-webkit-user-select:none}
+body.dragging{cursor:grabbing}
+
+/* FILM STRIP — horizontal scroll, full viewport panels */
+.strip{display:flex;height:100vh;width:max-content;transition:transform .5s cubic-bezier(.25,.46,.45,.94);will-change:transform}
+.strip.dragging{transition:none}
+
+/* Each frame */
+.frame{width:100vw;height:100vh;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* Film sprocket holes — top and bottom */
+.sprockets-top,.sprockets-bottom{position:fixed;left:0;right:0;height:24px;z-index:10;display:flex;
+  justify-content:space-around;align-items:center;pointer-events:none}
+.sprockets-top{top:0;background:var(--perf)}
+.sprockets-bottom{bottom:0;background:var(--perf)}
+.sprocket{width:14px;height:10px;background:var(--black);border-radius:2px;border:1px solid #222}
+
+/* Film edge borders */
+.strip::before,.strip::after{content:'';position:fixed;top:24px;width:2px;background:var(--dim);
+  height:calc(100vh - 48px);z-index:10;pointer-events:none}
+.strip::before{left:0}
+.strip::after{right:0}
+
+/* Frame counter — bottom corner */
+.frame-counter{position:fixed;bottom:30px;right:20px;font-size:.7rem;letter-spacing:.2em;
+  color:var(--gold);z-index:20;font-family:'Inter',sans-serif}
+
+/* NAV HINT */
+.nav-hint{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);font-size:.7rem;
+  color:var(--grey);z-index:20;letter-spacing:.1em;transition:opacity .5s}
+.nav-hint.hidden{opacity:0}
+
+/* NAV DOTS */
+.nav-dots{position:fixed;bottom:34px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:20}
+.ndot{width:8px;height:8px;border-radius:50%;background:var(--dim);cursor:pointer;transition:all .3s}
+.ndot.active{background:var(--gold);transform:scale(1.3)}
+
+/* === FRAME STYLES === */
+
+/* FRAME 1: Title */
+.f-title{flex-direction:column;text-align:center;background:var(--film)}
+.f-title h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,8vw,5rem);font-weight:400;
+  line-height:1;letter-spacing:-.02em}
+.f-title .sub{font-size:clamp(.8rem,2vw,1rem);color:var(--grey);letter-spacing:.3em;margin-top:1rem;text-transform:uppercase}
+.f-title .swipe{font-size:.8rem;color:var(--gold);margin-top:2rem;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* FRAME 2-5: Portfolio images */
+.f-portfolio{background:var(--film)}
+.f-portfolio .img-area{width:70vw;max-width:700px;height:65vh;border-radius:2px;position:relative}
+.f-portfolio .img-label{position:absolute;bottom:-2rem;left:0;right:0;text-align:center}
+.f-portfolio .img-label .title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--cream)}
+.f-portfolio .img-label .meta{font-size:.7rem;color:var(--grey);margin-top:.2rem}
+.bg1{background:linear-gradient(135deg,#2a1a08,#1a2a1a,#0a0a1a)}
+.bg2{background:linear-gradient(160deg,#1a0a1a,#0a1a2a,#1a1a0a)}
+.bg3{background:linear-gradient(120deg,#0a1a0a,#1a0a0a,#0a0a1a)}
+.bg4{background:linear-gradient(145deg,#1a1a2a,#2a1a1a,#0a1a0a)}
+
+/* FRAME 6: About */
+.f-about{flex-direction:column;text-align:center;background:var(--film);padding:2rem}
+.f-about h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:400;margin-bottom:1.5rem}
+.f-about p{max-width:500px;line-height:1.9;font-size:clamp(.85rem,2vw,1rem);color:var(--grey);margin-bottom:1rem}
+.f-about .sig{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--gold);margin-top:.5rem}
+
+/* FRAME 7: Services + Pricing */
+.f-services{flex-direction:column;text-align:center;background:var(--film);padding:2rem}
+.f-services h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:400;margin-bottom:1.5rem}
+.svc-grid{display:grid;grid-template-columns:1fr;gap:1rem;max-width:500px;width:100%}
+@media(min-width:500px){.svc-grid{grid-template-columns:1fr 1fr}}
+.svc{border:1px solid var(--dim);padding:1.2rem;text-align:left;border-radius:4px}
+.svc h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--cream);margin-bottom:.3rem}
+.svc p{font-size:.75rem;color:var(--grey);line-height:1.5}
+.svc .price{color:var(--gold);font-weight:400;font-size:.85rem;margin-top:.3rem;display:block}
+
+/* FRAME 8: Contact */
+.f-contact{flex-direction:column;text-align:center;background:var(--film);padding:2rem}
+.f-contact h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:400;margin-bottom:1.5rem}
+.f-contact .details{font-size:.9rem;color:var(--grey);line-height:2;margin-bottom:1.5rem}
+.f-contact .phone{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold)}
+.cf{max-width:400px;width:100%;text-align:left}
+.cf input,.cf textarea{width:100%;padding:.6rem;margin-bottom:.6rem;background:transparent;
+  border:1px solid var(--dim);color:var(--cream);font-family:'Inter',sans-serif;font-size:.85rem;border-radius:2px}
+.cf input:focus,.cf textarea:focus{border-color:var(--gold);outline:none}
+.cf textarea{height:70px;resize:vertical}
+.cf button{width:100%;padding:.7rem;background:var(--gold);color:var(--black);border:none;
+  font-family:'Playfair Display',serif;font-size:1rem;cursor:pointer;border-radius:2px}
+.cf .done{display:none;color:var(--gold);text-align:center;margin-top:.5rem;font-size:.9rem}
+</style>
+</head>
+<body>
+
+<!-- SPROCKET HOLES -->
+<div class="sprockets-top" id="spTop"></div>
+<div class="sprockets-bottom" id="spBot"></div>
+
+<div class="frame-counter" id="fc">01 / 08</div>
+<div class="nav-hint" id="hint">← drag or swipe →</div>
+<div class="nav-dots" id="navDots"></div>
+
+<!-- THE FILM STRIP -->
+<div class="strip" id="strip">
+
+  <!-- 1: TITLE -->
+  <div class="frame f-title">
+    <div>
+      <h1>Huw Griffiths</h1>
+      <div class="sub">Photography</div>
+      <div class="swipe">← swipe to browse →</div>
+    </div>
+  </div>
+
+  <!-- 2-5: PORTFOLIO -->
+  <div class="frame f-portfolio">
+    <div class="img-area bg1"><div class="img-label"><div class="title">Sophie & Rhys — Tredegar House</div><div class="meta">Wedding · September 2025</div></div></div>
+  </div>
+  <div class="frame f-portfolio">
+    <div class="img-area bg2"><div class="img-label"><div class="title">The Beacons at Dawn</div><div class="meta">Landscape · Brecon · January 2025</div></div></div>
+  </div>
+  <div class="frame f-portfolio">
+    <div class="img-area bg3"><div class="img-label"><div class="title">Griffiths Family — Bute Park</div><div class="meta">Family Portrait · Cardiff · March 2025</div></div></div>
+  </div>
+  <div class="frame f-portfolio">
+    <div class="img-area bg4"><div class="img-label"><div class="title">Valley Rugby RFC — Team Shoot</div><div class="meta">Commercial · Pontypridd · August 2025</div></div></div>
+  </div>
+
+  <!-- 6: ABOUT -->
+  <div class="frame f-about">
+    <h2>About</h2>
+    <p>I'm Huw — based in Pontypridd, shooting across South Wales. I've been behind a camera since I was 14, studying photography at USW, and working professionally since 2016. I shoot weddings, portraits, landscapes, and commercial work.</p>
+    <p>My approach is simple: natural light where possible, real moments over posed ones, and images that feel like the day felt — not like a catalogue. I deliver every gallery within 14 days, fully edited, no watermarks, full print rights.</p>
+    <div class="sig">— Huw</div>
+  </div>
+
+  <!-- 7: SERVICES -->
+  <div class="frame f-services">
+    <h2>Packages</h2>
+    <div class="svc-grid">
+      <div class="svc"><h3>Weddings</h3><p>Full day coverage, 400+ edited images, online gallery, USB delivery.</p><span class="price">From £950</span></div>
+      <div class="svc"><h3>Portraits</h3><p>1-hour session, 30+ edited images, indoor or outdoor, families & individuals.</p><span class="price">From £150</span></div>
+      <div class="svc"><h3>Commercial</h3><p>Product, headshots, interiors, events. Half-day or full-day rates.</p><span class="price">From £300</span></div>
+      <div class="svc"><h3>Landscapes</h3><p>Fine art prints of Welsh landscapes. Available framed or as canvas. See portfolio.</p><span class="price">From £45</span></div>
+    </div>
+  </div>
+
+  <!-- 8: CONTACT -->
+  <div class="frame f-contact">
+    <h2>Get in Touch</h2>
+    <div class="details">
+      Based in Pontypridd · Shoots across South Wales<br>
+      <span class="phone">07821 334 190</span><br>
+      huw@huwgriffithsphoto.co.uk
+    </div>
+    <form class="cf" onsubmit="event.preventDefault();this.querySelector('.done').style.display='block';this.querySelector('button').textContent='Sent ✓'">
+      <input type="text" placeholder="Your name" required>
+      <input type="email" placeholder="Email" required>
+      <input type="text" placeholder="What do you need? (wedding, portrait, etc.)">
+      <textarea placeholder="Any details — date, location, ideas?"></textarea>
+      <button type="submit">Send Enquiry</button>
+      <p class="done">Lovely — I'll get back to you within 24 hours. Looking forward to it.</p>
+    </form>
+  </div>
+
+</div>
+
+<script>
+// Generate sprocket holes
+const sp=12;for(let i=0;i<sp;i++){
+  document.getElementById('spTop').innerHTML+='<div class="sprocket"></div>';
+  document.getElementById('spBot').innerHTML+='<div class="sprocket"></div>'}
+
+const strip=document.getElementById('strip');
+const frames=document.querySelectorAll('.frame');
+const total=frames.length;
+let pos=0,startX=0,dragX=0,dragging=false,idx=0;
+
+// Nav dots
+const dotsEl=document.getElementById('navDots');
+for(let i=0;i<total;i++){const d=document.createElement('div');d.className='ndot'+(i===0?' active':'');
+  d.addEventListener('click',()=>goTo(i));dotsEl.appendChild(d)}
+
+function goTo(n){
+  idx=Math.max(0,Math.min(total-1,n));
+  pos=-idx*window.innerWidth;
+  strip.classList.remove('dragging');
+  strip.style.transform='translateX('+pos+'px)';
+  updateUI()}
+
+function updateUI(){
+  document.getElementById('fc').textContent=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+  document.querySelectorAll('.ndot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  if(idx>0)document.getElementById('hint').classList.add('hidden')}
+
+// DRAG / SWIPE
+strip.addEventListener('pointerdown',e=>{if(e.target.closest('input,textarea,button,select'))return;
+  dragging=true;startX=e.clientX;strip.classList.add('dragging');document.body.classList.add('dragging');
+  strip.setPointerCapture(e.pointerId)});
+strip.addEventListener('pointermove',e=>{if(!dragging)return;
+  dragX=e.clientX-startX;strip.style.transform='translateX('+(pos+dragX)+'px)'});
+strip.addEventListener('pointerup',e=>{if(!dragging)return;dragging=false;
+  document.body.classList.remove('dragging');
+  if(Math.abs(dragX)>60){dragX<0?idx=Math.min(total-1,idx+1):idx=Math.max(0,idx-1)}
+  pos=-idx*window.innerWidth;dragX=0;goTo(idx)});
+
+// Keyboard
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goTo(idx+1);if(e.key==='ArrowLeft')goTo(idx-1)});
+
+// Resize
+window.addEventListener('resize',()=>{pos=-idx*window.innerWidth;strip.style.transform='translateX('+pos+'px)'});
+</script>
+
+</body>
+</html>

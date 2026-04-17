@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!-- SITE_META {"business_type":"cafe","name":"Cwm Coffee Co.","palette":{"primary":"#2c1810","accent":"#c47a4a","bg":"#f5efe6"},"features":["dark theme","pricing table"],"experimental":["full-screen coffee configurator","animated cup layers","taste-matched menu"]} -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cwm Coffee Co. — Build Your Drink</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--dark:#2c1810;--mid:#6b4226;--warm:#c47a4a;--cream:#f5efe6;--light:#faf7f2;--espresso:#1a0e08;--milk:#f0e8d8;--mocha:#5a3a1e}
+body{background:var(--cream);color:var(--dark);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+
+/* THE APP — full viewport builder */
+.app{min-height:100vh;display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:700px){.app{grid-template-columns:1fr 320px;min-height:100vh}}
+
+/* LEFT: CUP DISPLAY */
+.cup-side{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem;background:var(--dark);color:var(--cream);position:relative;min-height:50vh}
+.brand{font-family:'DM Serif Display',serif;font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:.5rem;text-align:center}
+.brand small{display:block;font-family:'DM Sans',sans-serif;font-size:.7rem;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--warm);font-weight:400;margin-top:.3rem}
+
+/* THE CUP */
+.cup-wrap{position:relative;width:140px;height:200px;margin:1.5rem auto}
+.cup{width:120px;height:170px;background:var(--cream);border-radius:0 0 20px 20px;margin:0 auto;
+  position:relative;overflow:hidden;box-shadow:inset 0 0 20px rgba(0,0,0,.1)}
+.cup::before{content:'';position:absolute;top:-8px;left:-10px;right:-10px;height:16px;
+  background:var(--cream);border-radius:4px;z-index:5}
+/* Cup handle */
+.cup::after{content:'';position:absolute;right:-22px;top:30px;width:22px;height:50px;
+  border:4px solid var(--cream);border-left:none;border-radius:0 20px 20px 0}
+/* Liquid layers — fill from bottom */
+.layer{position:absolute;bottom:0;left:0;right:0;transition:height .5s cubic-bezier(.34,1.56,.64,1),background .3s}
+.layer-base{z-index:1}
+.layer-milk{z-index:2}
+.layer-top{z-index:3}
+/* Steam */
+.steam{position:absolute;top:-25px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+.steam span{width:4px;background:rgba(255,255,255,.15);border-radius:2px;
+  animation:steamUp 2s ease-in-out infinite}
+.steam span:nth-child(2){animation-delay:.3s;height:20px}
+.steam span:nth-child(1){animation-delay:.6s;height:15px}
+.steam span:nth-child(3){animation-delay:.1s;height:18px}
+@keyframes steamUp{0%,100%{height:15px;opacity:.3}50%{height:22px;opacity:.6}}
+
+/* PRICE + NAME */
+.drink-name{font-family:'DM Serif Display',serif;font-size:1.3rem;margin-top:1rem;text-align:center;min-height:1.5rem}
+.drink-price{font-size:1.8rem;font-weight:700;color:var(--warm);text-align:center;margin-top:.3rem;min-height:2rem}
+
+/* RIGHT: CONTROLS */
+.controls{padding:1.5rem;background:var(--light);overflow-y:auto;max-height:100vh}
+@media(max-width:699px){.controls{max-height:none}}
+.step{margin-bottom:1.5rem}
+.step-label{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:.6rem;font-weight:700}
+.options{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt{padding:.5rem 1rem;border:2px solid var(--milk);background:var(--cream);font-family:'DM Sans',sans-serif;
+  font-size:.85rem;cursor:pointer;transition:all .2s;border-radius:2rem;color:var(--dark)}
+.opt:hover,.opt:active{border-color:var(--warm)}
+.opt.sel{background:var(--dark);color:var(--cream);border-color:var(--dark)}
+.opt .extra-price{font-size:.7rem;opacity:.5;margin-left:.3rem}
+
+/* EXTRAS — toggles */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;
+  border-bottom:1px solid var(--milk)}
+.toggle-row span{font-size:.85rem}
+.toggle-row .tp{font-size:.7rem;color:var(--mid)}
+.tog{width:44px;height:24px;border-radius:12px;background:var(--milk);position:relative;cursor:pointer;
+  transition:background .2s;flex-shrink:0}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
+  background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.tog.on{background:var(--warm)}
+.tog.on::after{transform:translateX(20px)}
+
+/* ORDER BUTTON */
+.order-btn{width:100%;padding:.8rem;font-family:'DM Serif Display',serif;font-size:1.1rem;
+  background:var(--dark);color:var(--cream);border:none;cursor:pointer;margin-top:1rem;
+  transition:background .2s;border-radius:2rem}
+.order-btn:hover,.order-btn:active{background:var(--warm)}
+.order-result{display:none;text-align:center;padding:1rem;color:var(--warm);font-size:.9rem;line-height:1.6}
+
+/* BOTTOM SECTION — minimal info (not the focus) */
+.info-bar{background:var(--dark);color:var(--cream);padding:1.5rem 2rem;display:grid;
+  grid-template-columns:1fr;gap:1.5rem;font-size:.85rem;line-height:1.7}
+@media(min-width:600px){.info-bar{grid-template-columns:1fr 1fr 1fr}}
+.info-bar h3{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--warm);margin-bottom:.3rem}
+.info-bar p{opacity:.6}
+</style>
+</head>
+<body>
+
+<!-- THE APP -->
+<div class="app">
+  <!-- CUP DISPLAY -->
+  <div class="cup-side">
+    <div class="brand">Cwm Coffee Co.<small>Blackwood · Est. 2019</small></div>
+    <div class="cup-wrap">
+      <div class="cup">
+        <div class="steam"><span></span><span></span><span></span></div>
+        <div class="layer layer-base" id="lBase" style="height:0;background:var(--espresso)"></div>
+        <div class="layer layer-milk" id="lMilk" style="height:0;background:var(--milk)"></div>
+        <div class="layer layer-top" id="lTop" style="height:0;background:var(--warm)"></div>
+      </div>
+    </div>
+    <div class="drink-name" id="dName">Choose your drink</div>
+    <div class="drink-price" id="dPrice"></div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="step">
+      <div class="step-label">1. Base</div>
+      <div class="options" id="baseOpts">
+        <div class="opt" data-v="espresso" onclick="pick('base',this)">Espresso</div>
+        <div class="opt" data-v="americano" onclick="pick('base',this)">Americano</div>
+        <div class="opt" data-v="latte" onclick="pick('base',this)">Latte</div>
+        <div class="opt" data-v="cappuccino" onclick="pick('base',this)">Cappuccino</div>
+        <div class="opt" data-v="flatwhite" onclick="pick('base',this)">Flat White</div>
+        <div class="opt" data-v="mocha" onclick="pick('base',this)">Mocha</div>
+        <div class="opt" data-v="hotchoc" onclick="pick('base',this)">Hot Chocolate</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">2. Size</div>
+      <div class="options" id="sizeOpts">
+        <div class="opt" data-v="small" onclick="pick('size',this)">Small</div>
+        <div class="opt" data-v="regular" onclick="pick('size',this)">Regular<span class="extra-price">+40p</span></div>
+        <div class="opt" data-v="large" onclick="pick('size',this)">Large<span class="extra-price">+80p</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">3. Milk</div>
+      <div class="options" id="milkOpts">
+        <div class="opt" data-v="whole" onclick="pick('milk',this)">Whole</div>
+        <div class="opt" data-v="semi" onclick="pick('milk',this)">Semi</div>
+        <div class="opt" data-v="oat" onclick="pick('milk',this)">Oat<span class="extra-price">+30p</span></div>
+        <div class="opt" data-v="almond" onclick="pick('milk',this)">Almond<span class="extra-price">+30p</span></div>
+        <div class="opt" data-v="none" onclick="pick('milk',this)">Black</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">4. Extras</div>
+      <div class="toggle-row"><span>Extra shot <span class="tp">+50p</span></span><div class="tog" data-extra="shot" onclick="togExtra(this)"></div></div>
+      <div class="toggle-row"><span>Vanilla syrup <span class="tp">+40p</span></span><div class="tog" data-extra="vanilla" onclick="togExtra(this)"></div></div>
+      <div class="toggle-row"><span>Caramel syrup <span class="tp">+40p</span></span><div class="tog" data-extra="caramel" onclick="togExtra(this)"></div></div>
+      <div class="toggle-row"><span>Whipped cream <span class="tp">+30p</span></span><div class="tog" data-extra="cream" onclick="togExtra(this)"></div></div>
+      <div class="toggle-row"><span>Oat milk upgrade <span class="tp">+30p</span></span><div class="tog" data-extra="oatup" onclick="togExtra(this)"></div></div>
+    </div>
+
+    <button class="order-btn" onclick="doOrder()">That's my order →</button>
+    <div class="order-result" id="orderResult">
+      Lovely choice. Pop into Cwm Coffee on the high street and we'll have it ready. ☕<br>
+      <span style="font-size:.75rem;opacity:.5;margin-top:.5rem;display:block">42 High Street, Blackwood NP12 1BB · Open Mon–Sat 7am–5pm</span>
+    </div>
+  </div>
+</div>
+
+<!-- MINIMAL INFO BAR — not the main event -->
+<div class="info-bar">
+  <div>
+    <h3>Find Us</h3>
+    <p>42 High Street, Blackwood NP12 1BB<br>Opposite the Maxime Cinema</p>
+  </div>
+  <div>
+    <h3>Hours</h3>
+    <p>Mon–Fri: 7am – 5pm<br>Saturday: 8am – 4pm<br>Sunday: 9am – 2pm</p>
+  </div>
+  <div>
+    <h3>The Beans</h3>
+    <p>Roasted by Coaltown Coffee in Ammanford. Single origin and house blend rotated monthly. All ground fresh per cup.</p>
+  </div>
+</div>
+
+<script>
+const state={base:null,size:null,milk:null,extras:new Set()};
+const bases={espresso:{p:2.40,n:'Espresso',b:50,m:0,t:0,bc:'#1a0e08',mc:'',tc:''},
+  americano:{p:2.80,n:'Americano',b:30,m:0,t:40,bc:'#1a0e08',mc:'',tc:'#2a1810'},
+  latte:{p:3.20,n:'Latte',b:25,m:45,t:0,bc:'#1a0e08',mc:'#f0e8d8',tc:''},
+  cappuccino:{p:3.20,n:'Cappuccino',b:25,m:30,t:15,bc:'#1a0e08',mc:'#f0e8d8',tc:'#e8dcc8'},
+  flatwhite:{p:3.00,n:'Flat White',b:30,m:40,t:0,bc:'#1a0e08',mc:'#f0e8d8',tc:''},
+  mocha:{p:3.60,n:'Mocha',b:25,m:30,t:15,bc:'#3a1a0a',mc:'#f0e8d8',tc:'#5a3a1e'},
+  hotchoc:{p:3.20,n:'Hot Chocolate',b:0,m:60,t:10,bc:'#5a3a1e',mc:'#f0e8d8',tc:'#e8dcc8'}};
+const sizeMod={small:0,regular:.40,large:.80};
+const milkMod={whole:0,semi:0,oat:.30,almond:.30,none:0};
+const extraMod={shot:.50,vanilla:.40,caramel:.40,cream:.30,oatup:.30};
+
+function pick(cat,el){
+  state[cat]=el.dataset.v;
+  el.parentNode.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  render()}
+
+function togExtra(el){
+  el.classList.toggle('on');
+  const k=el.dataset.extra;
+  el.classList.contains('on')?state.extras.add(k):state.extras.delete(k);
+  render()}
+
+function render(){
+  const b=bases[state.base];
+  if(!b)return;
+  let price=b.p+(sizeMod[state.size]||0)+(milkMod[state.milk]||0);
+  state.extras.forEach(e=>price+=extraMod[e]||0);
+  const scale=state.size==='large'?1.15:state.size==='small'?.85:1;
+  document.getElementById('lBase').style.height=(b.b*scale)+'%';
+  document.getElementById('lBase').style.background=b.bc;
+  if(b.mc){document.getElementById('lMilk').style.height=(b.m*scale)+'%';document.getElementById('lMilk').style.background=b.mc}
+  else document.getElementById('lMilk').style.height='0';
+  if(b.tc){document.getElementById('lTop').style.height=(b.t*scale)+'%';document.getElementById('lTop').style.background=b.tc}
+  else document.getElementById('lTop').style.height='0';
+  let name=b.n;
+  if(state.size)name=(state.size==='small'?'Small ':'')+(state.size==='large'?'Large ':'')+b.n;
+  if(state.milk==='oat')name+=' (oat)';
+  if(state.milk==='almond')name+=' (almond)';
+  document.getElementById('dName').textContent=name;
+  document.getElementById('dPrice').textContent='£'+price.toFixed(2)}
+
+function doOrder(){
+  if(!state.base){document.getElementById('dName').textContent='Pick a drink first!';return}
+  document.querySelector('.order-btn').textContent='✓ Ordered';
+  document.getElementById('orderResult').style.display='block'}
+</script>
+
+</body>
+</html>

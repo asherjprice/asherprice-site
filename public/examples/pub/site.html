@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!-- SITE_META {"business_type":"pub","name":"The Colliers Arms","palette":{"primary":"#1a1008","accent":"#d4882b","bg":"#f4ead2"},"features":["opening hours widget","image gallery","testimonial section"],"experimental":["beer tap wall visualiser","pour animation"]} -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Colliers Arms — Craft Ale & Traditional Pub, Pontypool</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--wood:#1a1008;--amber:#d4882b;--cream:#f4ead2;--red:#6b1a1a;--brass:#b8963e}
+body{font-family:'Lora',serif;background:var(--wood);color:var(--cream);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Bebas Neue',sans-serif;letter-spacing:.05em}
+.woodgrain{background:repeating-linear-gradient(90deg,#1a1008 0,#1e1309 2px,#1a1008 4px,#211710 6px,#1a1008 8px),linear-gradient(180deg,#1a1008,#221a0f)}
+
+/* HEADER / HERO */
+header{text-align:center;padding:3rem 1rem 2rem;background:linear-gradient(180deg,#0d0804,#1a1008 70%);border-bottom:3px solid var(--brass)}
+header .sign{display:inline-block;border:3px solid var(--brass);padding:1.5rem 2.5rem;position:relative;background:rgba(26,16,8,.9)}
+header .sign::before{content:'';position:absolute;inset:6px;border:1px solid var(--brass);pointer-events:none}
+header h1{font-size:clamp(2.2rem,6vw,4rem);color:var(--amber);text-shadow:2px 2px 4px #000;line-height:1}
+header .est{font-family:'Bebas Neue',sans-serif;color:var(--brass);font-size:1rem;letter-spacing:.3em;margin-top:.3rem}
+header .tagline{color:var(--cream);font-style:italic;margin-top:1rem;font-size:clamp(.9rem,2.5vw,1.1rem);opacity:.85}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem 1.5rem;padding:1rem;background:#0d0804;border-bottom:1px solid var(--brass)}
+nav a{color:var(--brass);text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.1em;padding:.3rem 0;border-bottom:2px solid transparent;transition:border-color .3s}
+nav a:hover,nav a:focus{border-color:var(--amber)}
+
+/* SECTIONS */
+section{padding:3rem 1rem;max-width:900px;margin:0 auto}
+.section-title{font-size:clamp(1.8rem,4vw,2.5rem);color:var(--amber);text-align:center;margin-bottom:.3rem}
+.section-sub{text-align:center;color:var(--brass);font-style:italic;margin-bottom:2rem;font-size:.95rem}
+.divider{width:60px;height:3px;background:var(--brass);margin:0 auto 2rem;border-radius:2px}
+
+/* TAP WALL */
+#tapwall{background:linear-gradient(180deg,#0d0804 0%,#1a1008 100%);max-width:100%;padding:3rem 1rem}
+.tap-row{display:flex;justify-content:center;gap:clamp(.8rem,3vw,2rem);flex-wrap:wrap;max-width:900px;margin:0 auto 1.5rem}
+.tap{cursor:pointer;display:flex;flex-direction:column;align-items:center;transition:transform .15s}
+.tap:active{transform:scale(.95)}
+.tap-handle{width:18px;height:55px;background:linear-gradient(90deg,#8b6914,var(--brass),#8b6914);border-radius:4px 4px 2px 2px;position:relative;border:1px solid #6b4f0e}
+.tap-handle::before{content:'';position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:24px;height:14px;background:linear-gradient(180deg,var(--brass),#8b6914);border-radius:6px 6px 2px 2px;border:1px solid #6b4f0e}
+.tap-handle::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:28px;height:8px;background:linear-gradient(180deg,#555,#333);border-radius:2px;border:1px solid #222}
+.tap-base{width:40px;height:12px;background:linear-gradient(180deg,#444,#222);border-radius:0 0 4px 4px;margin-top:6px}
+.tap-label{font-family:'Bebas Neue',sans-serif;font-size:.7rem;color:var(--cream);margin-top:.5rem;text-align:center;max-width:70px;line-height:1.1}
+.pour-glass{width:50px;height:70px;border:2px solid rgba(184,150,62,.4);border-top:none;border-radius:0 0 6px 6px;margin:1rem auto 0;position:relative;overflow:hidden;opacity:0;transition:opacity .3s}
+.pour-glass.active{opacity:1}
+.pour-fill{position:absolute;bottom:0;left:0;right:0;height:0;background:linear-gradient(180deg,#e8a830,#d4882b,#b36d1a);transition:height 1.2s ease-out}
+.pour-fill.filling{height:85%}
+.pour-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,.35);border-radius:50%}
+.tasting-card{max-width:400px;margin:1rem auto 0;background:var(--cream);color:var(--wood);padding:1.2rem 1.5rem;border-radius:6px;opacity:0;transform:rotateX(90deg);transition:opacity .5s .4s,transform .5s .4s;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,.5)}
+.tasting-card.show{opacity:1;transform:rotateX(0)}
+.tasting-card h3{font-size:1.6rem;color:var(--red);margin-bottom:.1rem}
+.tasting-card .brewery{color:var(--brass);font-style:italic;font-size:.9rem}
+.tasting-card .abv{font-family:'Bebas Neue',sans-serif;background:var(--red);color:var(--cream);display:inline-block;padding:.1rem .5rem;border-radius:3px;margin:.5rem 0;font-size:.95rem}
+.tasting-card .notes{font-size:.9rem;line-height:1.5;margin:.5rem 0;color:#333}
+.tasting-card .price{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--amber)}
+
+/* FOOD MENU */
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+.menu-item{border:1px solid var(--brass);padding:1rem;border-radius:4px;background:rgba(255,255,255,.03)}
+.menu-item h4{color:var(--amber);font-size:1.2rem}
+.menu-item .mprice{float:right;color:var(--brass);font-family:'Bebas Neue',sans-serif;font-size:1.2rem}
+.menu-item p{font-size:.85rem;color:rgba(244,234,210,.7);margin-top:.3rem;clear:both}
+
+/* EVENTS */
+.events-list{display:grid;gap:1rem}
+.event{display:flex;gap:1rem;align-items:flex-start;border-left:3px solid var(--amber);padding-left:1rem}
+.event-day{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--amber);min-width:90px}
+.event p{font-size:.9rem;color:rgba(244,234,210,.8)}
+.event h4{color:var(--cream);font-size:1rem;font-family:'Lora',serif;font-weight:700}
+
+/* ABOUT */
+.about-text{max-width:650px;margin:0 auto;font-size:.95rem;line-height:1.7;color:rgba(244,234,210,.85);text-align:center}
+.about-text em{color:var(--amber)}
+
+/* FIND US */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;text-align:center}
+.info-block h3{color:var(--amber);font-size:1.4rem;margin-bottom:.5rem}
+.info-block p{font-size:.9rem;line-height:1.6;color:rgba(244,234,210,.8)}
+.hours-table{text-align:left;margin:0 auto;font-size:.9rem}
+.hours-table td{padding:.15rem .8rem}
+.hours-table .day{color:var(--brass);font-weight:700}
+
+footer{text-align:center;padding:2rem 1rem;border-top:1px solid var(--brass);font-size:.8rem;color:rgba(244,234,210,.4);background:#0d0804}
+</style>
+</head>
+<body class="woodgrain">
+
+<header>
+  <div class="sign">
+    <h1>The Colliers Arms</h1>
+    <div class="est">Est. 1887 &bull; Pontypool, South Wales</div>
+  </div>
+  <p class="tagline">Proper pints. Proper people. Proper valleys welcome.</p>
+</header>
+<nav>
+  <a href="#tapwall">Tap Wall</a>
+  <a href="#food">Food</a>
+  <a href="#events">What's On</a>
+  <a href="#about">Our Story</a>
+  <a href="#findus">Find Us</a>
+</nav>
+
+<!-- TAP WALL -->
+<section id="tapwall">
+  <h2 class="section-title">The Tap Wall</h2>
+  <p class="section-sub">Tap a handle to pour &amp; see what's flowing</p>
+  <div class="divider"></div>
+  <div class="tap-row" id="taps"></div>
+  <div class="pour-glass" id="glass"><div class="pour-fill" id="pourFill"></div></div>
+  <div class="tasting-card" id="card"></div>
+</section>
+
+<!-- FOOD -->
+<section id="food">
+  <h2 class="section-title">From the Kitchen</h2>
+  <p class="section-sub">Hearty grub, no nonsense</p>
+  <div class="divider"></div>
+  <div class="menu-grid">
+    <div class="menu-item"><h4>Colliers Pie of the Day <span class="mprice">£9.50</span></h4><p>Proper shortcrust, chunky fill, buttered mash, mushy peas and gravy.</p></div>
+    <div class="menu-item"><h4>Welsh Rarebit <span class="mprice">£7.00</span></h4><p>Mature Caerphilly, ale mustard, Worcestershire — grilled on thick-cut toast.</p></div>
+    <div class="menu-item"><h4>Beer-Battered Cod &amp; Chips <span class="mprice">£11.50</span></h4><p>Fresh from the market. Tartare sauce, lemon wedge, curry sauce on the side if you like.</p></div>
+    <div class="menu-item"><h4>Glamorgan Sausages <span class="mprice">£8.50</span></h4><p>Cheese and leek, crispy breadcrumbed. Served with chips and onion chutney. (V)</p></div>
+    <div class="menu-item"><h4>Sunday Carvery <span class="mprice">£12.50</span></h4><p>Beef, lamb or chicken. Three veg, Yorkshires, roasties and proper gravy. Sundays 12-4.</p></div>
+    <div class="menu-item"><h4>Chips, Cheese &amp; Gravy <span class="mprice">£4.50</span></h4><p>The valleys classic. No explanation needed.</p></div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+  <h2 class="section-title">What's On</h2>
+  <p class="section-sub">There's always something happening down the Colliers</p>
+  <div class="divider"></div>
+  <div class="events-list">
+    <div class="event"><div class="event-day">Monday</div><div><h4>Quiz Night — 8pm</h4><p>Teams of up to 6. £2 per head, winner takes the pot. Dave's questions are legendarily unfair.</p></div></div>
+    <div class="event"><div class="event-day">Wednesday</div><div><h4>Open Mic Night — 8:30pm</h4><p>Bring your guitar, your voice, or just your pint. All welcome, no judgement.</p></div></div>
+    <div class="event"><div class="event-day">Friday</div><div><h4>Live Music — 9pm</h4><p>Local bands and touring acts. Check our board for this week's lineup.</p></div></div>
+    <div class="event"><div class="event-day">Saturday</div><div><h4>Six Nations / Autumn Internationals</h4><p>Big screen, big atmosphere. Wales match = fancy dress optional, passion mandatory.</p></div></div>
+    <div class="event"><div class="event-day">Sunday</div><div><h4>Carvery &amp; Chill — 12pm</h4><p>Sunday roast, easy listening, papers on the bar. Families welcome 'til 6.</p></div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="section-title">Our Story</h2>
+  <p class="section-sub">A hundred-odd years and counting</p>
+  <div class="divider"></div>
+  <div class="about-text">
+    <p>The Colliers Arms has stood at the heart of Pontypool since <em>1887</em>, built to serve the men coming off shift at the ironworks and the coal levels that gave us our name. Four generations of landlords have kept the fires lit and the taps flowing.</p>
+    <br>
+    <p>We've had our share of history — survived two wars, the miners' strike, and that time Dai Evans tried to bring a sheep in on New Year's Eve. Through it all, we've stayed the same: <em>a proper valleys pub</em> where everyone's welcome, the beer's well-kept, and the craic is free.</p>
+    <br>
+    <p>These days we pair that tradition with a love of <em>Welsh craft ale</em>. Our six rotating taps showcase the best from breweries across South Wales and beyond. But don't worry — there's always a Brains on for the traditionalists.</p>
+  </div>
+</section>
+
+<!-- FIND US -->
+<section id="findus">
+  <h2 class="section-title">Find Us</h2>
+  <p class="section-sub">You're always welcome at the Colliers</p>
+  <div class="divider"></div>
+  <div class="info-grid">
+    <div class="info-block">
+      <h3>Address</h3>
+      <p>37 Crane Street<br>Pontypool NP4 6LY<br>South Wales</p>
+      <p style="margin-top:.5rem;color:var(--brass)">01495 742 318</p>
+    </div>
+    <div class="info-block">
+      <h3>Opening Hours</h3>
+      <table class="hours-table">
+        <tr><td class="day">Mon–Thu</td><td>12:00 – 23:00</td></tr>
+        <tr><td class="day">Friday</td><td>12:00 – 00:00</td></tr>
+        <tr><td class="day">Saturday</td><td>11:00 – 00:00</td></tr>
+        <tr><td class="day">Sunday</td><td>12:00 – 22:30</td></tr>
+      </table>
+    </div>
+    <div class="info-block">
+      <h3>Good to Know</h3>
+      <p>Dogs welcome in the bar<br>Beer garden out back<br>Card &amp; cash accepted<br>Families welcome 'til 8pm</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 The Colliers Arms, Pontypool. All rights reserved. Please drink responsibly.</p>
+</footer>
+
+<script>
+const beers=[
+  {name:"Pithead Pale",brewery:"Tudor Brewery, Llanhilleth",abv:"4.2%",notes:"Bright gold, citrus hop punch with a biscuity malt backbone. Crisp and sessionable — disappears dangerously fast.",price:"£4.80"},
+  {name:"Cwm Stout",brewery:"Untapped Brewing, Raglan",abv:"5.1%",notes:"Jet black with a tan head. Dark chocolate, roasted coffee and a hint of liquorice. Smooth as velvet on the finish.",price:"£5.40"},
+  {name:"Valleys Gold",brewery:"Rhymney Brewery, Merthyr",abv:"4.0%",notes:"Classic Welsh bitter. Toffee and caramel malts balanced with earthy English hops. Honest, reliable, proper.",price:"£4.50"},
+  {name:"Blaenavon Red",brewery:"Abergavenny Fine Ales",abv:"4.8%",notes:"Rich amber-red. Dried fruit, brown sugar and a subtle smokiness that nods to the old ironworks. Dangerously moreish.",price:"£5.20"},
+  {name:"Dragon's Breath IPA",brewery:"Tiny Rebel, Newport",abv:"5.9%",notes:"West Coast meets Wales. Pine resin, grapefruit and a bold bitterness that lingers. Not for the faint-hearted.",price:"£5.80"},
+  {name:"Brains SA Gold",brewery:"SA Brain & Co, Cardiff",abv:"4.7%",notes:"The Welsh classic, golden edition. Floral hops, gentle malt sweetness, clean finish. Your mam's favourite and ours.",price:"£4.60"}
+];
+const tapsEl=document.getElementById('taps'),glass=document.getElementById('glass'),pourFill=document.getElementById('pourFill'),card=document.getElementById('card');
+let pouring=false;
+beers.forEach((b,i)=>{
+  const t=document.createElement('div');t.className='tap';t.setAttribute('role','button');t.setAttribute('aria-label','Pour '+b.name);
+  t.innerHTML=`<div class="tap-handle"></div><div class="tap-base"></div><div class="tap-label">${b.name}</div>`;
+  t.addEventListener('click',()=>pourBeer(i));
+  tapsEl.appendChild(t);
+});
+function pourBeer(i){
+  if(pouring)return;pouring=true;
+  const b=beers[i];
+  card.classList.remove('show');card.innerHTML='';
+  pourFill.classList.remove('filling');pourFill.style.height='0';
+  glass.classList.add('active');
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{pourFill.classList.add('filling')})});
+  setTimeout(()=>{
+    card.innerHTML=`<h3>${b.name}</h3><div class="brewery">${b.brewery}</div><span class="abv">${b.abv}</span><p class="notes">${b.notes}</p><div class="price">${b.price} / pint</div>`;
+    card.classList.add('show');pouring=false;
+  },900);
+}
+</script>
+</body>
+</html>

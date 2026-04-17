@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!-- SITE_META {"business_type":"nail salon","name":"Lux Nails — Cardiff","palette":{"primary":"#1a1020","accent":"#d4a0c0","bg":"#1a1020"},"features":["dark theme","pricing table","image gallery","contact form","testimonial section"],"experimental":["liquid glass morphism cards","aurora soft background","scroll-driven CSS animations","grain texture","kinetic hover typography"]} -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lux Nails — Nail Bar & Beauty, Cardiff</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#1a1020;--surface:#221830;--rose:#d4a0c0;--lilac:#b8a0d4;--blush:#e8c0d0;--white:#f0eaf4;
+  --dim:#6a5878;--glass-bg:rgba(255,255,255,.06);--glass-border:rgba(255,255,255,.1);--gold:#d4b896}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;text-wrap:balance}
+h2{font-size:clamp(2rem,6vw,3.2rem);font-weight:600;margin-bottom:.5rem}
+.sub{color:var(--dim);font-size:.8rem;letter-spacing:.05em;margin-bottom:2.5rem}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:128px 128px}
+
+/* AURORA — softer, warmer */
+.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(100px);will-change:transform;opacity:.2}
+.b1{width:500px;height:500px;background:var(--rose);top:-15%;left:10%;animation:f1 16s ease-in-out infinite}
+.b2{width:400px;height:400px;background:var(--lilac);bottom:10%;right:-5%;animation:f2 20s ease-in-out infinite}
+.b3{width:300px;height:300px;background:var(--blush);top:50%;left:50%;animation:f3 14s ease-in-out infinite}
+@keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
+@keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-40px)}}
+@keyframes f3{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,30px)}}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(20px);animation:slideUp linear both;animation-timeline:view();animation-range:entry 0% cover 25%}
+@keyframes slideUp{to{opacity:1;transform:translateY(0)}}
+
+.content{position:relative;z-index:1}
+
+/* GLASS CARD */
+.glass{background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);border-radius:16px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.8rem 2rem;display:flex;justify-content:space-between;
+  align-items:center;background:rgba(26,16,32,.5);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700}
+.logo span{color:var(--rose)}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--dim);font-size:.75rem;letter-spacing:.1em;
+  text-transform:uppercase;transition:color .3s}
+.nav-links a:hover{color:var(--rose)}
+@media(max-width:600px){.nav-links{display:none}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:6rem 2rem 4rem}
+.hero h1{font-size:clamp(3rem,10vw,6rem);font-weight:700;line-height:.9;margin-bottom:1rem}
+.hero h1 em{color:var(--rose);font-style:italic}
+.hero .tagline{color:var(--dim);font-size:clamp(.85rem,2vw,1rem);max-width:440px;line-height:1.8;margin-bottom:2rem}
+.hero-cta{display:inline-flex;padding:.8rem 2.5rem;border-radius:50px;border:1px solid var(--glass-border);
+  background:var(--glass-bg);backdrop-filter:blur(12px);color:var(--white);text-decoration:none;
+  font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;transition:all .3s;cursor:pointer}
+.hero-cta:hover{background:rgba(212,160,192,.15);border-color:var(--rose)}
+
+/* SERVICES GRID */
+.services{padding:5rem 2rem;max-width:900px;margin:0 auto;text-align:center}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.svc-card{padding:2rem;text-align:left;transition:transform .4s,border-color .4s}
+.svc-card:hover{transform:translateY(-4px);border-color:rgba(212,160,192,.25)}
+.svc-card .icon{font-size:1.5rem;margin-bottom:.8rem}
+.svc-card h3{font-size:1.15rem;font-weight:600;margin-bottom:.3rem}
+.svc-card p{font-size:.8rem;color:var(--dim);line-height:1.6;margin-bottom:.8rem}
+.svc-card .price{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--rose);font-size:1.1rem}
+.svc-card .time{font-size:.7rem;color:var(--dim);margin-top:.2rem}
+
+/* GALLERY — horizontal scroll */
+.gallery{padding:5rem 2rem;text-align:center}
+.gal-scroll{display:flex;gap:.8rem;overflow-x:auto;padding:1rem 0;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;max-width:100vw;margin:0 -2rem;padding-left:2rem}
+.gal-scroll::-webkit-scrollbar{height:4px}
+.gal-scroll::-webkit-scrollbar-thumb{background:var(--rose);border-radius:2px}
+.gal-item{flex:0 0 220px;height:280px;border-radius:14px;scroll-snap-align:start;position:relative;overflow:hidden;
+  border:1px solid var(--glass-border);transition:transform .3s}
+.gal-item:hover{transform:scale(1.03)}
+.gal-item:nth-child(1){background:linear-gradient(135deg,#3a2040,#2a1830)}
+.gal-item:nth-child(2){background:linear-gradient(135deg,#2a1030,#3a2040)}
+.gal-item:nth-child(3){background:linear-gradient(135deg,#301838,#201028)}
+.gal-item:nth-child(4){background:linear-gradient(135deg,#281830,#382040)}
+.gal-item:nth-child(5){background:linear-gradient(135deg,#2a2040,#1a1030)}
+.gal-item:nth-child(6){background:linear-gradient(135deg,#381838,#281028)}
+.gal-label{position:absolute;bottom:0;left:0;right:0;padding:.8rem;
+  background:linear-gradient(transparent,rgba(26,16,32,.9));font-size:.75rem;color:var(--blush)}
+
+/* REVIEWS */
+.reviews{padding:5rem 2rem;max-width:800px;margin:0 auto;text-align:center}
+.rev-stack{display:flex;flex-direction:column;gap:1rem;margin-top:1rem}
+.rev-card{padding:1.5rem 2rem;text-align:left;position:relative;overflow:hidden}
+.rev-card::before{content:'❝';position:absolute;top:.5rem;right:1rem;font-size:3rem;opacity:.05;
+  font-family:'Cormorant Garamond',serif}
+.rev-card .stars{color:var(--rose);font-size:.85rem;letter-spacing:2px;margin-bottom:.5rem}
+.rev-card p{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--blush);line-height:1.8;font-style:italic}
+.rev-card .who{font-family:'DM Sans',sans-serif;font-weight:500;font-size:.75rem;color:var(--dim);margin-top:.5rem}
+
+/* ABOUT */
+.about{padding:5rem 2rem;max-width:700px;margin:0 auto;text-align:center}
+.about p{font-size:.9rem;color:var(--dim);line-height:2;margin-bottom:1rem}
+.about .quote{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--rose);
+  margin:1.5rem 0;padding:0 1rem}
+
+/* CONTACT */
+.contact{padding:5rem 2rem;max-width:800px;margin:0 auto;text-align:center}
+.contact-inner{display:grid;grid-template-columns:1fr;gap:2rem;text-align:left;margin-top:1rem}
+@media(min-width:550px){.contact-inner{grid-template-columns:1fr 1fr}}
+.c-info h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--rose);margin-bottom:.8rem}
+.c-info p{font-size:.85rem;color:var(--dim);line-height:2}
+.c-info .phone{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--white);margin:.5rem 0}
+.c-form input,.c-form select,.c-form textarea{width:100%;padding:.8rem 1rem;margin-bottom:.7rem;
+  border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(8px);
+  font-family:'DM Sans',sans-serif;font-size:.85rem;border-radius:10px;color:var(--white)}
+.c-form input:focus,.c-form select:focus,.c-form textarea:focus{outline:none;border-color:rgba(212,160,192,.3)}
+.c-form textarea{height:70px;resize:vertical}
+.c-form button{width:100%;padding:.9rem;border-radius:50px;border:1px solid var(--rose);
+  background:rgba(212,160,192,.1);color:var(--white);font-family:'Cormorant Garamond',serif;
+  font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s;backdrop-filter:blur(8px)}
+.c-form button:hover{background:rgba(212,160,192,.2);box-shadow:0 8px 25px rgba(212,160,192,.12)}
+.c-form .done{display:none;color:var(--rose);text-align:center;margin-top:.5rem;font-size:.85rem}
+
+footer{padding:2.5rem;text-align:center;font-size:.65rem;color:var(--dim);letter-spacing:.05em;
+  border-top:1px solid var(--glass-border);position:relative;z-index:1}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<div class="content">
+
+<nav>
+  <div class="logo">Lux <span>Nails</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Book</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Nails that<br><em>speak</em></h1>
+  <p class="tagline">Gel, acrylics, nail art &amp; luxury pedicures in the heart of Cardiff. By appointment only — because you're not a walk-in.</p>
+  <a class="hero-cta" href="#contact">Book Your Appointment</a>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="reveal"><h2>Our Services</h2><p class="sub">Every treatment includes cuticle care &amp; hand massage</p></div>
+  <div class="svc-grid">
+    <div class="svc-card glass reveal">
+      <div class="icon">💅</div>
+      <h3>Gel Manicure</h3>
+      <p>CND Shellac or OPI GelColor. Chip-free for 2–3 weeks. Huge colour range.</p>
+      <div class="price">£28</div>
+      <div class="time">45 minutes</div>
+    </div>
+    <div class="svc-card glass reveal">
+      <div class="icon">✨</div>
+      <h3>Acrylic Extensions</h3>
+      <p>Full set with tip or form. Choose your shape — coffin, stiletto, almond, square.</p>
+      <div class="price">from £38</div>
+      <div class="time">1 hour 15 min</div>
+    </div>
+    <div class="svc-card glass reveal">
+      <div class="icon">🎨</div>
+      <h3>Nail Art</h3>
+      <p>Hand-painted designs, foils, chrome, ombré, French tips, 3D charms. Show us your Pinterest.</p>
+      <div class="price">from £5 per nail</div>
+      <div class="time">Varies</div>
+    </div>
+    <div class="svc-card glass reveal">
+      <div class="icon">🌸</div>
+      <h3>BIAB / Builder Gel</h3>
+      <p>Strengthening overlay on natural nails. The healthy alternative to acrylics.</p>
+      <div class="price">£32</div>
+      <div class="time">50 minutes</div>
+    </div>
+    <div class="svc-card glass reveal">
+      <div class="icon">🦶</div>
+      <h3>Luxury Pedicure</h3>
+      <p>Soak, scrub, mask, massage, and gel polish. Your feet will thank you.</p>
+      <div class="price">£35</div>
+      <div class="time">1 hour</div>
+    </div>
+    <div class="svc-card glass reveal">
+      <div class="icon">🔄</div>
+      <h3>Infills</h3>
+      <p>Acrylic or BIAB maintenance. Every 2–3 weeks to keep them fresh.</p>
+      <div class="price">from £25</div>
+      <div class="time">45 minutes</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="reveal"><h2>Our Work</h2><p class="sub">All sets done by our artists — no filters, no stock photos</p></div>
+  <div class="gal-scroll">
+    <div class="gal-item"><div class="gal-label">Chrome ombré set</div></div>
+    <div class="gal-item"><div class="gal-label">French tip coffin</div></div>
+    <div class="gal-item"><div class="gal-label">Hand-painted florals</div></div>
+    <div class="gal-item"><div class="gal-label">3D charm stilettos</div></div>
+    <div class="gal-item"><div class="gal-label">Minimalist lines</div></div>
+    <div class="gal-item"><div class="gal-label">Glazed donut finish</div></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="reveal"><h2>Love Notes</h2><p class="sub">From Google &amp; Instagram DMs</p></div>
+  <div class="rev-stack">
+    <div class="rev-card glass reveal"><div class="stars">★★★★★</div><p>"Honestly the best nails I've ever had. Mia did a chrome ombré set that had everyone asking where I go. Obsessed."</p><div class="who">— Chloe B., Canton</div></div>
+    <div class="rev-card glass reveal"><div class="stars">★★★★★</div><p>"I showed her a blurry screenshot from TikTok and she recreated it perfectly. Absolute artist."</p><div class="who">— Ffion R., Roath</div></div>
+    <div class="rev-card glass reveal"><div class="stars">★★★★★</div><p>"Had my wedding nails done here. They lasted the full honeymoon — two weeks in Greece, pool every day, not a single chip."</p><div class="who">— Lauren H., Penarth</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="reveal">
+    <h2>About Lux</h2>
+    <p>Lux Nails is run by Mia Nguyen out of a private studio on City Road. It's just Mia and one other artist, Amy — we keep it small, quiet, and focused.</p>
+    <div class="quote">"I trained in Ho Chi Minh City where nail art is an actual art form. I brought that standard to Cardiff."</div>
+    <p>We're appointment only because we give every client our full attention. No rushing, no double-booking, no assembly line. Your hour is your hour.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="reveal"><h2>Book Your Slot</h2><p class="sub">Appointment only — DM, call, or use the form</p></div>
+  <div class="contact-inner reveal">
+    <div class="c-info">
+      <h3>Find Us</h3>
+      <p>Studio 2, 114 City Road<br>Cardiff CF24 3DQ</p>
+      <div class="phone">07712 884 220</div>
+      <p>Tue–Fri: 10am – 7pm<br>Saturday: 9am – 5pm<br>Sun–Mon: Closed</p>
+      <p style="margin-top:.5rem;font-size:.75rem;color:var(--dim)">@luxnailscardiff on Instagram<br>DM for fastest booking</p>
+    </div>
+    <form class="c-form" onsubmit="event.preventDefault();this.querySelector('.done').style.display='block'">
+      <input type="text" placeholder="Your name" required>
+      <input type="tel" placeholder="Phone or Instagram" required>
+      <select><option value="">Service...</option><option>Gel Manicure</option><option>Acrylic Full Set</option><option>Nail Art</option><option>BIAB</option><option>Pedicure</option><option>Infills</option></select>
+      <input type="text" placeholder="Preferred date & time">
+      <textarea placeholder="Inspo pics? Shape preference? Anything else?"></textarea>
+      <button type="submit">Request Booking</button>
+      <p class="done">Booked! Mia will confirm via text within 24hrs.</p>
+    </form>
+  </div>
+</section>
+
+<footer>© 2024 Lux Nails · Cardiff · By appointment only</footer>
+
+</div>
+
+<script>
+/* Kinetic typography on hero h1 */
+const h1=document.querySelector('.hero h1');
+const text=h1.innerHTML;
+h1.style.cursor='default';
+h1.addEventListener('pointermove',e=>{
+  const chars=h1.querySelectorAll('.kc');
+  if(!chars.length)return;
+  const r=h1.getBoundingClientRect();
+  chars.forEach(c=>{
+    const cr=c.getBoundingClientRect();
+    const dx=e.clientX-(cr.left+cr.width/2);
+    const dy=e.clientY-(cr.top+cr.height/2);
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const force=Math.max(0,1-dist/150);
+    c.style.transform=`translateY(${-force*6}px) scale(${1+force*.08})`;
+    c.style.color=force>.3?'var(--rose)':''});
+});
+h1.addEventListener('pointerleave',()=>{
+  h1.querySelectorAll('.kc').forEach(c=>{c.style.transform='';c.style.color=''})});
+// Wrap characters
+function wrapChars(el){
+  const nodes=[...el.childNodes];let html='';
+  nodes.forEach(n=>{
+    if(n.nodeType===3){html+=n.textContent.split('').map(c=>c===' '?' ':`<span class="kc" style="display:inline-block;transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s">${c}</span>`).join('')}
+    else if(n.tagName==='EM'){html+=`<em>${n.textContent.split('').map(c=>c===' '?' ':`<span class="kc" style="display:inline-block;transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s">${c}</span>`).join('')}</em>`}
+    else if(n.tagName==='BR'){html+='<br>'}
+    else html+=n.outerHTML});
+  el.innerHTML=html}
+wrapChars(h1);
+</script>
+
+</body>
+</html>

@@ -10,71 +10,121 @@ const C = {
 /* ── Knowledge base ── */
 const RESPONSES = {
   greeting: {
-    text: "Hi! 👋 I'm AP — Asher's virtual assistant. I can tell you about our services, how we work, or help you get in touch. What are you interested in?",
-    options: ["Services", "How it works", "Pricing", "Get in touch"],
+    text: "Hi! I'm AP — Asher's virtual assistant. I can help you with anything about our services, pricing, or show you what we've built. What would you like to know?",
+    options: ["Services", "Founding Local", "See examples", "Pricing", "Get in touch"],
   },
   services: {
-    text: "We offer four core services — all powered by AI and built bespoke for your business:",
+    text: "Here's what I build for local businesses — everything bespoke, nothing off the shelf:",
     bullets: [
-      "🌐 **Websites** — Fast, mobile-first sites that turn visitors into customers. No templates.",
-      "🤖 **AI Chatbots** — Intelligent assistants trained on your business. They answer enquiries, book appointments, and capture leads 24/7.",
-      "⚡ **Automation** — Automated booking, invoicing, follow-ups, and lead capture. Stop doing the same task twice.",
-      "📱 **Social & Content** — AI-created and scheduled social media content to keep your feeds active.",
+      "🌐 **Websites** — Fast, mobile-first, built from scratch. I've built 60+ demos and have a live client (The Westgate Bar).",
+      "🤖 **AI Assistants** — Trained on your business. They answer enquiries, book appointments, and work 24/7. Like me, but for your customers.",
+      "🛒 **Online Ordering** — Customers order directly from your site. No Deliveroo commission, no middleman.",
+      "📅 **Booking Systems** — Pick a service, pick a time, done. Works for barbers, salons, trades — anyone with appointments.",
+      "⭐ **Digital Loyalty Cards** — Replace paper stamp cards. Customers collect digitally, you keep them coming back.",
+      "⚡ **Automation** — Invoicing, follow-ups, lead capture. If you do it twice, I can automate it.",
     ],
-    followUp: "Want to know more about any of these?",
-    options: ["Websites", "AI Chatbots", "Automation", "Social & Content", "Pricing", "Get in touch"],
+    followUp: "Want details on any of these? Or see live demos on the Showcase page.",
+    options: ["Websites", "AI Assistants", "Ordering & Booking", "Founding Local", "See examples", "Get in touch"],
   },
   websites: {
-    text: "Every website we build is bespoke — no WordPress templates or cookie-cutter designs. We build fast, mobile-first sites optimised for Google, designed to convert visitors into paying customers. Average build time is about 5 days, and we handle everything: design, development, hosting, and DNS.",
-    options: ["Pricing", "How it works", "Get in touch", "Back to services"],
+    text: "Every site is designed and coded from scratch — no WordPress, no templates, no themes. Built to be fast, mobile-first, and optimised for Google.\n\nI've built 60+ demo sites across every industry you can think of — cafés, barbers, pubs, plumbers, nail salons, photographers, and more. Plus a live client site for **The Westgate Bar** in Abertillery.\n\nAverage build time is 1–2 weeks. I handle design, build, hosting, domain, and DNS.",
+    options: ["See examples", "Founding Local", "Pricing", "Get in touch"],
   },
-  "ai chatbots": {
-    text: "Our AI chatbots are trained specifically on your business — your services, your FAQs, your tone of voice. They handle enquiries, book appointments, capture leads, and work 24/7 without a break. They can be added to your website, Facebook page, or WhatsApp.",
-    options: ["Pricing", "How it works", "Get in touch", "Back to services"],
+  "ai assistants": {
+    text: "AI assistants trained on your business — your services, your prices, your tone. They answer customer questions 24/7, capture leads, and can book appointments.\n\nThey can live on your website, your Facebook page, or WhatsApp. You're chatting with one right now — imagine this for your business, trained on what you actually do.",
+    options: ["See showcase", "Pricing", "Get in touch", "Back to services"],
   },
-  automation: {
-    text: "We automate the repetitive stuff that eats your time — appointment booking, invoice generation, follow-up emails, lead capture forms, and more. If you're doing the same task twice, we can probably automate it. This frees you up to focus on what actually makes money.",
-    options: ["Pricing", "How it works", "Get in touch", "Back to services"],
+  "ordering & booking": {
+    text: "Two of the most popular add-ons:\n\n**Online Ordering** — customers browse your menu, build their order, and submit it. No commission fees like Deliveroo or Just Eat. It lives on your own website.\n\n**Booking Systems** — customers pick a service, choose a time, and book instantly. Works for barbers, salons, trades, anyone with appointments.\n\nBoth are available as add-ons to any website. You can try live demos on our Showcase page.",
+    options: ["See showcase", "Pricing", "Get in touch", "Back to services"],
   },
-  "social & content": {
-    text: "We use AI to create consistent, on-brand social media content — posts, captions, and scheduling — so your feeds stay active without eating your evenings. Everything is tailored to your brand voice and audience.",
-    options: ["Pricing", "How it works", "Get in touch", "Back to services"],
+  "loyalty cards": {
+    text: "Digital loyalty cards that replace paper stamp cards. Your customers collect stamps on their phone — no app download needed, it works from your website.\n\nYou control the rewards, track who's coming back, and it costs a fraction of a printed card run. Available as an add-on.",
+    options: ["See showcase", "Pricing", "Get in touch", "Back to services"],
+  },
+  "founding local": {
+    text: "**Founding Local** is my launch offer — 10 places only.\n\n**£100 setup + £50/month**, locked in for life. The price never goes up.\n\nWhat's included:\n• Custom website built from scratch\n• Hosting on fast UK servers\n• Your own .co.uk domain\n• One free update every month\n• Uptime monitoring\n• Monthly check-in call\n\nIt's for local businesses in Blackwood and the Valleys. Once the 10 are filled, it closes permanently and standard rates apply (from £300+ setup, £80+/month).",
+    options: ["Who's it for?", "See examples", "Claim a place", "Back to services"],
+  },
+  "who's it for?": {
+    text: "Founding Local is built for small local businesses — the kind that are all over the Valleys:\n\n• Cafés & coffee shops\n• Barbers & salons\n• Pubs & bars\n• Trades (plumbers, electricians, roofers)\n• Takeaways & restaurants\n• Florists, beauticians, local professionals\n\nIf you run a local business and don't have a proper website (or have one that's not working for you), this is for you.",
+    options: ["Founding Local", "See examples", "Get in touch"],
+  },
+  "see examples": {
+    text: "I've got 9 full interactive website demos you can browse — each one built for a different type of local business:\n\n• **Café** — coffee configurator with animated cup\n• **Pizza shop** — build-your-own pizza with live toppings\n• **Barber** — ticket-strip layout with spinning barber pole\n• **Pub** — beer tap wall with pour animation\n• **Plumber** — instant quote calculator\n• **Nail salon** — liquid glass design with colour try-on\n• **Photographer** — horizontal film strip portfolio\n• **Vape shop** — neon arcade with slot machine reveal\n• **Indian restaurant** — spice heat slider menu\n\nCheck them out at **asherprice.co.uk/examples** — or I can tell you more about any specific one.",
+    options: ["Founding Local", "Pricing", "Get in touch"],
+  },
+  "see showcase": {
+    text: "The Showcase page has live demos of individual features you can add to any website:\n\n• **AI Chatbot** — like this one, but trained on your business\n• **Online Ordering** — browse menu, build order, submit\n• **Booking System** — pick service, pick time, done\n• **Digital Loyalty Card** — collect stamps, earn rewards\n\nAll working, all interactive. Try them at **asherprice.co.uk/showcase**.",
+    options: ["Services", "Founding Local", "Get in touch"],
+  },
+  "the westgate": {
+    text: "The Westgate Bar in Abertillery is my first live client — a real, paying customer with a website I built and maintain.\n\nIt's proof this isn't just demos — I build and run real sites for real businesses. Their site is live and getting customers through the door.",
+    options: ["See examples", "Founding Local", "Get in touch"],
   },
   "how it works": {
-    text: "Our process is simple — four steps:",
+    text: "Four steps, no fuss:",
     bullets: [
-      "**1. Chat** — A free, no-pressure conversation. Tell us about your business and we'll tell you exactly what would help.",
-      "**2. Build** — We build your website, chatbot, or automation. You see progress throughout — no disappearing for weeks.",
-      "**3. Launch** — We go live. We handle all the technical setup — DNS, hosting, everything.",
-      "**4. Grow** — Ongoing support, updates, and improvements. Your monthly retainer keeps everything running.",
+      "**1. Drop me a message** — email or Facebook. A quick chat about your business — what you do, who you serve, what you need. No jargon.",
+      "**2. I design and build** — a working draft within 1–2 weeks. You'll see it before anyone else does.",
+      "**3. You review** — we tweak until it's right. Colours, wording, layout — it's your business, it has to feel like yours.",
+      "**4. Go live** — £100 setup, then £50/month from month two. Your site is live, monitored, and maintained.",
     ],
-    options: ["Pricing", "Services", "Get in touch"],
+    followUp: "That's for Founding Local. For custom projects, the process is similar but pricing is quoted individually.",
+    options: ["Founding Local", "Pricing", "Get in touch"],
   },
   pricing: {
-    text: "We don't do one-size-fits-all pricing — every business is different. What I can tell you is:\n\n• The initial chat is always **free** — no obligation\n• No hidden fees or 12-month lock-in contracts\n• Pricing that respects your margins — we're not a London agency\n• Most projects start with a one-off build fee + optional monthly retainer\n\nThe best way to get a quote is to have a quick chat with Asher directly.",
-    options: ["Get in touch", "Services", "How it works"],
+    text: "**Founding Local** (first 10 clients):\n• £100 one-off setup\n• £50/month — locked in for life\n• Includes website, hosting, domain, monthly update, monitoring, and check-in call\n\n**Standard rates** (after Founding Local fills):\n• From £300+ setup\n• From £80+/month\n\n**Add-ons** (available for any client):\n• AI chatbot assistant\n• Online ordering system\n• Booking system\n• Digital loyalty cards\n• Social media content\n\nNo 12-month lock-ins. Just 1 month's notice to cancel. The initial chat is always free.",
+    options: ["Founding Local", "Get in touch", "Services"],
   },
   "back to services": {
     redirect: "services",
   },
+  "claim a place": {
+    text: "Nice one! You can claim a Founding Local place two ways:\n\n📧 **Email** — hello@asherprice.co.uk (subject: Founding Local)\n💬 **Facebook** — facebook.com/asherprice.uk\n\nOr drop your details below and I'll pass them to Asher. He'll get back to you within 24 hours.",
+    showForm: true,
+  },
   "get in touch": {
-    text: "Great! Drop your details below and Asher will get back to you within 24 hours. Or you can email directly at **hello@asherprice.co.uk**.",
+    text: "You can reach Asher directly:\n\n📧 **Email** — hello@asherprice.co.uk\n💬 **Facebook** — facebook.com/asherprice.uk\n\nOr drop your details below and he'll get back to you within 24 hours. No obligation, no pressure.",
     showForm: true,
   },
   fallback: {
-    text: "I'm not quite sure what you mean — but I'm here to help! Here's what I can tell you about:",
-    options: ["Services", "How it works", "Pricing", "Get in touch"],
+    text: "I'm not sure about that one — but here's what I can help with:",
+    options: ["Services", "Founding Local", "See examples", "Pricing", "Get in touch"],
   },
 };
 
 /* ── Intent matching ── */
 const INTENTS = [
+  { key: "founding local", patterns: [
+    "founding local", "founding", "£100", "£50", "100 setup", "50 a month",
+    "50/month", "launch offer", "first 10", "10 places", "places remaining",
+    "founding deal", "special offer", "founding rate",
+  ]},
+  { key: "claim a place", patterns: [
+    "claim", "sign up", "sign me up", "interested", "join", "reserve",
+    "want a place", "get a place", "secure", "apply",
+  ]},
   { key: "get in touch", patterns: [
     "contact", "get in touch", "reach", "speak", "talk", "call", "phone", "email",
-    "message", "enquir", "inquir", "book", "consultation", "free chat", "arrange",
-    "meet", "appointment", "quote", "interested", "sign up", "start",
+    "message", "enquir", "inquir", "consultation", "free chat", "arrange",
+    "meet", "appointment", "quote",
     "how can i", "how do i", "get started", "reach out", "drop a message",
     "want to work", "hire", "need help",
+  ]},
+  { key: "see examples", patterns: [
+    "example", "demo", "demos", "portfolio", "show me", "see what you",
+    "what have you built", "sample", "preview", "mock",
+    "cafe", "barber", "pub", "plumber", "salon", "pizza",
+    "photographer", "vape", "indian", "restaurant",
+  ]},
+  { key: "see showcase", patterns: [
+    "showcase", "features", "chatbot demo", "ordering demo", "booking demo",
+    "loyalty demo", "try it", "live demo",
+  ]},
+  { key: "the westgate", patterns: [
+    "westgate", "client", "live site", "real site", "real client",
+    "abertillery", "who have you built for",
   ]},
   { key: "services", patterns: [
     "services", "what do you do", "what do you offer", "what can you",
@@ -82,20 +132,20 @@ const INTENTS = [
     "tell me about", "what's available", "full package",
   ]},
   { key: "websites", patterns: [
-    "website", "web site", "site", "landing page", "web design", "web dev",
+    "website", "web site", "landing page", "web design", "web dev",
     "build a site", "build me a", "new site", "redesign",
   ]},
-  { key: "ai chatbots", patterns: [
+  { key: "ai assistants", patterns: [
     "chatbot", "chat bot", "bot", "ai assistant", "virtual assistant",
     "live chat", "customer support bot", "whatsapp",
   ]},
-  { key: "automation", patterns: [
-    "automat", "workflow", "invoice", "booking system", "follow up",
-    "lead capture", "crm", "repetitive", "save time", "streamline",
+  { key: "ordering & booking", patterns: [
+    "ordering", "online order", "takeaway", "booking system", "appointments",
+    "book online", "schedule", "just eat", "deliveroo", "order system",
   ]},
-  { key: "social & content", patterns: [
-    "social media", "social", "content", "instagram", "facebook", "tiktok",
-    "posting", "schedule", "feed", "marketing",
+  { key: "loyalty cards", patterns: [
+    "loyalty", "stamp card", "loyalty card", "rewards", "points card",
+    "digital stamps", "repeat customers",
   ]},
   { key: "how it works", patterns: [
     "how does it work", "how it work", "how do you work", "process",
@@ -104,8 +154,12 @@ const INTENTS = [
   ]},
   { key: "pricing", patterns: [
     "price", "pricing", "cost", "how much", "expensive", "cheap", "afford",
-    "budget", "rates", "fees", "pay", "charge", "package", "plan", "money",
+    "budget", "rates", "fees", "pay", "charge", "package", "money",
     "investment", "worth", "value",
+  ]},
+  { key: "who's it for?", patterns: [
+    "who is it for", "who's it for", "what kind of business", "what type",
+    "is it for me", "my business", "suitable", "right for",
   ]},
   { key: "greeting", patterns: [
     "hello", "hi ", "hey", "hiya", "morning", "afternoon", "evening",

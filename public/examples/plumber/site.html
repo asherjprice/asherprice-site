@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!-- SITE_META {"business_type":"plumber","name":"Emrys Plumbing","palette":{"primary":"#0b2745","accent":"#ff7a1a","bg":"#f4f6fa","utility":"#1b3a5c"},"features":["split-screen layout","pricing table","contact form"],"experimental":["interactive job-type → urgency → instant quote calculator","live 24h response countdown timer"]} -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emrys Plumbing — 24h Emergency · Blackwood</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f4f6fa;color:#0b2745;line-height:1.55}
+.topbar{background:#ff7a1a;color:#0b2745;padding:8px 30px;font-family:'IBM Plex Mono',monospace;font-size:12px;display:flex;justify-content:space-between;font-weight:500;letter-spacing:.03em}
+.topbar .live::before{content:'● ';color:#0b2745}
+nav{background:#0b2745;color:white;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:30}
+.mark{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;letter-spacing:.05em}
+.mark span{color:#ff7a1a}
+nav ul{display:flex;gap:24px;list-style:none;font-size:13px;text-transform:uppercase;letter-spacing:.1em}
+nav a{color:white;text-decoration:none}
+nav a:hover{color:#ff7a1a}
+.call-btn{background:#ff7a1a;color:#0b2745;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.1em;border-radius:4px;text-decoration:none}
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:78vh}
+.hero-left{background:linear-gradient(135deg,#0b2745 0%,#1b3a5c 100%);color:white;padding:70px 50px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero-left::before{content:'';position:absolute;width:200px;height:200px;background:#ff7a1a;opacity:.08;border-radius:50%;top:-50px;right:-50px}
+.hero-kicker{display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#ff7a1a;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px}
+.hero-kicker::before{content:'';width:30px;height:2px;background:#ff7a1a}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(52px,8vw,110px);line-height:.9;letter-spacing:-.01em;margin-bottom:20px;text-transform:uppercase}
+.hero h1 span{color:#ff7a1a}
+.hero-sub{font-size:17px;color:#c5d5e5;max-width:480px;margin-bottom:28px;line-height:1.7}
+.badges{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+.badge{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);padding:10px 16px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;display:flex;gap:8px;align-items:center}
+.badge strong{color:#ff7a1a}
+.countdown-panel{background:#07182c;padding:30px;border-left:4px solid #ff7a1a;margin-top:32px}
+.countdown-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff7a1a;letter-spacing:.25em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.countdown-label::before{content:'';width:8px;height:8px;background:#ff7a1a;border-radius:50%;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.3}}
+.countdown-time{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:56px;color:white;line-height:1;margin-bottom:8px;letter-spacing:.04em}
+.countdown-note{font-size:13px;color:#7a95b0}
+.hero-right{background:#f4f6fa;padding:60px 50px;display:flex;flex-direction:column;justify-content:center}
+.quote-kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff7a1a;letter-spacing:.25em;text-transform:uppercase;margin-bottom:10px}
+.quote-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:48px;line-height:1;letter-spacing:-.01em;margin-bottom:18px;text-transform:uppercase}
+.quote-title span{color:#ff7a1a}
+.quote-sub{font-size:15px;color:#555e72;margin-bottom:24px}
+.q-step{margin-bottom:20px}
+.q-step label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#0b2745;margin-bottom:10px}
+.q-chips{display:flex;flex-wrap:wrap;gap:6px}
+.q-chip{padding:10px 16px;background:white;border:2px solid #d0d8e4;border-radius:4px;cursor:pointer;font-size:13px;font-weight:500;transition:.15s;user-select:none}
+.q-chip:hover{border-color:#ff7a1a}
+.q-chip.active{background:#0b2745;color:white;border-color:#0b2745}
+.q-slider{margin-top:10px}
+.q-slider input{width:100%;height:8px;background:#d0d8e4;border-radius:4px;-webkit-appearance:none;appearance:none;outline:none}
+.q-slider input::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;background:#ff7a1a;border-radius:50%;cursor:pointer;border:3px solid #0b2745}
+.q-values{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#555e72;margin-top:6px}
+.estimate{background:#0b2745;color:white;padding:24px;border-radius:6px;margin-top:20px;text-align:center;border:3px solid #ff7a1a}
+.estimate-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff7a1a;letter-spacing:.25em;text-transform:uppercase;margin-bottom:6px}
+.estimate-amount{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:56px;line-height:1}
+.estimate-amount small{font-size:18px;color:#7a95b0;font-weight:500}
+.estimate-note{font-size:12px;color:#7a95b0;margin-top:6px;font-family:'IBM Plex Mono',monospace}
+.estimate-cta{display:block;background:#ff7a1a;color:#0b2745;text-decoration:none;padding:14px;margin-top:16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.1em;border-radius:4px}
+.services{padding:80px 40px;max-width:1200px;margin:0 auto}
+.services-head{display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:end;margin-bottom:40px}
+.services-head h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:56px;letter-spacing:-.01em;text-transform:uppercase}
+.services-head h2 span{color:#ff7a1a}
+.services-head p{color:#555e72;max-width:480px}
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:3px solid #0b2745}
+.svc{padding:24px 20px;border-bottom:1px solid #d0d8e4;border-right:1px solid #d0d8e4;background:white}
+.svc:nth-child(4n){border-right:none}
+.svc-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff7a1a;letter-spacing:.2em;margin-bottom:14px}
+.svc h3{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;margin-bottom:8px}
+.svc p{font-size:13px;color:#555e72;margin-bottom:12px}
+.svc-price{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:#0b2745;padding-top:10px;border-top:1px dashed #d0d8e4}
+.svc-price span{color:#ff7a1a}
+.zones{padding:80px 40px;background:#0b2745;color:white}
+.zones-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:center}
+.zones h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:52px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:14px}
+.zones h2 span{color:#ff7a1a}
+.zones p{color:#7a95b0;font-size:15px;margin-bottom:14px}
+.zone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#ff7a1a;padding:3px;border-radius:4px}
+.zone{background:#0b2745;padding:14px 10px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:17px;letter-spacing:.04em}
+.zone small{display:block;font-size:11px;color:#ff7a1a;font-weight:400;letter-spacing:.1em;font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.testimonials{padding:80px 40px;max-width:1200px;margin:0 auto}
+.testimonials h2{font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:700;text-align:center;margin-bottom:40px;text-transform:uppercase;letter-spacing:-.01em}
+.testimonials h2 span{color:#ff7a1a}
+.tc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tc{background:white;padding:24px;border-top:4px solid #ff7a1a;border-radius:4px;box-shadow:0 4px 14px rgba(11,39,69,.08)}
+.tc-stars{color:#ff7a1a;font-size:16px;margin-bottom:10px;letter-spacing:.15em}
+.tc p{font-size:14px;margin-bottom:10px;color:#0b2745}
+.tc-author{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:16px;color:#555e72;letter-spacing:.05em}
+footer{padding:30px;background:#07182c;color:#7a95b0;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em}
+footer span{color:#ff7a1a}
+@media(max-width:900px){.hero,.services-head,.svc-grid,.zones-inner,.tc-grid{grid-template-columns:1fr}.svc-grid{grid-template-columns:repeat(2,1fr)}.svc:nth-child(4n){border-right:1px solid #d0d8e4}}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="live">24h emergency line open · Engineer on call NOW</span><span>☎ 07700 400 400 · Gas Safe 000000</span></div>
+<nav>
+  <div class="mark">EMRYS<span>.</span>PLUMBING</div>
+  <ul><li><a href="#quote">Instant Quote</a></li><li><a href="#services">Services</a></li><li><a href="#zones">Coverage</a></li></ul>
+  <a href="tel:07700400400" class="call-btn">☎ 07700 400 400</a>
+</nav>
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-kicker">Plumber · Gas Engineer · 24h Emergency</div>
+    <h1>Leak.<br>Boiler.<br>Blocked<br><span>drain.</span></h1>
+    <p class="hero-sub">Emrys and his son Rhys. Gas Safe registered. Covering Blackwood, Bargoed, Newbridge, Ystrad Mynach. We answer at 2am, we don't sneer at the mess, and we leave it tidier than we found it.</p>
+    <div class="badges">
+      <div class="badge"><strong>Gas Safe</strong> 000000</div>
+      <div class="badge"><strong>CIPHE</strong> Member</div>
+      <div class="badge"><strong>£5m</strong> Public Liability</div>
+    </div>
+    <div class="countdown-panel">
+      <div class="countdown-label">24H response guaranteed</div>
+      <div class="countdown-time" id="cd">23:48:07</div>
+      <div class="countdown-note">remaining on today's next-day promise · ring us now and we'll be there tomorrow</div>
+    </div>
+  </div>
+  <div class="hero-right" id="quote">
+    <div class="quote-kicker">— Instant online quote —</div>
+    <h2 class="quote-title">Tell us the <span>job</span></h2>
+    <p class="quote-sub">Three questions · instant estimate · no email required to see the price.</p>
+    <div class="q-step">
+      <label>① Job type</label>
+      <div class="q-chips" id="jobs">
+        <div class="q-chip active" data-price="85">Leak / pipe burst</div>
+        <div class="q-chip" data-price="120">Blocked drain</div>
+        <div class="q-chip" data-price="180">Boiler issue</div>
+        <div class="q-chip" data-price="95">Toilet / flush</div>
+        <div class="q-chip" data-price="240">New tap / shower fit</div>
+        <div class="q-chip" data-price="450">Boiler service &amp; gas check</div>
+      </div>
+    </div>
+    <div class="q-step">
+      <label>② Urgency</label>
+      <div class="q-chips" id="urg">
+        <div class="q-chip" data-mult="1.0">Within 2 weeks</div>
+        <div class="q-chip active" data-mult="1.2">This week</div>
+        <div class="q-chip" data-mult="1.5">Tomorrow morning</div>
+        <div class="q-chip" data-mult="2.0">EMERGENCY · tonight</div>
+      </div>
+    </div>
+    <div class="q-step">
+      <label>③ Access / complexity</label>
+      <div class="q-slider">
+        <input type="range" min="0" max="100" value="30" id="complexity">
+        <div class="q-values"><span>easy access</span><span id="cx-val">standard · +£0</span><span>bathroom rip-out</span></div>
+      </div>
+    </div>
+    <div class="estimate">
+      <div class="estimate-label">Your estimated price</div>
+      <div class="estimate-amount">£<span id="est">102</span></div>
+      <div class="estimate-note">fixed-price quote guaranteed within £20 on site visit</div>
+      <a href="tel:07700400400" class="estimate-cta">☎ Ring Emrys now →</a>
+    </div>
+  </div>
+</section>
+<section class="services" id="services">
+  <div class="services-head">
+    <h2>The <span>full</span> job sheet</h2>
+    <p>Domestic plumbing and gas work. No job too small — a dripping tap is £60, and we'll be out this week. No job too big — full bathroom rips, combi boilers, underfloor heating, all quoted in writing.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc"><div class="svc-num">SVC 01</div><h3>Emergency leaks</h3><p>Burst pipe, dripping ceiling, water coming through a wall. Out within the hour in emergencies.</p><div class="svc-price">from <span>£85</span></div></div>
+    <div class="svc"><div class="svc-num">SVC 02</div><h3>Blocked drains</h3><p>Sinks, toilets, mains drains. Rodded, jetted, CCTV survey if needed. Cleaned up after.</p><div class="svc-price">from <span>£120</span></div></div>
+    <div class="svc"><div class="svc-num">SVC 03</div><h3>Boiler service &amp; repair</h3><p>Worcester, Vaillant, Ideal, Baxi certified. Annual service, fault-finding, parts replacement.</p><div class="svc-price">from <span>£85</span></div></div>
+    <div class="svc"><div class="svc-num">SVC 04</div><h3>Boiler replacement</h3><p>Old combi to new combi usually one day. Quoted fixed on site, written before we start.</p><div class="svc-price">from <span>£1,850</span></div></div>
+    <div class="svc"><div class="svc-num">SVC 05</div><h3>Bathroom fits</h3><p>Full bathroom strip, tile, plumb and finish. Plans to pick through before we buy anything.</p><div class="svc-price">from <span>£3,500</span></div></div>
+    <div class="svc"><div class="svc-num">SVC 06</div><h3>Landlord gas safety</h3><p>CP12 certificates, appliance checks, legal compliance paperwork within 24h of visit.</p><div class="svc-price">from <span>£85</span></div></div>
+    <div class="svc"><div class="svc-num">SVC 07</div><h3>Radiators &amp; heating</h3><p>New radiators, moved radiators, power flushes, thermostatic valves. Heating balanced on leave.</p><div class="svc-price">from <span>£120</span></div></div>
+    <div class="svc"><div class="svc-num">SVC 08</div><h3>Tap, toilet, shower</h3><p>Small fittings, quick fixes, valves, shower pumps, basin installs. Usually same-week.</p><div class="svc-price">from <span>£60</span></div></div>
+  </div>
+</section>
+<section class="zones" id="zones">
+  <div class="zones-inner">
+    <div>
+      <h2>Where we <span>cover</span></h2>
+      <p>Core zone — we live here. 30-minute response on emergencies in these towns. Further afield by prior booking.</p>
+    </div>
+    <div class="zone-grid">
+      <div class="zone">BLACKWOOD<small>NP12</small></div>
+      <div class="zone">BARGOED<small>CF81</small></div>
+      <div class="zone">NEWBRIDGE<small>NP11</small></div>
+      <div class="zone">YSTRAD M.<small>CF82</small></div>
+      <div class="zone">OAKDALE<small>NP12</small></div>
+      <div class="zone">PENGAM<small>NP12</small></div>
+      <div class="zone">CRUMLIN<small>NP11</small></div>
+      <div class="zone">PONTLLAN.<small>NP12</small></div>
+      <div class="zone">RISCA<small>NP11</small></div>
+    </div>
+  </div>
+</section>
+<section class="testimonials">
+  <h2>Reviews from <span>recent jobs</span></h2>
+  <div class="tc-grid">
+    <div class="tc"><div class="tc-stars">★★★★★</div><p>"Boiler packed up at 7pm Sunday. Emrys was round at 9pm with parts, fixed by 10:30. Fair price, no weekend rip-off."</p><div class="tc-author">— Hannah, Oakdale</div></div>
+    <div class="tc"><div class="tc-stars">★★★★★</div><p>"Rhys did our full bathroom. Arrived when he said, finished when he said, cleaned up every night. Proper craftsmen."</p><div class="tc-author">— Dafydd, Ystrad Mynach</div></div>
+    <div class="tc"><div class="tc-stars">★★★★★</div><p>"Third plumber I called — first to turn up. Landlord gas cert same day, paperwork same day. Hired for all three flats."</p><div class="tc-author">— S. Price Lettings</div></div>
+  </div>
+</section>
+<footer>EMRYS PLUMBING · GAS SAFE <span>000000</span> · CIPHE <span>MEMBER</span> · BLACKWOOD · NP12</footer>
+<script>
+const s={job:85,urg:1.2,cx:30};
+function calc(){
+  let cxAdd=Math.round((s.cx/100)*80);
+  document.getElementById('cx-val').textContent=`+£${cxAdd}`;
+  document.getElementById('est').textContent=Math.round(s.job*s.urg+cxAdd);
+}
+document.querySelectorAll('#jobs .q-chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#jobs .q-chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');s.job=+c.dataset.price;calc();
+}));
+document.querySelectorAll('#urg .q-chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#urg .q-chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');s.urg=+c.dataset.mult;calc();
+}));
+document.getElementById('complexity').addEventListener('input',e=>{s.cx=+e.target.value;calc()});
+calc();
+const cd=document.getElementById('cd');
+let left=23*3600+48*60+7;
+setInterval(()=>{
+  if(left<=0)left=24*3600;
+  left--;
+  const h=String(Math.floor(left/3600)).padStart(2,'0'),m=String(Math.floor((left%3600)/60)).padStart(2,'0'),sc=String(left%60).padStart(2,'0');
+  cd.textContent=`${h}:${m}:${sc}`;
+},1000);
+</script>
+</body>
+</html>

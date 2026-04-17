@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!-- SITE_META {"business_type":"vape shop","name":"Flavour Vapour","palette":{"primary":"#050010","accent":"#ff00aa","bg":"#0a0018","cyan":"#00ffff","lime":"#9fff00"},"features":["dark theme","gradient backgrounds","image gallery"],"experimental":["CRT scanlines and glitch typography","slot-machine flavour roulette","arcade-style product reel"]} -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flavour Vapour — Blackwood</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#050010;color:#e0e0ff;overflow-x:hidden}
+body{font-family:'Space Grotesk',sans-serif;line-height:1.5;position:relative}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,255,255,.03) 3px,rgba(0,0,0,0) 4px);pointer-events:none;z-index:100}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.4) 100%);pointer-events:none;z-index:99}
+nav{position:sticky;top:0;background:rgba(5,0,16,.9);backdrop-filter:blur(6px);padding:14px 30px;display:flex;justify-content:space-between;align-items:center;z-index:50;border-bottom:2px solid #ff00aa;box-shadow:0 0 20px rgba(255,0,170,.3)}
+.mark{font-family:'VT323',monospace;font-size:32px;color:#00ffff;text-shadow:0 0 10px #00ffff,2px 0 0 #ff00aa,-2px 0 0 #9fff00;letter-spacing:.05em;animation:glitch 4s infinite}
+@keyframes glitch{0%,92%,100%{text-shadow:0 0 10px #00ffff,2px 0 0 #ff00aa,-2px 0 0 #9fff00}93%{text-shadow:0 0 10px #00ffff,4px 0 0 #ff00aa,-4px 0 0 #9fff00;transform:translateX(2px)}95%{text-shadow:0 0 10px #00ffff,-2px 0 0 #ff00aa,2px 0 0 #9fff00;transform:translateX(-2px)}}
+nav ul{display:flex;gap:24px;list-style:none;font-family:'VT323',monospace;font-size:22px}
+nav a{color:#e0e0ff;text-decoration:none;letter-spacing:.05em}
+nav a:hover{color:#ff00aa;text-shadow:0 0 8px #ff00aa}
+.hero{min-height:90vh;display:grid;place-items:center;padding:40px 30px;text-align:center;position:relative;background:radial-gradient(ellipse at 30% 40%,rgba(255,0,170,.15) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(0,255,255,.15) 0%,transparent 50%)}
+.hero-inner{max-width:900px;z-index:2}
+.hero-badge{display:inline-block;font-family:'VT323',monospace;font-size:18px;color:#9fff00;border:2px solid #9fff00;padding:4px 14px;letter-spacing:.15em;margin-bottom:30px;text-shadow:0 0 8px #9fff00;box-shadow:inset 0 0 12px rgba(159,255,0,.2)}
+.hero h1{font-family:'VT323',monospace;font-size:clamp(80px,14vw,180px);line-height:.9;margin-bottom:20px;color:#ff00aa;text-shadow:0 0 20px #ff00aa,4px 0 0 #00ffff,-4px 0 0 #9fff00;letter-spacing:.02em;animation:glitch 6s infinite}
+.hero-sub{font-family:'VT323',monospace;font-size:28px;color:#00ffff;margin-bottom:30px;text-shadow:0 0 8px #00ffff;letter-spacing:.1em}
+.hero-text{font-size:15px;color:#c0c0e0;max-width:520px;margin:0 auto 40px;line-height:1.7}
+.cta-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+.arcade-btn{font-family:'VT323',monospace;font-size:24px;padding:10px 26px;background:transparent;color:#ff00aa;border:2px solid #ff00aa;text-decoration:none;letter-spacing:.1em;text-transform:uppercase;transition:.15s;box-shadow:0 0 15px rgba(255,0,170,.3),inset 0 0 15px rgba(255,0,170,.1);cursor:pointer}
+.arcade-btn:hover{background:#ff00aa;color:#050010;box-shadow:0 0 25px #ff00aa}
+.arcade-btn.cyan{color:#00ffff;border-color:#00ffff;box-shadow:0 0 15px rgba(0,255,255,.3),inset 0 0 15px rgba(0,255,255,.1)}
+.arcade-btn.cyan:hover{background:#00ffff;color:#050010;box-shadow:0 0 25px #00ffff}
+.slot-section{padding:80px 30px;max-width:1000px;margin:0 auto;text-align:center}
+.slot-title{font-family:'VT323',monospace;font-size:56px;color:#9fff00;margin-bottom:10px;text-shadow:0 0 12px #9fff00}
+.slot-sub{font-family:'VT323',monospace;font-size:20px;color:#c0c0e0;margin-bottom:40px;letter-spacing:.05em}
+.slot-machine{display:inline-block;background:linear-gradient(180deg,#1a0030 0%,#050010 100%);border:4px solid #ff00aa;border-radius:8px;padding:30px;box-shadow:0 0 40px rgba(255,0,170,.5),inset 0 0 20px rgba(0,255,255,.1)}
+.reels{display:flex;gap:12px;margin-bottom:24px;justify-content:center}
+.reel{width:140px;height:160px;background:#0a0018;border:2px solid #00ffff;border-radius:4px;overflow:hidden;position:relative;box-shadow:inset 0 0 20px rgba(0,255,255,.3)}
+.reel-strip{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'VT323',monospace;color:#9fff00;text-shadow:0 0 8px #9fff00;text-align:center;padding:10px;transition:transform .4s cubic-bezier(.2,1,.3,1)}
+.reel-word{font-size:32px;line-height:1.1}
+.reel-sub{font-size:14px;color:#00ffff;text-shadow:0 0 6px #00ffff;margin-top:4px;letter-spacing:.1em}
+.spin-btn{font-family:'VT323',monospace;font-size:32px;padding:14px 44px;background:linear-gradient(180deg,#ff00aa 0%,#aa0080 100%);color:#050010;border:none;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 0 #550055,0 0 30px rgba(255,0,170,.5);transition:.1s;font-weight:bold}
+.spin-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #550055,0 0 40px rgba(255,0,170,.7)}
+.spin-btn:active{transform:translateY(2px);box-shadow:0 0 0 #550055,0 0 20px rgba(255,0,170,.4)}
+.result{font-family:'VT323',monospace;font-size:24px;color:#00ffff;text-shadow:0 0 10px #00ffff;margin-top:20px;min-height:30px;letter-spacing:.05em}
+.products{padding:80px 30px;max-width:1200px;margin:0 auto}
+.products h2{font-family:'VT323',monospace;font-size:64px;color:#00ffff;text-align:center;margin-bottom:10px;text-shadow:0 0 15px #00ffff;letter-spacing:.05em}
+.products .sub{font-family:'VT323',monospace;font-size:20px;color:#ff00aa;text-align:center;margin-bottom:50px;text-shadow:0 0 8px #ff00aa}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.product{background:linear-gradient(180deg,#1a0030 0%,#050010 100%);border:2px solid #333366;padding:24px 18px;text-align:center;transition:.2s;cursor:pointer;position:relative;overflow:hidden}
+.product:hover{border-color:var(--c,#ff00aa);box-shadow:0 0 20px var(--c,#ff00aa),inset 0 0 20px rgba(255,0,170,.1);transform:translateY(-4px)}
+.product::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,#ff00aa);box-shadow:0 0 10px var(--c,#ff00aa)}
+.product-icon{font-size:48px;margin-bottom:14px}
+.product-name{font-family:'VT323',monospace;font-size:22px;color:var(--c,#ff00aa);letter-spacing:.05em;text-shadow:0 0 8px var(--c,#ff00aa);margin-bottom:6px}
+.product-desc{font-family:'Space Grotesk',sans-serif;font-size:12px;color:#a0a0c0;line-height:1.4;margin-bottom:12px}
+.product-price{font-family:'VT323',monospace;font-size:26px;color:#9fff00;text-shadow:0 0 8px #9fff00}
+.visit{padding:80px 30px;text-align:center;background:linear-gradient(180deg,#050010 0%,#1a0030 100%);border-top:2px solid #ff00aa;border-bottom:2px solid #00ffff}
+.visit h2{font-family:'VT323',monospace;font-size:56px;color:#ff00aa;text-shadow:0 0 15px #ff00aa;margin-bottom:14px}
+.visit-info{font-family:'VT323',monospace;font-size:22px;color:#00ffff;letter-spacing:.1em;line-height:1.8;text-shadow:0 0 8px #00ffff}
+footer{padding:20px;text-align:center;font-family:'VT323',monospace;font-size:18px;color:#555588;letter-spacing:.15em}
+@media(max-width:700px){.reels{gap:6px}.reel{width:90px;height:110px}.reel-word{font-size:20px}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="mark">FLAVOUR_VAPOUR</div>
+  <ul><li><a href="#roulette">roulette</a></li><li><a href="#shop">shop</a></li><li><a href="#visit">visit</a></li></ul>
+</nav>
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">▶ OPEN · 10AM–10PM · 7 DAYS</div>
+    <h1>FLAVOUR<br>VAPOUR</h1>
+    <div class="hero-sub">&gt; BLACKWOOD · HIGH STREET · EST. 2019</div>
+    <p class="hero-text">Over 400 flavours of e-liquid on the wall. Every major brand, every hardware kit. Can't decide? Spin the roulette — we'll pick for you.</p>
+    <div class="cta-row">
+      <a href="#roulette" class="arcade-btn">▸ spin the roulette</a>
+      <a href="#visit" class="arcade-btn cyan">▸ find us</a>
+    </div>
+  </div>
+</section>
+<section class="slot-section" id="roulette">
+  <h2 class="slot-title">▼ FLAVOUR ROULETTE ▼</h2>
+  <p class="slot-sub">// can't decide? let the machine decide //</p>
+  <div class="slot-machine">
+    <div class="reels">
+      <div class="reel"><div class="reel-strip" id="r1"><div class="reel-word">BLUE</div><div class="reel-sub">· fruit ·</div></div></div>
+      <div class="reel"><div class="reel-strip" id="r2"><div class="reel-word">RASP</div><div class="reel-sub">· berry ·</div></div></div>
+      <div class="reel"><div class="reel-strip" id="r3"><div class="reel-word">ICE</div><div class="reel-sub">· menthol ·</div></div></div>
+    </div>
+    <button class="spin-btn" id="spin">▶ SPIN ◀</button>
+    <div class="result" id="result">press spin to begin</div>
+  </div>
+</section>
+<section class="products" id="shop">
+  <h2>THE SHOP</h2>
+  <p class="sub">// featured hardware · this week //</p>
+  <div class="product-grid">
+    <div class="product" style="--c:#ff00aa"><div class="product-icon">🔋</div><div class="product-name">VINCI Q</div><div class="product-desc">Pod system · 15W · built-in 900mAh</div><div class="product-price">£24</div></div>
+    <div class="product" style="--c:#00ffff"><div class="product-icon">💨</div><div class="product-name">CALIBURN A3</div><div class="product-desc">MTL pod · slim form · 520mAh</div><div class="product-price">£19</div></div>
+    <div class="product" style="--c:#9fff00"><div class="product-icon">⚡</div><div class="product-name">DRAG X PRO</div><div class="product-desc">Mod · up to 100W · dual 18650</div><div class="product-price">£64</div></div>
+    <div class="product" style="--c:#ff8c00"><div class="product-icon">💧</div><div class="product-name">10ML E-LIQ</div><div class="product-desc">all flavours · 3 for £10</div><div class="product-price">£4</div></div>
+    <div class="product" style="--c:#ff00aa"><div class="product-icon">🧊</div><div class="product-name">ELFBAR 600</div><div class="product-desc">disposable · 20mg · assorted</div><div class="product-price">£4.99</div></div>
+    <div class="product" style="--c:#00ffff"><div class="product-icon">🔧</div><div class="product-name">COIL PACKS</div><div class="product-desc">UWELL · Uwell · GT · choose ohm</div><div class="product-price">£8</div></div>
+    <div class="product" style="--c:#9fff00"><div class="product-icon">🍓</div><div class="product-name">NIC SHOTS</div><div class="product-desc">18mg · VG/PG · 10ml unflavoured</div><div class="product-price">£1</div></div>
+    <div class="product" style="--c:#ff8c00"><div class="product-icon">⚙️</div><div class="product-name">DIY BASE</div><div class="product-desc">500ml · build your own liquid</div><div class="product-price">£9</div></div>
+  </div>
+</section>
+<section class="visit" id="visit">
+  <h2>▶ VISIT_US ◀</h2>
+  <div class="visit-info">
+    42 High Street · Blackwood · NP12<br>
+    01495 000 000 · flavourvapour.uk<br>
+    OPEN 10:00 — 22:00 · 7 DAYS
+  </div>
+</section>
+<footer>&copy; FLAVOUR VAPOUR // OVER 18s ONLY // DRINK WATER</footer>
+<script>
+const flavours={
+  top:[{w:'BLUE',s:'fruit'},{w:'MANGO',s:'tropical'},{w:'APPLE',s:'crisp'},{w:'LYCHEE',s:'exotic'},{w:'GRAPE',s:'purple'},{w:'WTRMLN',s:'melon'},{w:'TOBAC',s:'classic'},{w:'CRML',s:'dessert'}],
+  mid:[{w:'RASP',s:'berry'},{w:'BANANA',s:'smooth'},{w:'CHERRY',s:'tart'},{w:'PINE',s:'sharp'},{w:'PEACH',s:'soft'},{w:'CUSTRD',s:'cream'},{w:'MINT',s:'fresh'},{w:'VNLLA',s:'sweet'}],
+  bot:[{w:'ICE',s:'menthol'},{w:'FRESH',s:'cool'},{w:'SMOOTH',s:'no ice'},{w:'FROST',s:'arctic'},{w:'SODA',s:'fizzy'},{w:'NIC20',s:'strong'},{w:'NIC10',s:'medium'},{w:'NIC6',s:'light'}]
+};
+const spin=document.getElementById('spin'),result=document.getElementById('result');
+spin.addEventListener('click',()=>{
+  result.textContent='rolling…';
+  const picks=['top','mid','bot'].map(k=>flavours[k][Math.floor(Math.random()*flavours[k].length)]);
+  ['r1','r2','r3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.style.transform=`translateY(-${(i+4)*60}px)`;
+    setTimeout(()=>{
+      el.style.transition='none';
+      el.style.transform='translateY(0)';
+      el.innerHTML=`<div class="reel-word">${picks[i].w}</div><div class="reel-sub">· ${picks[i].s} ·</div>`;
+      setTimeout(()=>el.style.transition='',50);
+    },600+i*150);
+  });
+  setTimeout(()=>{result.textContent=`» ${picks[0].w} · ${picks[1].w} · ${picks[2].w} «`},1100);
+});
+</script>
+</body>
+</html>
