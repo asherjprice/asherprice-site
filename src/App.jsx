@@ -1070,6 +1070,14 @@ function Footer() {
           onMouseEnter={e => e.target.style.color = C.red}
           onMouseLeave={e => e.target.style.color = C.t3}
         >hello@asherprice.co.uk</a>
+        <a href="/privacy-policy" style={{
+          fontFamily: "'Inter',sans-serif", fontSize: 12,
+          color: C.t3, textDecoration: "none", letterSpacing: "0.04em",
+          transition: "color 0.3s",
+        }}
+          onMouseEnter={e => e.target.style.color = C.red}
+          onMouseLeave={e => e.target.style.color = C.t3}
+        >Privacy Policy</a>
       </div>
       </div>
     </footer>

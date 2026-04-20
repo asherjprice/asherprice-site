@@ -12,6 +12,7 @@ export default defineConfig({
         examples: resolve(__dirname, 'examples.html'),
         foundingLocal: resolve(__dirname, 'founding-local.html'),
         whyWebsite: resolve(__dirname, 'why-a-website.html'),
+        privacy: resolve(__dirname, 'privacy-policy.html'),
       },
     },
   },
