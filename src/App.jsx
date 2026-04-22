@@ -1,919 +1,1105 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+/* ─────────────────────────────────────────────────────────────────────────
+   Asher Price — Workshop Ledger
+   Drop-in replacement for src/App.jsx
+
+   React 19 + Vite 8. Pure inline styles. No CSS framework.
+
+   Before running, make sure index.html (or your root HTML) includes the
+   Google Fonts link — or add this to main.jsx / index.html <head>:
+
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   ───────────────────────────────────────────────────────────────────────── */
+
+import { useState, useEffect } from "react";
 import Chatbot from "./Chatbot";
 
-/* ── palette ── */
-const C = {
-  red: "#C8102E", redHov: "#E01A38", redFaint: "rgba(200,16,46,0.06)",
-  green: "#1B6B3A", greenFaint: "rgba(27,107,58,0.08)",
-  bg: "#08090B", bg2: "#0C0D10", card: "#101218", card2: "#14161D",
-  border: "#1B1E26", border2: "#252830",
-  t1: "#F0EDEA", t2: "#9B9DA4", t3: "#5C5F68",
-  slate: "#1E2028",
+/* ───────── tokens ───────── */
+const AP = {
+  slate:   "#15171B",
+  slate2:  "#1B1E22",
+  slate3:  "#23262B",
+  rule:    "rgba(232,228,219,0.12)",
+  ruleStr: "rgba(232,228,219,0.22)",
+  off:     "#E8E4DB",
+  off2:    "#D6D1C4",
+  red:     "#A3132A",
+  redDeep: "#7A0E20",
+  moss:    "#7A8564",
+  brass:   "#B79862",
+  dim:     "#7E8086",
+  display: "'Space Grotesk', system-ui, sans-serif",
+  mono:    "'JetBrains Mono', ui-monospace, monospace",
+  italic:  "'Fraunces', Georgia, serif",
+  body:    "'Inter Tight', system-ui, sans-serif",
 };
 
-/* ── intersection observer hook ── */
-function useInView(threshold = 0.1) {
-  const ref = useRef(null);
-  const [v, setV] = useState(false);
-  useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setV(true); obs.disconnect(); } }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return [ref, v];
-}
-
-const PRERENDER = typeof window !== "undefined" && window.location.search.includes("prerender");
-function Reveal({ children, delay = 0, y = 40, style = {} }) {
-  const [ref, v] = useInView();
-  const visible = v || PRERENDER;
-  return <div ref={ref} style={{ ...style, opacity: visible ? 1 : 0, transform: visible ? "none" : `translateY(${y}px)`, transition: `all 0.9s cubic-bezier(0.16,1,0.3,1) ${delay}s` }}>{children}</div>;
-}
-
-/* ── animated counter ── */
-function Counter({ end, suffix = "", duration = 2000 }) {
-  const [val, setVal] = useState(0);
-  const [ref, v] = useInView();
-  useEffect(() => {
-    if (!v) return;
-    let start = 0; const step = end / (duration / 16);
-    const id = setInterval(() => { start += step; if (start >= end) { setVal(end); clearInterval(id); } else setVal(Math.floor(start)); }, 16);
-    return () => clearInterval(id);
-  }, [v, end, duration]);
-  return <span ref={ref}>{val}{suffix}</span>;
-}
-
-/* ── floating particles ── */
-function Particles() {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    const c = canvasRef.current; if (!c) return;
-    const ctx = c.getContext("2d");
-    let w = c.width = window.innerWidth, h = c.height = window.innerHeight;
-    const particles = Array.from({ length: 40 }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-      r: Math.random() * 1.5 + 0.5, o: Math.random() * 0.3 + 0.05,
-    }));
-    let raf;
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,16,46,${p.o})`; ctx.fill();
-      });
-      // draw lines between close particles
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(200,16,46,${0.04 * (1 - dist / 150)})`;
-            ctx.lineWidth = 0.5; ctx.stroke();
-          }
-        }
-      }
-      raf = requestAnimationFrame(draw);
-    }
-    draw();
-    const resize = () => { w = c.width = window.innerWidth; h = c.height = window.innerHeight; };
-    window.addEventListener("resize", resize);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
-  }, []);
-  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />;
-}
-
-/* ── noise/grain overlay ── */
-function Grain() {
-  return <div style={{
-    position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9999,
-    opacity: 0.035,
-    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-    backgroundRepeat: "repeat",
-  }} />;
-}
-
-/* ── dragon mark ── */
-function Dragon({ size = 32, color = C.red, style = {} }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" style={style}>
-      <path d="M50 2L61 28L90 8L72 35L98 50L72 65L90 92L61 72L50 98L39 72L10 92L28 65L2 50L28 35L10 8L39 28Z"
-        fill={color} />
-    </svg>
+/* Responsive hook — mobile breakpoint at 640px */
+function useMobile() {
+  const [m, setM] = useState(
+    typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches
   );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const h = (e) => setM(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
+  return m;
 }
 
-/* ── section label ── */
-function Label({ children }) {
+/* ───────── primitives ───────── */
+function Eyebrow({ children, color = AP.brass, line = true, width = 28 }) {
   return (
     <div style={{
-      fontFamily: "'Inter',sans-serif", fontSize: 11, fontWeight: 700,
-      color: C.red, letterSpacing: "0.22em", textTransform: "uppercase",
-      marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "center", gap: 14,
+      display: "flex", alignItems: "center", gap: 10,
+      fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.16em", color,
+      textTransform: "uppercase",
     }}>
-      <span style={{ width: 32, height: 2, background: C.red, display: "block" }} />
-      {children}
+      {line && <span style={{ width, height: 1, background: color }} />}
+      <span>{children}</span>
     </div>
   );
 }
 
-/* ═══════════════ NAVBAR ═══════════════ */
-function Navbar({ topOffset = 0 }) {
-  const [s, setS] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  useEffect(() => {
-    const h = () => setS(window.scrollY > 60);
-    window.addEventListener("scroll", h); return () => window.removeEventListener("scroll", h);
-  }, []);
-  const navLinks = [
-    { label: "Services", href: "#services" },
-    { label: "Showcase", href: "/showcase" },
-    { label: "Examples", href: "/examples" },
-    { label: "How It Works", href: "#process" },
-  ];
+function SectionHeader({ index, welsh, title, right, invert = false, mobile }) {
+  const fg = invert ? AP.slate : AP.off;
   return (
-    <>
-    <nav style={{
-      position: "fixed", top: topOffset, left: 0, right: 0, zIndex: 200,
-      padding: "0 clamp(24px,6vw,72px)", height: 76,
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      background: s ? "rgba(8,9,11,0.92)" : "transparent",
-      backdropFilter: s ? "blur(24px) saturate(1.4)" : "none",
-      borderBottom: s ? `1px solid ${C.border}` : "1px solid transparent",
-      transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: mobile ? "1fr" : "auto 1fr auto",
+      alignItems: "end", gap: mobile ? 14 : 32,
+      padding: "0 0 22px", borderBottom: `2px solid ${fg}`,
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{
-          width: 36, height: 36, border: `2px solid ${C.red}`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontFamily: "'Playfair Display',Georgia,serif",
-          fontSize: 15, fontWeight: 800, color: C.t1, letterSpacing: "1.5px",
-        }}>AP</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{
-            fontFamily: "'Playfair Display',Georgia,serif",
-            fontSize: 20, fontWeight: 800, color: C.t1,
-            letterSpacing: "-0.02em",
-          }}>Asher Price</span>
-          <span style={{ width: 1, height: 16, background: C.border2, display: "inline-block" }} />
-          <span style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 9, fontWeight: 600,
-            color: C.t3, letterSpacing: "0.15em", textTransform: "uppercase",
-          }}>AI & Web</span>
+      <div style={{ display: "grid", gap: 6 }}>
+        <div style={{ fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.18em", color: AP.red }}>
+          // {index}
+        </div>
+        <div style={{ fontFamily: AP.italic, fontStyle: "italic", fontSize: 16, color: AP.brass }}>
+          {welsh}
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-        {navLinks.map(t => (
-          <a key={t.label} href={t.href} className="desktop-nav" style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 600,
-            color: C.t2, textDecoration: "none", letterSpacing: "0.08em",
-            textTransform: "uppercase", transition: "color 0.3s",
-          }}
-            onMouseEnter={e => e.target.style.color = C.t1}
-            onMouseLeave={e => e.target.style.color = C.t2}
-          >{t.label}</a>
-        ))}
-        <a href="#contact" className="desktop-nav" style={{
-          padding: "11px 28px", background: C.red, color: "#fff",
-          fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
-          letterSpacing: "0.08em", textTransform: "uppercase",
-          textDecoration: "none", transition: "all 0.3s",
-          boxShadow: "0 0 30px rgba(200,16,46,0.15)",
-        }}
-          onMouseEnter={e => { e.target.style.background = C.redHov; e.target.style.boxShadow = "0 0 40px rgba(200,16,46,0.3)"; }}
-          onMouseLeave={e => { e.target.style.background = C.red; e.target.style.boxShadow = "0 0 30px rgba(200,16,46,0.15)"; }}
-        >Get Started</a>
-        {/* Hamburger button — hidden by default, shown via media query */}
-        <button className="mobile-menu-btn" onClick={() => setMenuOpen(true)} style={{
-          display: "none", alignItems: "center", justifyContent: "center",
-          background: "none", border: "none", cursor: "pointer", padding: 4,
-        }}>
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <rect y="5" width="28" height="2.5" rx="1.25" fill={C.t2} />
-            <rect y="12.75" width="28" height="2.5" rx="1.25" fill={C.t2} />
-            <rect y="20.5" width="28" height="2.5" rx="1.25" fill={C.t2} />
-          </svg>
-        </button>
-      </div>
-    </nav>
-    {/* Mobile overlay menu */}
-    {menuOpen && (
-      <div style={{
-        position: "fixed", inset: 0, zIndex: 300,
-        background: "rgba(8,9,11,0.98)", backdropFilter: "blur(20px)",
-        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        gap: 32,
-      }}>
-        <button onClick={() => setMenuOpen(false)} style={{
-          position: "absolute", top: 22, right: 28,
-          background: "none", border: "none", cursor: "pointer", padding: 4,
-        }}>
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <line x1="4" y1="4" x2="24" y2="24" stroke={C.t2} strokeWidth="2.5" strokeLinecap="round" />
-            <line x1="24" y1="4" x2="4" y2="24" stroke={C.t2} strokeWidth="2.5" strokeLinecap="round" />
-          </svg>
-        </button>
-        {navLinks.map(t => (
-          <a key={t.label} href={t.href} onClick={() => setMenuOpen(false)} style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 600,
-            color: C.t2, textDecoration: "none", letterSpacing: "0.08em",
-            textTransform: "uppercase", transition: "color 0.3s",
-          }}>{t.label}</a>
-        ))}
-        <a href="#contact" onClick={() => setMenuOpen(false)} style={{
-          padding: "14px 36px", background: C.red, color: "#fff",
-          fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
-          letterSpacing: "0.08em", textTransform: "uppercase",
-          textDecoration: "none", marginTop: 8,
-          boxShadow: "0 0 30px rgba(200,16,46,0.15)",
-        }}>Get Started</a>
-      </div>
-    )}
-    </>
+      <h2 style={{
+        margin: 0, fontFamily: AP.display, fontWeight: 500,
+        fontSize: mobile ? 40 : 72, lineHeight: 0.96,
+        letterSpacing: "-0.035em", color: fg, textWrap: "balance",
+      }}>{title}</h2>
+      {right && (
+        <div style={{
+          fontFamily: AP.mono, fontSize: 11, color: fg, letterSpacing: "0.02em",
+          textAlign: mobile ? "left" : "right", lineHeight: 1.55, opacity: 0.75,
+        }}>{right}</div>
+      )}
+    </div>
   );
 }
 
-/* ═══════════════ HERO ═══════════════ */
-function Hero() {
-  const [loaded, setLoaded] = useState(PRERENDER);
-  useEffect(() => { setTimeout(() => setLoaded(true), 200); }, []);
-  const a = (d) => ({
-    opacity: loaded ? 1 : 0,
-    transform: loaded ? "none" : "translateY(35px)",
-    transition: `all 1s cubic-bezier(0.16,1,0.3,1) ${d}s`,
-  });
+function Btn({ children, variant = "solid", as = "button", href, icon = "→", small, full, onClick }) {
+  const base = {
+    display: "inline-flex", alignItems: "center", justifyContent: "space-between", gap: 14,
+    padding: small ? "10px 14px" : "14px 20px",
+    fontFamily: AP.mono, fontSize: small ? 11 : 12, letterSpacing: "0.12em",
+    textTransform: "uppercase", border: "none", cursor: "pointer",
+    width: full ? "100%" : "auto", textDecoration: "none",
+  };
+  const variants = {
+    solid:  { ...base, background: AP.red, color: AP.off },
+    ghost:  { ...base, background: "transparent", color: AP.off, border: `1px solid ${AP.off}` },
+    light:  { ...base, background: AP.off, color: AP.slate },
+  };
+  const style = variants[variant] || variants.solid;
+  if (as === "a") return <a href={href} style={style} onClick={onClick}><span>{children}</span><span aria-hidden>{icon}</span></a>;
+  return <button style={style} onClick={onClick}><span>{children}</span><span aria-hidden>{icon}</span></button>;
+}
+
+function Monogram({ size = 44, color = AP.red, fg = AP.off }) {
   return (
-    <section style={{
-      minHeight: "100vh", display: "flex", flexDirection: "column",
-      justifyContent: "center", alignItems: "center",
-      position: "relative", overflow: "hidden",
-      padding: "140px clamp(24px,6vw,72px) 100px",
-    }}>
-      <Particles />
-      {/* Large faded dragon watermark */}
-      <div style={{ position: "absolute", right: "-5%", top: "15%", opacity: 0.018, transform: "rotate(12deg)" }}>
-        <Dragon size={600} color={C.red} />
-      </div>
-
-      <div style={{ position: "relative", maxWidth: 820, textAlign: "center" }}>
-        <div style={a(0.3)}>
-          <Label>Blackwood, South Wales</Label>
-        </div>
-        <h1 style={{
-          fontFamily: "'Playfair Display',Georgia,serif",
-          fontSize: "clamp(44px,8vw,92px)", fontWeight: 800,
-          lineHeight: 1.02, color: C.t1, margin: "0 0 40px 0",
-          letterSpacing: "-0.03em", ...a(0.5),
-        }}>
-          <span style={{ display: "block", marginBottom: 12 }}>Your business,</span>
-          <span style={{
-            display: "block",
-            background: `linear-gradient(135deg, ${C.red} 0%, #E84460 50%, ${C.red} 100%)`,
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            ...a(0.65),
-          }}>
-            supercharged.
-          </span>
-        </h1>
-        <p style={{
-          fontFamily: "'Inter',sans-serif",
-          fontSize: "clamp(15px,1.8vw,19px)", color: C.t2,
-          lineHeight: 1.8, maxWidth: 540, margin: "0 auto 52px auto",
-          fontWeight: 400, ...a(0.8),
-        }}>
-          AI-powered websites, assistants, and automation
-          for businesses across South Wales. Professional
-          results, personal service, honest advice.
-        </p>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", ...a(0.95) }}>
-          <a href="/founding-local" style={{
-            padding: "18px 36px", background: C.red, color: "#fff",
-            fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
-            letterSpacing: "0.04em", textDecoration: "none",
-            textTransform: "uppercase", transition: "all 0.4s",
-            boxShadow: "0 4px 30px rgba(200,16,46,0.2)",
-            position: "relative", overflow: "hidden",
-          }}
-            onMouseEnter={e => { e.target.style.background = C.redHov; e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 8px 40px rgba(200,16,46,0.3)"; }}
-            onMouseLeave={e => { e.target.style.background = C.red; e.target.style.transform = "none"; e.target.style.boxShadow = "0 4px 30px rgba(200,16,46,0.2)"; }}
-          >From £100 — See the Deal</a>
-          <a href="/examples" style={{
-            padding: "18px 36px", background: "transparent",
-            border: `1px solid ${C.red}`, color: C.t1,
-            fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
-            letterSpacing: "0.04em", textDecoration: "none",
-            textTransform: "uppercase", transition: "all 0.4s",
-          }}
-            onMouseEnter={e => { e.target.style.background = C.red; e.target.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.transform = "none"; }}
-          >See Example Sites</a>
-          <a href="#contact" style={{
-            padding: "18px 36px", background: "transparent",
-            border: `1px solid ${C.border2}`, color: C.t1,
-            fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 600,
-            letterSpacing: "0.04em", textDecoration: "none",
-            textTransform: "uppercase", transition: "all 0.4s",
-          }}
-            onMouseEnter={e => { e.target.style.borderColor = C.t2; e.target.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={e => { e.target.style.borderColor = C.border2; e.target.style.transform = "none"; }}
-          >Book a Free Chat</a>
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div style={{
-        position: "absolute", bottom: 40,
-        left: "50%", transform: "translateX(-50%)",
-        display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
-        ...a(1.3),
-      }}>
-        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 10, color: C.t3, letterSpacing: "0.15em", textTransform: "uppercase" }}>Scroll</span>
-        <div style={{
-          width: 1, height: 40,
-          background: `linear-gradient(to bottom, ${C.red}, transparent)`,
-          animation: "scrollPulse 2s ease-in-out infinite",
-        }} />
-      </div>
-    </section>
+    <div style={{
+      width: size, height: size, background: color, color: fg,
+      display: "grid", placeItems: "center",
+      fontFamily: AP.display, fontWeight: 700, letterSpacing: "-0.04em",
+      fontSize: size * 0.42,
+    }}>AP</div>
   );
 }
 
-/* ═══════════════ PROOF STRIP ═══════════════ */
-function ProofStrip() {
+/* ───────── 01 · Announcement ───────── */
+function Announcement({ mobile }) {
+  return (
+    <div style={{
+      height: 38, display: "flex", alignItems: "center",
+      padding: mobile ? "0 14px" : "0 28px", gap: mobile ? 10 : 22,
+      borderBottom: `1px solid ${AP.rule}`,
+      fontFamily: AP.mono, fontSize: mobile ? 10 : 11, color: AP.off, letterSpacing: "0.04em",
+      background: AP.slate2, position: "relative", zIndex: 5,
+      overflow: "hidden", whiteSpace: "nowrap",
+    }}>
+      <span style={{ color: AP.brass }}>◆</span>
+      <span>FOUNDING_LOCAL</span>
+      <span style={{ color: AP.dim }}>//</span>
+      <span>£100 setup</span>
+      <span style={{ color: AP.dim }}>·</span>
+      <span>£50/mo</span>
+      <span style={{ color: AP.dim }}>//</span>
+      <span style={{ color: AP.red }}>10 of 10 places remaining</span>
+      {!mobile && (
+        <span style={{ marginLeft: "auto", color: AP.dim, display: "flex", gap: 18 }}>
+          <span>Blackwood · NP12</span>
+          <span>[apply →]</span>
+        </span>
+      )}
+    </div>
+  );
+}
+
+/* ───────── 02 · Nav ───────── */
+function Nav({ mobile, onMenuOpen }) {
   const items = [
-    { value: "1", label: "Live client site" },
-    { value: "9", label: "Full website demos" },
-    { value: "60+", label: "Mockups built" },
-    { value: "£100", label: "To get started" },
+    { label: "Services",     href: "#services" },
+    { label: "Showcase",     href: "/showcase" },
+    { label: "Examples",     href: "/examples" },
+    { label: "How it works", href: "#how-it-works" },
   ];
   return (
-    <div style={{
-      borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
-      padding: "28px clamp(24px,6vw,72px)",
-      background: C.bg2,
+    <nav style={{
+      height: mobile ? 64 : 78, display: "flex", alignItems: "center",
+      padding: mobile ? "0 16px" : "0 28px",
+      borderBottom: `1px solid ${AP.rule}`, position: "sticky", top: 0,
+      background: `${AP.slate}ee`, backdropFilter: "blur(8px)", zIndex: 10,
     }}>
-      <div style={{
-        maxWidth: 900, margin: "0 auto",
-        display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24,
-        textAlign: "center",
-      }} className="proof-strip-grid">
-        {items.map((item, i) => (
-          <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-            <span style={{
-              fontFamily: "'Playfair Display',Georgia,serif",
-              fontSize: "clamp(24px,3vw,32px)", fontWeight: 800,
-              color: i === 3 ? C.green : C.red, lineHeight: 1,
-            }}>{item.value}</span>
-            <span style={{
-              fontFamily: "'Inter',sans-serif", fontSize: 11, fontWeight: 500,
-              color: C.t3, letterSpacing: "0.04em",
-            }}>{item.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+      <a href="#top" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", color: AP.off }}>
+        <Monogram />
+        <div style={{ lineHeight: 1.15 }}>
+          <div style={{ fontFamily: AP.display, fontWeight: 600, fontSize: 18, letterSpacing: "-0.01em" }}>Asher Price</div>
+          {!mobile && (
+            <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.08em" }}>
+              / solo studio / blackwood, cymru
+            </div>
+          )}
+        </div>
+      </a>
+      {mobile ? (
+        <button onClick={onMenuOpen} style={{
+          marginLeft: "auto", width: 40, height: 40, background: "transparent",
+          border: `1px solid ${AP.ruleStr}`, color: AP.off, cursor: "pointer",
+          display: "inline-flex", alignItems: "center", justifyContent: "center", padding: 0,
+        }} aria-label="Open menu">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+            <line x1="0" y1="1" x2="18" y2="1" stroke="currentColor" strokeWidth="1.4"/>
+            <line x1="0" y1="6" x2="18" y2="6" stroke="currentColor" strokeWidth="1.4"/>
+            <line x1="0" y1="11" x2="18" y2="11" stroke="currentColor" strokeWidth="1.4"/>
+          </svg>
+        </button>
+      ) : (
+        <div style={{
+          marginLeft: "auto", display: "flex", gap: 26, alignItems: "center",
+          fontFamily: AP.mono, fontSize: 12, color: AP.off,
+        }}>
+          {items.map((x, i) => (
+            <a key={x.label} href={x.href} style={{
+              color: AP.off, textDecoration: "none", display: "flex", gap: 8, alignItems: "baseline",
+            }}>
+              <span style={{ color: AP.dim, fontSize: 10 }}>{String(i + 1).padStart(2, "0")}</span>
+              <span>{x.label}</span>
+            </a>
+          ))}
+          <a href="#contact" style={{ textDecoration: "none" }}>
+            <Btn small>05 · Get started</Btn>
+          </a>
+        </div>
+      )}
+    </nav>
   );
 }
 
-/* ═══════════════ SERVICES (everything in one section) ═══════════════ */
-const SERVICE_ITEMS = [
-  { title: "Websites", desc: "Bespoke, mobile-first, built to convert. No templates.", link: { href: "/why-a-website.html", label: "Why you need one" } },
-  { title: "AI Assistants", desc: "Trained on your business. Answer enquiries and capture leads 24/7." },
-  { title: "Online Ordering", desc: "Customers order from your site. No Deliveroo commission." },
-  { title: "Booking Systems", desc: "Pick a service, pick a time, done. Works for any appointment business." },
-  { title: "Loyalty Cards", desc: "Digital stamp cards from your website. No app download needed." },
-  { title: "Automation", desc: "Invoicing, follow-ups, lead capture — if you do it twice, I automate it." },
-];
-
-const PROCESS_STEPS = [
-  { n: "01", t: "Chat", d: "Free, no-pressure conversation about your business." },
-  { n: "02", t: "Build", d: "I design and build. You see progress throughout." },
-  { n: "03", t: "Launch", d: "I handle DNS, hosting — everything. You watch it go live." },
-  { n: "04", t: "Grow", d: "Ongoing support, updates, and improvements." },
-];
-
-function Services() {
+/* ───────── 03 · Hero + proof strip ───────── */
+function Hero({ mobile }) {
   return (
-    <section id="services" style={{ padding: "120px clamp(24px,6vw,72px) 80px", position: "relative" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-      <Reveal>
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
-        <Label>What I Do</Label>
-        <h2 style={{
-          fontFamily: "'Playfair Display',Georgia,serif",
-          fontSize: "clamp(32px,5vw,52px)", fontWeight: 800,
-          color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.025em", lineHeight: 1.1,
-        }}>
-          Everything your business needs.<br />
-          <span style={{ color: C.t3 }}>One person to talk to.</span>
-        </h2>
-        </div>
-      </Reveal>
-
-      {/* Services — 6 items, 3x2 grid, no dead cell */}
+    <section id="top" style={{
+      position: "relative", background: AP.slate, color: AP.off,
+      borderBottom: `1px solid ${AP.rule}`, overflow: "hidden",
+    }}>
+      {/* Ruled paper */}
       <div style={{
-        display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2,
-      }} className="services-grid">
-        {SERVICE_ITEMS.map((s, i) => (
-          <Reveal key={i} delay={i * 0.06}>
-            <div style={{
-              background: C.card, padding: "clamp(24px,2.5vw,36px)",
-              height: "100%", position: "relative",
-              transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
-              borderBottom: `2px solid transparent`,
-            }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = C.card2;
-                e.currentTarget.style.borderBottomColor = C.red;
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = C.card;
-                e.currentTarget.style.borderBottomColor = "transparent";
-              }}
-            >
-              <h3 style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700,
-                color: C.t1, margin: "0 0 8px 0",
-              }}>{s.title}</h3>
-              <p style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 13,
-                color: C.t2, lineHeight: 1.7, margin: 0,
-              }}>{s.desc}</p>
-              {s.link && (
-                <a href={s.link.href} style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  marginTop: 12, fontFamily: "'Inter',sans-serif", fontSize: 11,
-                  fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-                  color: C.red, textDecoration: "none", transition: "gap 0.3s",
-                }}
-                  onMouseEnter={e => e.currentTarget.style.gap = "10px"}
-                  onMouseLeave={e => e.currentTarget.style.gap = "6px"}
-                >{s.link.label} <span aria-hidden="true">→</span></a>
-              )}
-            </div>
-          </Reveal>
-        ))}
-      </div>
+        position: "absolute", inset: 0, pointerEvents: "none",
+        backgroundImage: `repeating-linear-gradient(to bottom, transparent 0, transparent 47px, rgba(232,228,219,0.035) 47px, rgba(232,228,219,0.035) 48px)`,
+      }}/>
+      <div style={{
+        position: "relative",
+        display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "1.25fr 1fr",
+        minHeight: mobile ? 0 : 720,
+      }}>
+        {/* LEFT */}
+        <div style={{
+          padding: mobile ? "40px 22px 28px" : "56px 36px 36px",
+          borderRight: mobile ? "none" : `1px solid ${AP.rule}`,
+          borderBottom: mobile ? `1px solid ${AP.rule}` : "none",
+          display: "flex", flexDirection: "column", justifyContent: "space-between",
+        }}>
+          <div style={{
+            display: "flex", justifyContent: "space-between", flexWrap: "wrap",
+            gap: mobile ? 8 : 0,
+            fontFamily: AP.mono, fontSize: mobile ? 9 : 11, letterSpacing: "0.14em", color: AP.dim,
+          }}>
+            <span>№ 001 / HERO</span>
+            <span>LAT 51.6656° N · LON 3.1905° W</span>
+          </div>
 
-      {/* Process strip + differentiators — all one visual block */}
-      <div style={{ marginTop: 2 }}>
-        {/* 4-step process */}
-        <Reveal delay={0.2}>
-          <div id="process" style={{
-            padding: "32px clamp(20px,3vw,40px)",
-            background: C.card,
-            display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0,
-          }} className="process-grid">
-            {PROCESS_STEPS.map((s, i) => (
+          <div style={{
+            fontFamily: AP.display, fontWeight: 700,
+            fontSize: mobile ? 180 : "clamp(220px, 28vw, 400px)",
+            lineHeight: 0.82, letterSpacing: "-0.05em", color: AP.off,
+            marginLeft: mobile ? -6 : -14,
+            marginTop: 14, marginBottom: mobile ? 24 : 14,
+          }}>
+            A<span style={{ color: AP.red }}>/</span>P
+          </div>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: mobile ? "1fr 1fr" : "repeat(4, 1fr)",
+            borderTop: `1px solid ${AP.ruleStr}`,
+          }}>
+            {[
+              ["01",   "LIVE CLIENT",  "Site in the wild"],
+              ["09",   "DEMOS",        "Full website builds"],
+              ["60+",  "MOCKUPS",      "In the drawer"],
+              ["£100", "START",        "Founding Local"],
+            ].map((x, i, arr) => (
               <div key={i} style={{
-                padding: "0 clamp(12px,2vw,24px)",
-                borderLeft: i > 0 ? `1px solid ${C.border}` : "none",
-                textAlign: "center",
+                padding: "18px 18px 4px",
+                borderRight: mobile
+                  ? (i % 2 === 0 ? `1px solid ${AP.ruleStr}` : "none")
+                  : (i < arr.length - 1 ? `1px solid ${AP.ruleStr}` : "none"),
+                borderBottom: mobile && i < 2 ? `1px solid ${AP.ruleStr}` : "none",
               }}>
-                <span style={{
-                  fontFamily: "'Playfair Display',Georgia,serif",
-                  fontSize: 24, fontWeight: 800, color: C.red, opacity: 0.3,
-                  display: "block", marginBottom: 6,
-                }}>{s.n}</span>
-                <h4 style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
-                  color: C.t1, marginBottom: 4, letterSpacing: "0.02em",
-                }}>{s.t}</h4>
-                <p style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 11,
-                  color: C.t3, lineHeight: 1.5,
-                }}>{s.d}</p>
+                <div style={{
+                  fontFamily: AP.display, fontWeight: 600,
+                  fontSize: mobile ? 32 : 44,
+                  letterSpacing: "-0.03em", lineHeight: 1, color: AP.off,
+                }}>{x[0]}</div>
+                <div style={{ fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.14em", color: AP.brass, marginTop: 12 }}>{x[1]}</div>
+                <div style={{ fontSize: 13, color: AP.dim, marginTop: 4 }}>{x[2]}</div>
               </div>
             ))}
           </div>
-        </Reveal>
+        </div>
 
-        {/* Why me */}
-        <Reveal delay={0.1}>
+        {/* RIGHT */}
+        <div style={{
+          padding: mobile ? "36px 22px 40px" : "56px 40px 40px",
+          display: "flex", flexDirection: "column",
+          gap: mobile ? 20 : 22, justifyContent: "center",
+        }}>
+          <Eyebrow>Blackwood, South Wales</Eyebrow>
+
+          <h1 style={{
+            margin: 0, fontFamily: AP.display, fontWeight: 500,
+            fontSize: mobile ? 44 : "clamp(48px, 5.2vw, 84px)",
+            lineHeight: 0.95, letterSpacing: "-0.035em",
+            textWrap: "balance", color: AP.off,
+          }}>
+            Websites and{" "}
+            <span style={{ fontFamily: AP.italic, fontStyle: "italic", fontWeight: 400, color: AP.red }}>
+              quiet little robots
+            </span>{" "}
+            for businesses in the Valleys.
+          </h1>
+
+          <p style={{ margin: 0, maxWidth: 520, fontSize: 17, lineHeight: 1.55, color: AP.off2, textWrap: "pretty" }}>
+            AI-powered websites, assistants, and automation for businesses across South Wales.
+            Professional results, personal service, honest advice.
+          </p>
+
           <div style={{
-            background: C.card, marginTop: 2,
-            padding: "clamp(28px,3vw,40px)",
+            border: `1px solid ${AP.ruleStr}`, background: "rgba(0,0,0,0.3)",
+            fontFamily: AP.mono, fontSize: 13, lineHeight: 1.65, padding: "14px 18px", marginTop: 4,
+          }}>
+            <div style={{ color: AP.dim, fontSize: 10, letterSpacing: "0.14em", marginBottom: 8 }}>
+              ~/asherprice/status.md
+            </div>
+            <div><span style={{ color: AP.brass }}>accepting</span>: <span style={{ color: AP.off }}>new briefs · Founding Local</span></div>
+            <div><span style={{ color: AP.brass }}>current</span>: <span style={{ color: AP.off }}>The Westgate Bar, Blackwood</span></div>
+            <div><span style={{ color: AP.brass }}>reply_time</span>: <span style={{ color: AP.off }}>within 24 hours, usually same day</span></div>
+            <div style={{ marginTop: 8, color: AP.moss }}>
+              → places remaining: <span style={{ color: AP.off }}>10 of 10</span>{" "}
+              <span className="ap-blink" style={{ color: AP.red }}>▍</span>
+            </div>
+          </div>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: mobile ? "1fr" : "1.2fr 1fr 1fr",
+            gap: 10, marginTop: 6,
+          }}>
+            <Btn as="a" href="#founding">From £100 — See the Deal</Btn>
+            <Btn variant="ghost" as="a" href="#examples">See example sites</Btn>
+            <Btn variant="ghost" as="a" href="#contact">Book a free chat</Btn>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        .ap-blink { animation: apblink 1s steps(2) infinite }
+        @keyframes apblink { 50% { opacity: 0 } }
+      `}</style>
+    </section>
+  );
+}
+
+/* ───────── 05 · Services ───────── */
+const SERVICES_DATA = [
+  { n: "01", title: "Websites",        welsh: "Gwefannau",    body: "Bespoke, mobile-first, built to convert. No templates.",                                      stat: ["1–2 WK", "typical build"] },
+  { n: "02", title: "AI Assistants",   welsh: "Cynorthwywyr", body: "Trained on your business. Answer enquiries and capture leads 24/7.",                         stat: ["24 / 7", "on the clock"]   },
+  { n: "03", title: "Online Ordering", welsh: "Archebu",      body: "Customers order from your site. No Deliveroo commission.",                                    stat: ["0 %",    "commission"]       },
+  { n: "04", title: "Booking Systems", welsh: "Bwcio",        body: "Pick a service, pick a time, done. Works for any appointment business.",                      stat: ["SMS",    "reminders in"]    },
+  { n: "05", title: "Loyalty Cards",   welsh: "Teyrngarwch",  body: "Digital stamp cards from your website. No app download needed.",                              stat: ["WALLET", "Apple · Google"]   },
+  { n: "06", title: "Automation",      welsh: "Awtomeiddio",  body: "Invoicing, follow-ups, lead capture — if you do it twice, I automate it.",                    stat: ["÷ 2",    "repeat tasks"]     },
+];
+
+function ServiceIcon({ kind }) {
+  const s = { width: 30, height: 30, stroke: "currentColor", strokeWidth: 1.4, fill: "none", strokeLinecap: "square" };
+  switch (kind) {
+    case 0: return <svg viewBox="0 0 30 30" style={s}><rect x="3" y="5" width="24" height="20"/><line x1="3" y1="10" x2="27" y2="10"/><line x1="6" y1="7.5" x2="8" y2="7.5"/></svg>;
+    case 1: return <svg viewBox="0 0 30 30" style={s}><circle cx="15" cy="14" r="10"/><path d="M10 13c1.5-2 3.5-2 5 0s3.5 2 5 0"/><path d="M8 26l3-4"/></svg>;
+    case 2: return <svg viewBox="0 0 30 30" style={s}><path d="M4 9h22l-2 13H6z"/><path d="M10 5v4M20 5v4"/><circle cx="12" cy="16" r="0.9" fill="currentColor"/><circle cx="18" cy="16" r="0.9" fill="currentColor"/></svg>;
+    case 3: return <svg viewBox="0 0 30 30" style={s}><rect x="4" y="6" width="22" height="19"/><line x1="4" y1="12" x2="26" y2="12"/><rect x="8" y="16" width="4" height="4"/><line x1="15" y1="17" x2="22" y2="17"/><line x1="15" y1="20" x2="22" y2="20"/></svg>;
+    case 4: return <svg viewBox="0 0 30 30" style={s}><rect x="5" y="7" width="20" height="16"/><path d="M9 11h12M9 15h12M9 19h8"/></svg>;
+    case 5: return <svg viewBox="0 0 30 30" style={s}><circle cx="15" cy="15" r="10"/><path d="M15 9v6l4 2"/></svg>;
+    default: return null;
+  }
+}
+
+function ServiceRow({ item, i, open, onToggle, mobile }) {
+  return (
+    <div onClick={onToggle} style={{
+      position: "relative", cursor: "pointer",
+      borderBottom: `1px solid ${AP.ruleStr}`,
+      background: open ? "rgba(163,19,42,0.06)" : "transparent",
+      transition: "background 160ms ease",
+    }}>
+      {open && <span style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: AP.red }}/>}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "72px 1.2fr 2fr 170px 48px",
+        alignItems: "center", gap: mobile ? 8 : 0,
+        padding: mobile ? "22px 22px" : "24px 36px",
+        position: "relative",
+      }}>
+        <div style={{ fontFamily: AP.mono, fontSize: mobile ? 11 : 13, letterSpacing: "0.12em", color: AP.dim }}>{item.n}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, color: AP.off }}>
+          <ServiceIcon kind={i}/>
+          <div style={{ fontFamily: AP.display, fontSize: mobile ? 24 : 28, fontWeight: 600, letterSpacing: "-0.02em" }}>{item.title}</div>
+        </div>
+        <div style={{ fontSize: mobile ? 14 : 15, lineHeight: 1.55, color: AP.off2, maxWidth: mobile ? "none" : 520, textWrap: "pretty" }}>{item.body}</div>
+        <div style={{
+          justifySelf: mobile ? "start" : "end",
+          fontFamily: AP.italic, fontStyle: "italic", fontSize: 18, color: AP.brass,
+        }}>{item.welsh}</div>
+        <div style={{
+          position: mobile ? "absolute" : "static",
+          top: mobile ? 22 : "auto", right: mobile ? 22 : "auto",
+          justifySelf: mobile ? "auto" : "end",
+          fontFamily: AP.mono, fontSize: 16, color: open ? AP.red : AP.dim,
+        }}>{open ? "–" : "+"}</div>
+      </div>
+
+      {open && (
+        <div style={{
+          padding: mobile ? "0 22px 22px" : "0 36px 28px 108px",
+          display: "grid",
+          gridTemplateColumns: mobile ? "1fr" : "1fr 1fr 1fr",
+          gap: mobile ? 16 : 24,
+          borderTop: `1px dashed ${AP.rule}`, marginTop: -2, paddingTop: 22,
+        }}>
+          <div>
+            <Eyebrow width={18}>Includes</Eyebrow>
+            <ul style={{ margin: "12px 0 0", padding: 0, listStyle: "none", display: "grid", gap: 8, fontSize: 14, color: AP.off2 }}>
+              <li>— Full custom design + build</li>
+              <li>— Hosting, domain, analytics</li>
+              <li>— One round of revisions</li>
+            </ul>
+          </div>
+          <div>
+            <Eyebrow width={18}>Stat</Eyebrow>
+            <div style={{ marginTop: 10 }}>
+              <div style={{ fontFamily: AP.display, fontWeight: 600, fontSize: 42, letterSpacing: "-0.025em", color: AP.off }}>{item.stat[0]}</div>
+              <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.08em", marginTop: 4 }}>{item.stat[1]}</div>
+            </div>
+          </div>
+          <div style={{ alignSelf: "end" }}>
+            <Btn variant="ghost" small as="a" href="#showcase">See a live demo</Btn>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Services({ mobile }) {
+  const [open, setOpen] = useState(0);
+  return (
+    <section id="services" style={{ background: AP.slate, color: AP.off, padding: mobile ? "64px 0 0" : "96px 0 0" }}>
+      <div style={{ padding: mobile ? "0 22px" : "0 36px" }}>
+        <SectionHeader
+          mobile={mobile}
+          index="02 · SERVICES"
+          welsh="Gwasanaethau"
+          title="Six things. One pair of hands."
+          right={<>Scope scales with the bill.<br/>Pick one, or pick all six.</>}
+        />
+      </div>
+      <div style={{ marginTop: 24, borderTop: `1px solid ${AP.ruleStr}` }}>
+        {SERVICES_DATA.map((item, i) => (
+          <ServiceRow key={i} item={item} i={i} open={open === i} mobile={mobile}
+            onToggle={() => setOpen(open === i ? -1 : i)} />
+        ))}
+      </div>
+      <div style={{
+        padding: mobile ? "14px 22px" : "20px 36px",
+        background: AP.slate2,
+        display: "flex",
+        flexDirection: mobile ? "column" : "row",
+        justifyContent: "space-between",
+        alignItems: mobile ? "flex-start" : "center",
+        gap: mobile ? 4 : 0,
+        fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.14em", color: AP.off2,
+      }}>
+        <span>Every project quoted per brief — no off-the-shelf packages.</span>
+        <span style={{ color: AP.brass }}>start the conversation →</span>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── 06 · Process ───────── */
+const PROCESS_STEPS = [
+  { n: "01", welsh: "Sgwrs",   title: "Chat",   body: "Free, no-pressure conversation about your business.",          tag: "usually 20 min" },
+  { n: "02", welsh: "Adeilad", title: "Build",  body: "I design and build. You see progress throughout.",              tag: "7–14 days"       },
+  { n: "03", welsh: "Lansio",  title: "Launch", body: "I handle DNS, hosting — everything. You watch it go live.",     tag: "same-day cutover" },
+  { n: "04", welsh: "Tyfu",    title: "Grow",   body: "Ongoing support, updates, and improvements.",                   tag: "monthly, month-to-month" },
+];
+
+function Process({ mobile }) {
+  return (
+    <section id="how-it-works" style={{ background: AP.off, color: AP.slate, padding: mobile ? "64px 22px" : "96px 36px" }}>
+      <SectionHeader
+        mobile={mobile} invert
+        index="03 · HOW IT WORKS"
+        welsh="Sut mae'n gweithio"
+        title={<span style={{ fontSize: mobile ? 32 : undefined }}>Four steps. No big reveal at&nbsp;the&nbsp;end.</span>}
+        right={<>From first chat to live site:<br/>usually 2–3 weeks.</>}
+      />
+      <div style={{
+        marginTop: 40, position: "relative",
+        display: "grid", gridTemplateColumns: mobile ? "1fr" : "repeat(4, 1fr)",
+        borderTop: `1px solid ${AP.slate}`,
+      }}>
+        {!mobile && (
+          <div style={{
+            position: "absolute", top: 48, left: "12.5%", right: "12.5%", height: 1,
+            borderTop: `1px dashed ${AP.slate}`, opacity: 0.5,
+          }}/>
+        )}
+        {PROCESS_STEPS.map((s, i) => (
+          <div key={i} style={{
+            padding: mobile ? "22px 0" : "28px 24px 32px",
+            borderRight: !mobile && i < 3 ? `1px solid rgba(21,23,27,0.2)` : "none",
+            borderBottom: mobile && i < 3 ? `1px solid rgba(21,23,27,0.2)` : "none",
+            position: "relative",
           }}>
             <div style={{
-              fontFamily: "'Inter',sans-serif", fontSize: 10, fontWeight: 700,
-              color: C.red, letterSpacing: "0.15em", textTransform: "uppercase",
-              marginBottom: 20,
-            }}>Why work with me</div>
-            <div className="why-me-grid" style={{
-              display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20,
-            }}>
+              width: 36, height: 36, background: AP.slate, color: AP.off,
+              display: "grid", placeItems: "center",
+              fontFamily: AP.mono, fontSize: 12, letterSpacing: "0.04em",
+              position: "relative", zIndex: 2,
+            }}>{s.n}</div>
+            <div style={{ marginTop: 20, fontFamily: AP.italic, fontStyle: "italic", fontSize: 14, color: AP.redDeep }}>{s.welsh}</div>
+            <h3 style={{ margin: "6px 0 0", fontFamily: AP.display, fontSize: 40, fontWeight: 600, letterSpacing: "-0.025em", lineHeight: 1 }}>{s.title}</h3>
+            <p style={{ margin: "14px 0 18px", fontSize: 15, lineHeight: 1.55, color: "#3b3e3a", maxWidth: 260 }}>{s.body}</p>
+            <div style={{ borderTop: `1px solid rgba(21,23,27,0.15)`, paddingTop: 10, fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.08em", color: "#3b3e3a" }}>→ {s.tag}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ───────── 07 · Why ───────── */
+const WHY_DATA = [
+  { n: "01", welsh: "Un person",           title: "One person, not a department.",       body: "You deal with me from first chat to finished site and every update after. No handoffs, no account managers, no repeating yourself to someone new.", wide: true  },
+  { n: "02", welsh: "Wedi ei wneud yma",   title: "Built in Blackwood, not outsourced.", body: "I'm based in the Valleys. If you need me, I'm a text or a short drive away — not a support ticket in a queue.",                                     wide: false },
+  { n: "03", welsh: "Cyflym a gonest",     title: "Fast turnaround, honest timelines.",  body: "Most sites go live within 1–2 weeks. If something needs fixing, it's done same day or next — not buried in a backlog.",                              wide: false },
+  { n: "04", welsh: "Dim cloi",            title: "No lock-in, no surprises.",           body: "Month-to-month. Fixed pricing agreed upfront. 1 month's notice to cancel. I keep clients by doing good work, not with contracts.",                   wide: true  },
+];
+
+function Why({ mobile }) {
+  return (
+    <section id="why" style={{ background: AP.slate, color: AP.off, padding: mobile ? "64px 22px" : "96px 36px" }}>
+      <SectionHeader
+        mobile={mobile}
+        index="04 · WHY WORK WITH ME"
+        welsh="Pam fi?"
+        title={<>The actual difference.<br/>Not the sales-deck version.</>}
+        right={<>Four reasons I'd pick<br/>a solo designer myself.</>}
+      />
+      <div style={{
+        marginTop: 40,
+        display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "2fr 1fr 1fr 2fr",
+        gap: 16,
+      }}>
+        {WHY_DATA.map((item, i) => (
+          <div key={i} style={{
+            border: `1px solid ${AP.ruleStr}`, padding: "28px 28px 26px",
+            display: "flex", flexDirection: "column", gap: 12, position: "relative",
+            background: AP.slate2, minHeight: 280,
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline",
+              fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.16em", color: AP.brass }}>
+              <span>/ {item.n}</span>
+              <span style={{ fontFamily: AP.italic, fontStyle: "italic", fontSize: 15, letterSpacing: 0 }}>{item.welsh}</span>
+            </div>
+            <h3 style={{ margin: "6px 0 0", fontFamily: AP.display, fontWeight: 500,
+              fontSize: item.wide ? 36 : 28, lineHeight: 1.02, letterSpacing: "-0.025em",
+              color: AP.off, textWrap: "balance" }}>{item.title}</h3>
+            <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: AP.off2, textWrap: "pretty" }}>{item.body}</p>
+          </div>
+        ))}
+      </div>
+
+      <blockquote style={{
+        margin: "48px 0 0", padding: "36px 0 0",
+        borderTop: `1px solid ${AP.ruleStr}`,
+        display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "160px 1fr 200px",
+        gap: mobile ? 16 : 32, alignItems: "start",
+      }}>
+        <Eyebrow>Working principle</Eyebrow>
+        <p style={{
+          margin: 0, fontFamily: AP.italic, fontStyle: "italic", fontWeight: 400,
+          fontSize: mobile ? 22 : 36, lineHeight: 1.2, letterSpacing: "-0.01em",
+          color: AP.off, textWrap: "balance",
+        }}>
+          "I'd rather <span style={{ color: AP.red }}>under-promise and over-deliver</span> than sell you a package you don't need."
+        </p>
+        <div style={{
+          fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.14em",
+          textAlign: mobile ? "left" : "right", paddingTop: mobile ? 0 : 10,
+        }}>— Asher P.<br/>Blackwood, 2026</div>
+      </blockquote>
+    </section>
+  );
+}
+
+/* ───────── 08 · Examples ───────── */
+const EXAMPLES_DATA = [
+  { slug: "cafe",     tag: "CAFÉ",       welsh: "Caffi",   title: "Rhymney Roasters",    meta: "Ordering · menu · loyalty",  hue: 32,  hero: "Proper coffee. Welsh cakes. Wifi." },
+  { slug: "barber",   tag: "BARBER",     welsh: "Barbwr",  title: "Valley Cuts",         meta: "Booking · gallery",          hue: 14,  hero: "Sharp fades. No waiting." },
+  { slug: "pub",      tag: "PUB",        welsh: "Tafarn",  title: "The Gwent Arms",      meta: "Events · menu · bookings",   hue: 355, hero: "Warm welcome. Cold pints." },
+  { slug: "plumber",  tag: "PLUMBER",    welsh: "Plymwr",  title: "Caerphilly Plumbing", meta: "Quote form · AI triage",     hue: 210, hero: "Fast, Gas-Safe, honest." },
+  { slug: "salon",    tag: "NAIL SALON", welsh: "Ewinedd", title: "Ysbryd Nails",        meta: "Booking · loyalty",          hue: 330, hero: "Ysbryd. Salon-grade nails." },
+  { slug: "pizza",    tag: "PIZZA",      welsh: "Pitsa",   title: "Forno Blackwood",     meta: "Ordering · delivery · SMS",  hue: 12,  hero: "Wood-fired, in 30 minutes." },
+];
+
+function MiniSite({ ex }) {
+  const bg = `oklch(0.22 0.03 ${ex.hue})`;
+  const accent = `oklch(0.62 0.17 ${ex.hue})`;
+  return (
+    <div style={{ width: "100%", aspectRatio: "4 / 3", background: bg, color: AP.off,
+      position: "relative", overflow: "hidden", borderBottom: `1px solid ${AP.ruleStr}` }}>
+      <div style={{ height: 20, background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center",
+        gap: 4, padding: "0 8px", borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
+        <span style={{ width: 6, height: 6, background: "#ff5f57", borderRadius: 10 }}/>
+        <span style={{ width: 6, height: 6, background: "#febc2e", borderRadius: 10 }}/>
+        <span style={{ width: 6, height: 6, background: "#28c840", borderRadius: 10 }}/>
+        <span style={{ marginLeft: 8, fontFamily: AP.mono, fontSize: 8, color: "rgba(232,228,219,0.5)" }}>
+          {ex.title.toLowerCase().replace(/\s+/g, "")}.co.uk
+        </span>
+      </div>
+      <div style={{ padding: "12px 14px", display: "grid", gap: 8 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ fontFamily: AP.display, fontWeight: 700, fontSize: 13, letterSpacing: "-0.02em" }}>{ex.title.split(" ")[0]}</div>
+          <div style={{ display: "flex", gap: 6, fontFamily: AP.mono, fontSize: 6, color: "rgba(232,228,219,0.5)" }}>
+            <span>menu</span><span>book</span><span>find us</span>
+          </div>
+        </div>
+        <div style={{ fontFamily: AP.display, fontWeight: 500, fontSize: 28, lineHeight: 0.95,
+          letterSpacing: "-0.035em", marginTop: 10, textWrap: "balance" }}>{ex.hero}</div>
+        <div style={{ height: 1, background: "rgba(255,255,255,0.12)", margin: "4px 0" }}/>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+          {[0, 1, 2].map((j) => (
+            <div key={j} style={{ aspectRatio: "1", background: "rgba(232,228,219,0.08)",
+              border: "1px solid rgba(232,228,219,0.12)", display: "grid", placeItems: "center",
+              fontFamily: AP.mono, fontSize: 7, color: "rgba(232,228,219,0.4)" }}>img</div>
+          ))}
+        </div>
+        <button style={{ marginTop: 2, padding: "6px 8px", border: "none", background: accent,
+          color: "#0c0b08", fontFamily: AP.mono, fontSize: 8, letterSpacing: "0.14em",
+          textAlign: "left", textTransform: "uppercase" }}>
+          {ex.tag === "BARBER" || ex.tag === "NAIL SALON" ? "Book now →" :
+           ex.tag === "PLUMBER" ? "Request a quote →" : "Order now →"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Examples({ mobile }) {
+  return (
+    <section id="examples" style={{ background: AP.slate, color: AP.off, padding: mobile ? "64px 22px" : "96px 36px" }}>
+      <SectionHeader
+        mobile={mobile}
+        index="05 · EXAMPLES"
+        welsh="Enghreifftiau"
+        title={<>Not templates. <span style={{ fontFamily: AP.italic, fontStyle: "italic", color: AP.red, fontWeight: 400 }}>Real</span> websites.</>}
+        right={<>Every site is designed and built bespoke.<br/>Click through and use them yourself.</>}
+      />
+      <div style={{ marginTop: 40, display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+        {EXAMPLES_DATA.map((ex, i) => (
+          <a key={i} href={`/examples/${ex.slug}/index.html`} style={{ display: "block", textDecoration: "none", color: "inherit",
+            border: `1px solid ${AP.ruleStr}`, background: AP.slate2 }}>
+            <MiniSite ex={ex}/>
+            <div style={{ padding: "18px 20px", display: "grid", gap: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline",
+                fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.16em", color: AP.brass }}>
+                <span>№ {String(i + 1).padStart(2, "0")} · {ex.tag}</span>
+                <span style={{ fontFamily: AP.italic, fontStyle: "italic", fontSize: 14, letterSpacing: 0 }}>{ex.welsh}</span>
+              </div>
+              <div style={{ fontFamily: AP.display, fontSize: 22, fontWeight: 600, letterSpacing: "-0.02em", color: AP.off }}>{ex.title}</div>
+              <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.04em" }}>→ {ex.meta}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div style={{ marginTop: 32, display: "flex", justifyContent: "space-between", alignItems: "center",
+        paddingTop: 20, borderTop: `1px solid ${AP.ruleStr}` }}>
+        <div style={{ fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.14em", color: AP.dim }}>Showing 6 of 9</div>
+        <Btn variant="ghost" small as="a" href="/examples">See all 9 examples</Btn>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── 09 · Showcase interactive demos ───────── */
+function ShowcaseChat() {
+  const [i, setI] = useState(0);
+  const convo = [
+    { role: "user", text: "Are you open Sunday?" },
+    { role: "bot",  text: "We're open 10am–6pm Sunday. Kitchen stops at 5.",  meta: "trained on your hours" },
+    { role: "user", text: "Can I book a table for 6?" },
+    { role: "bot",  text: "Course — what time works? Sundays fill after 1pm.", meta: "hand-off to booking" },
+  ];
+  useEffect(() => {
+    const t = setInterval(() => setI((x) => (x + 1) % (convo.length + 2)), 1500);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div style={{ padding: "16px 18px", display: "grid", gap: 10, minHeight: 240 }}>
+      {convo.slice(0, i).map((m, j) => (
+        <div key={j} style={{
+          justifySelf: m.role === "user" ? "end" : "start", maxWidth: "80%",
+          padding: "10px 12px", fontSize: 13, lineHeight: 1.4,
+          background: m.role === "user" ? AP.slate3 : "rgba(163,19,42,0.18)",
+          color: AP.off,
+          borderLeft: m.role === "bot" ? `2px solid ${AP.red}` : `2px solid ${AP.brass}`,
+        }}>
+          {m.text}
+          {m.meta && <div style={{ marginTop: 4, fontFamily: AP.mono, fontSize: 9, color: AP.dim, letterSpacing: "0.08em" }}>↳ {m.meta}</div>}
+        </div>
+      ))}
+      {i <= convo.length && <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.dim }}><span className="ap-blink" style={{ color: AP.red }}>▍</span> typing…</div>}
+    </div>
+  );
+}
+
+function ShowcaseOrder() {
+  const [qty, setQty] = useState({ a: 1, b: 0, c: 2 });
+  const items = [
+    { k: "a", name: "Margherita",       price: 9.5  },
+    { k: "b", name: "Valleys Pepperoni", price: 11.0 },
+    { k: "c", name: "Garlic Bread",      price: 4.5  },
+  ];
+  const total = items.reduce((s, it) => s + qty[it.k] * it.price, 0);
+  return (
+    <div style={{ padding: "12px 16px", display: "grid", gap: 8 }}>
+      {items.map((it) => (
+        <div key={it.k} style={{
+          display: "grid", gridTemplateColumns: "1fr 60px 90px", alignItems: "center", gap: 10,
+          paddingBottom: 8, borderBottom: `1px dashed ${AP.rule}`,
+        }}>
+          <div>
+            <div style={{ fontFamily: AP.display, fontSize: 14, fontWeight: 500 }}>{it.name}</div>
+            <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, marginTop: 2 }}>£{it.price.toFixed(2)}</div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "center", fontFamily: AP.mono, fontSize: 13 }}>
+            <button onClick={() => setQty((q) => ({ ...q, [it.k]: Math.max(0, q[it.k] - 1) }))} style={{
+              width: 22, height: 22, background: "transparent", color: AP.off, border: `1px solid ${AP.ruleStr}`, cursor: "pointer",
+            }}>–</button>
+            <span style={{ width: 18, textAlign: "center" }}>{qty[it.k]}</span>
+            <button onClick={() => setQty((q) => ({ ...q, [it.k]: q[it.k] + 1 }))} style={{
+              width: 22, height: 22, background: AP.red, color: AP.off, border: "none", cursor: "pointer",
+            }}>+</button>
+          </div>
+          <div style={{ textAlign: "right", fontFamily: AP.mono, fontSize: 13, color: AP.off }}>£{(qty[it.k] * it.price).toFixed(2)}</div>
+        </div>
+      ))}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 6, fontFamily: AP.mono, fontSize: 13, color: AP.off }}>
+        <span style={{ color: AP.dim, letterSpacing: "0.12em" }}>TOTAL</span>
+        <span style={{ fontFamily: AP.display, fontSize: 22, fontWeight: 600, letterSpacing: "-0.02em" }}>£{total.toFixed(2)}</span>
+      </div>
+      <button style={{
+        padding: 10, background: AP.red, color: AP.off, border: "none",
+        fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.14em", cursor: "pointer",
+        textAlign: "left", display: "flex", justifyContent: "space-between",
+      }}><span>CHECKOUT</span><span>→</span></button>
+    </div>
+  );
+}
+
+function ShowcaseBooking() {
+  const [slot, setSlot] = useState(2);
+  const slots = ["09:00", "09:30", "10:00", "10:30", "11:00", "—", "13:00", "13:30", "14:00", "—", "15:30", "16:00"];
+  return (
+    <div style={{ padding: "14px 16px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
+        <div style={{ fontFamily: AP.display, fontSize: 14, fontWeight: 500 }}>Skin fade · 30 min · £18</div>
+        <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.14em" }}>TUE · 23 APR</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
+        {slots.map((s, i) => (
+          <button key={i} disabled={s === "—"} onClick={() => setSlot(i)} style={{
+            padding: "8px 6px", border: `1px solid ${s === "—" ? "transparent" : AP.ruleStr}`,
+            background: slot === i ? AP.red : (s === "—" ? "transparent" : AP.slate3),
+            color: s === "—" ? AP.dim : AP.off,
+            fontFamily: AP.mono, fontSize: 12, cursor: s === "—" ? "default" : "pointer",
+            textDecoration: s === "—" ? "line-through" : "none",
+          }}>{s}</button>
+        ))}
+      </div>
+      <div style={{ marginTop: 12, padding: "10px 12px", background: AP.slate3, fontFamily: AP.mono, fontSize: 12,
+        display: "flex", justifyContent: "space-between" }}>
+        <span style={{ color: AP.brass }}>→ confirming {slots[slot]}</span>
+        <span>£18 · SMS reminder</span>
+      </div>
+    </div>
+  );
+}
+
+function ShowcaseLoyalty() {
+  const [n, setN] = useState(5);
+  const total = 8;
+  return (
+    <div style={{ padding: "14px 16px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
+        <div style={{ fontFamily: AP.display, fontSize: 14, fontWeight: 500 }}>Rhymney Roasters</div>
+        <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.14em" }}>CARD № 0042</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
+        {Array.from({ length: total }).map((_, i) => (
+          <div key={i} style={{
+            aspectRatio: "1", display: "grid", placeItems: "center",
+            border: `1px solid ${AP.ruleStr}`,
+            background: i < n ? AP.red : "transparent",
+            color: AP.off, fontFamily: AP.display, fontSize: 18, fontWeight: 600,
+          }}>{i < n ? "✕" : ""}</div>
+        ))}
+      </div>
+      <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: AP.mono, fontSize: 12, color: AP.off }}>
+        <span><span style={{ color: AP.dim }}>progress · </span>{n} / {total}</span>
+        <button onClick={() => setN((x) => (x + 1) % (total + 1))} style={{
+          padding: "6px 10px", background: "transparent", color: AP.off,
+          border: `1px solid ${AP.ruleStr}`, fontFamily: AP.mono, fontSize: 11, cursor: "pointer",
+          letterSpacing: "0.1em",
+        }}>+ STAMP</button>
+      </div>
+      <div style={{ marginTop: 8, fontFamily: AP.mono, fontSize: 10, color: AP.brass, letterSpacing: "0.12em" }}>→ free flat white at 8</div>
+    </div>
+  );
+}
+
+const SHOWCASE_DATA = [
+  { n: "01", tag: "AI ASSISTANT",    welsh: "Sgwrsio",  title: "Live Chat",       sub: "Trained on your business. Answers 24/7.",     Demo: ShowcaseChat },
+  { n: "02", tag: "ONLINE ORDERING", welsh: "Archebu",  title: "Takeaway Orders", sub: "Customers order from their phone.",           Demo: ShowcaseOrder },
+  { n: "03", tag: "BOOKING SYSTEM",  welsh: "Bwcio",    title: "Appointments",    sub: "Pick service, pick time, done.",              Demo: ShowcaseBooking },
+  { n: "04", tag: "LOYALTY CARD",    welsh: "Stampiau", title: "Digital Stamps",  sub: "Replace paper cards. Keep them coming back.", Demo: ShowcaseLoyalty },
+];
+
+function Showcase({ mobile }) {
+  return (
+    <section id="showcase" style={{ background: AP.slate, color: AP.off, padding: mobile ? "64px 22px" : "96px 36px" }}>
+      <SectionHeader
+        mobile={mobile}
+        index="06 · SHOWCASE"
+        welsh="Arddangos"
+        title={<>Don't just take my word. <span style={{ fontFamily: AP.italic, fontStyle: "italic", color: AP.red, fontWeight: 400 }}>Try</span> the demos.</>}
+        right={<>Live showcase of what I build<br/>for local businesses.</>}
+      />
+      <div style={{ marginTop: 40, display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+        {SHOWCASE_DATA.map((item, i) => (
+          <div key={i} style={{
+            border: `1px solid ${AP.ruleStr}`, background: AP.slate2,
+            display: "grid", gridTemplateRows: "auto 1fr auto",
+          }}>
+            <div style={{ padding: "16px 18px", borderBottom: `1px solid ${AP.rule}`,
+              display: "flex", justifyContent: "space-between", alignItems: "baseline",
+              fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.16em", color: AP.brass }}>
+              <span>/ {item.n} · {item.tag}</span>
+              <span style={{ fontFamily: AP.italic, fontStyle: "italic", fontSize: 14, letterSpacing: 0 }}>{item.welsh}</span>
+            </div>
+            <div>
+              <div style={{ padding: "18px 18px 0" }}>
+                <h3 style={{ margin: 0, fontFamily: AP.display, fontSize: 24, fontWeight: 600, letterSpacing: "-0.02em", color: AP.off }}>{item.title}</h3>
+                <p style={{ margin: "6px 0 14px", fontSize: 13, color: AP.off2, lineHeight: 1.45 }}>{item.sub}</p>
+              </div>
+              <item.Demo/>
+            </div>
+            <a href="/showcase" style={{ padding: "12px 18px", borderTop: `1px solid ${AP.rule}`,
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.14em", color: AP.dim,
+              textDecoration: "none" }}>
+              <span>LIVE · interactive</span>
+              <span style={{ color: AP.off }}>open full demo →</span>
+            </a>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 32, display: "flex", justifyContent: "flex-end",
+        paddingTop: 20, borderTop: `1px solid ${AP.ruleStr}` }}>
+        <Btn variant="ghost" small as="a" href="/showcase">See the full showcase</Btn>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── 10 · Founding Local ───────── */
+function Founding({ mobile }) {
+  return (
+    <section id="founding" style={{
+      background: AP.off, color: AP.slate,
+      padding: mobile ? "64px 22px" : "96px 36px",
+      position: "relative", overflow: "hidden",
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
+        paddingBottom: 16, borderBottom: `2px solid ${AP.slate}`,
+        fontFamily: AP.mono, fontSize: 11, letterSpacing: "0.18em", color: AP.redDeep }}>
+        <span>/ 07 · FOUNDING LOCAL · <span style={{ fontFamily: AP.italic, fontStyle: "italic", letterSpacing: 0, fontSize: 14 }}>Lleol</span></span>
+        <span style={{ color: AP.slate, letterSpacing: "0.14em" }}>VALID · PLACES REMAINING · 10 / 10</span>
+      </div>
+
+      <div style={{ marginTop: 36, display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "1.1fr 1fr",
+        gap: mobile ? 32 : 48, alignItems: "start" }}>
+        <div>
+          <h2 style={{ margin: 0, fontFamily: AP.display, fontWeight: 500,
+            fontSize: mobile ? 52 : "clamp(56px, 6.8vw, 108px)",
+            lineHeight: 0.92, letterSpacing: "-0.04em", color: AP.slate, textWrap: "balance" }}>
+            Founding Local.<br/>
+            <span style={{ color: AP.red }}>£100</span> setup.<br/>
+            <span style={{ fontFamily: AP.italic, fontStyle: "italic", fontWeight: 400 }}>£50 / month.</span>
+          </h2>
+          <p style={{ margin: "28px 0 0", fontSize: 18, lineHeight: 1.5, color: "#3b3e3a", maxWidth: 560, textWrap: "pretty" }}>
+            A properly built website, hosted and maintained, for the first 10 local businesses in Blackwood and the Valleys. The price is <em style={{ fontFamily: AP.italic }}>locked in for life</em>.
+          </p>
+        </div>
+
+        <div style={{ border: `1.5px solid ${AP.slate}`, padding: "24px 26px",
+          position: "relative", background: "#F3EEE2" }}>
+          <div style={{ position: "absolute", top: -10, left: 20, padding: "0 8px",
+            background: "#F3EEE2", fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.16em", color: AP.redDeep }}>
+            WHAT YOU GET
+          </div>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 12, fontSize: 15 }}>
+            {[
+              "Custom site, designed and built for you",
+              "Your own domain and hosting",
+              "Monthly update window",
+              "Uptime monitoring",
+              "Quarterly check-in call",
+              "No lock-in — cancel any time",
+            ].map((x, i) => (
+              <li key={i} style={{
+                display: "grid", gridTemplateColumns: "22px 1fr",
+                paddingBottom: 10, borderBottom: i < 5 ? `1px dashed rgba(21,23,27,0.25)` : "none",
+              }}>
+                <span style={{ fontFamily: AP.mono, fontSize: 11, color: AP.redDeep, paddingTop: 2 }}>{String(i + 1).padStart(2, "0")}</span>
+                <span style={{ color: AP.slate }}>{x}</span>
+              </li>
+            ))}
+          </ul>
+          <div style={{ marginTop: 20, paddingTop: 14, borderTop: `2px solid ${AP.slate}`,
+            display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <Btn variant="light" as="a" href="/founding-local">Learn more</Btn>
+            <Btn as="a" href="#contact">Claim a place</Btn>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 56, paddingTop: 22, borderTop: `1px solid rgba(21,23,27,0.2)`,
+        display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "auto 1fr",
+        gap: mobile ? 20 : 32, alignItems: "center" }}>
+        <div style={{ fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.16em", color: AP.redDeep }}>
+          PLACES<br/>REMAINING
+        </div>
+        <div style={{ display: "grid",
+          gridTemplateColumns: mobile ? "repeat(5, 1fr)" : "repeat(10, 1fr)",
+          gap: 8 }}>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} style={{
+              aspectRatio: "4 / 5", border: `1.5px solid ${AP.slate}`,
+              display: "grid", placeItems: "center",
+              fontFamily: AP.display, fontWeight: 600,
+              fontSize: mobile ? 20 : 32, letterSpacing: "-0.03em", color: AP.slate,
+            }}>{String(i + 1).padStart(2, "0")}</div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── 11 · Client proof ───────── */
+function ClientProof({ mobile }) {
+  return (
+    <section id="clients" style={{ background: AP.slate, color: AP.off, padding: mobile ? "64px 22px" : "96px 36px" }}>
+      <SectionHeader
+        mobile={mobile}
+        index="08 · LIVE WORK"
+        welsh="Gwaith byw"
+        title={<>Not just demos. <span style={{ fontFamily: AP.italic, fontStyle: "italic", color: AP.red, fontWeight: 400 }}>Real</span> businesses.</>}
+        right={<>First live client. More launching<br/>soon through Founding Local.</>}
+      />
+      <div style={{ marginTop: 40, display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "2fr 1fr", gap: 16 }}>
+        <article style={{ border: `1px solid ${AP.ruleStr}`, background: AP.slate2,
+          display: "grid", gridTemplateRows: "auto 1fr auto" }}>
+          <div style={{ aspectRatio: "21 / 9", position: "relative",
+            background: "linear-gradient(180deg, #2a1316 0%, #120607 100%)",
+            overflow: "hidden", borderBottom: `1px solid ${AP.rule}` }}>
+            <div style={{ position: "absolute", inset: 0,
+              backgroundImage: "repeating-linear-gradient(135deg, rgba(232,228,219,0.03) 0 10px, transparent 10px 24px)" }}/>
+            <div style={{ position: "absolute", top: 18, left: 22,
+              fontFamily: AP.mono, fontSize: 10, color: AP.off, letterSpacing: "0.18em" }}>
+              [PHOTOGRAPH · THE WESTGATE BAR · BLACKWOOD]
+            </div>
+            <div style={{ position: "absolute", bottom: 22, left: 22, right: 22,
+              display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+              <h3 style={{ margin: 0, fontFamily: AP.display, fontWeight: 500,
+                fontSize: mobile ? 32 : 56, lineHeight: 0.9, letterSpacing: "-0.035em",
+                color: AP.off, textWrap: "balance", maxWidth: "70%" }}>
+                The Westgate Bar<br/>
+                <span style={{ fontFamily: AP.italic, fontStyle: "italic", fontWeight: 400, color: AP.red }}>Blackwood · 2026</span>
+              </h3>
+              <div style={{ fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.14em", color: AP.off,
+                textAlign: "right", lineHeight: 1.7 }}>
+                LIVE SINCE APR · 2026<br/>CUSTOM WEBSITE<br/>BUILT & MAINTAINED BY AP
+              </div>
+            </div>
+          </div>
+          <div style={{ padding: "24px 24px 28px", display: "grid", gap: 18 }}>
+            <div style={{ display: "grid",
+              gridTemplateColumns: mobile ? "1fr 1fr" : "repeat(4, 1fr)",
+              gap: mobile ? 14 : 20, borderBottom: `1px solid ${AP.rule}`, paddingBottom: 20 }}>
               {[
-                { t: "One person, not a department", d: "You deal with me from first chat to finished site and every update after. No handoffs, no account managers, no repeating yourself to someone new." },
-                { t: "Built in Blackwood, not outsourced", d: "I'm based in the Valleys. If you need me, I'm a text or a short drive away — not a support ticket in a queue." },
-                { t: "Fast turnaround, honest timelines", d: "Most sites go live within 1–2 weeks. If something needs fixing, it's done same day or next — not buried in a backlog." },
-                { t: "No lock-in, no surprises", d: "Month-to-month. Fixed pricing agreed upfront. 1 month's notice to cancel. I keep clients by doing good work, not with contracts." },
-              ].map((item, i) => (
+                ["SECTOR", "Pub · food"],
+                ["BRIEF", "Website + menus"],
+                ["BUILT IN", "5 days"],
+                ["STATUS", "Live, maintained"],
+              ].map((x, i) => (
                 <div key={i}>
-                  <div style={{
-                    fontFamily: "'Inter',sans-serif", fontSize: 14,
-                    fontWeight: 700, color: C.t1, marginBottom: 6,
-                  }}>{item.t}</div>
-                  <div style={{
-                    fontFamily: "'Inter',sans-serif", fontSize: 13,
-                    color: C.t2, lineHeight: 1.7,
-                  }}>{item.d}</div>
+                  <div style={{ fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.18em", color: AP.brass }}>{x[0]}</div>
+                  <div style={{ fontFamily: AP.display, fontSize: 18, fontWeight: 500, color: AP.off, marginTop: 6, letterSpacing: "-0.01em" }}>{x[1]}</div>
                 </div>
               ))}
             </div>
-          </div>
-        </Reveal>
-      </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════ SHOWCASE TEASER ═══════════════ */
-const SHOWCASE_ITEMS = [
-  { tag: "AI Assistant", title: "Live Chat", desc: "Trained on your business. Answers 24/7.", emoji: "💬" },
-  { tag: "Online Ordering", title: "Takeaway Orders", desc: "Customers order from their phone.", emoji: "🛒" },
-  { tag: "Booking System", title: "Appointments", desc: "Pick service, pick time, done.", emoji: "📅" },
-  { tag: "Loyalty Card", title: "Digital Stamps", desc: "Replace paper cards. Keep them coming back.", emoji: "⭐" },
-];
-
-function ShowcaseTeaser() {
-  return (
-    <section style={{
-      padding: "120px clamp(24px,6vw,72px)",
-      borderTop: `1px solid ${C.border}`,
-      background: C.bg2, position: "relative",
-    }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <Label>See It Working</Label>
-            <h2 style={{
-              fontFamily: "'Playfair Display',Georgia,serif",
-              fontSize: "clamp(30px,4.5vw,52px)", fontWeight: 800,
-              color: C.t1, margin: "0 0 20px 0", letterSpacing: "-0.025em", lineHeight: 1.1,
-            }}>
-              Don't just take my word.<br />
-              <span style={{ color: C.red }}>Try the demos.</span>
-            </h2>
-            <p style={{
-              fontFamily: "'Inter',sans-serif", fontSize: 15, color: C.t2,
-              lineHeight: 1.7, maxWidth: 480, margin: "0 auto",
-            }}>
-              Live showcase of what I build for local businesses. Click through and use them yourself.
-            </p>
-          </div>
-        </Reveal>
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 2,
-        }}>
-          {SHOWCASE_ITEMS.map((item, i) => (
-            <Reveal key={i} delay={i * 0.08}>
-              <a href="/showcase" style={{
-                display: "block", textDecoration: "none",
-                background: C.card, padding: 28, height: "100%",
-                borderBottom: "3px solid transparent",
-                transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
-              }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = C.card2;
-                  e.currentTarget.style.borderBottomColor = C.red;
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = C.card;
-                  e.currentTarget.style.borderBottomColor = "transparent";
-                  e.currentTarget.style.transform = "none";
-                }}
-              >
-                <div style={{ fontSize: 28, marginBottom: 18 }}>{item.emoji}</div>
-                <div style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 10, fontWeight: 700,
-                  color: C.red, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 10,
-                }}>{item.tag}</div>
-                <h3 style={{
-                  fontFamily: "'Playfair Display',Georgia,serif",
-                  fontSize: 19, fontWeight: 700, color: C.t1, margin: "0 0 8px 0",
-                }}>{item.title}</h3>
-                <p style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 13,
-                  color: C.t2, lineHeight: 1.6, margin: 0,
-                }}>{item.desc}</p>
-              </a>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={0.3}>
-          <div style={{ textAlign: "center", marginTop: 48 }}>
-            <a href="/showcase" style={{
-              display: "inline-block", padding: "16px 42px",
-              background: "transparent", color: C.t1,
-              fontFamily: "'Inter',sans-serif", fontSize: 13, fontWeight: 700,
-              letterSpacing: "0.08em", textTransform: "uppercase",
-              textDecoration: "none", border: `1px solid ${C.red}`,
-              transition: "all 0.3s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.red; e.currentTarget.style.color = "#fff"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.t1; }}
-            >See the full showcase →</a>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════ EXAMPLES TEASER ═══════════════ */
-const EXAMPLE_PREVIEWS = [
-  { slug: "cafe", label: "Café" },
-  { slug: "barber", label: "Barber" },
-  { slug: "pub", label: "Pub" },
-  { slug: "plumber", label: "Plumber" },
-  { slug: "salon", label: "Nail Salon" },
-  { slug: "pizza", label: "Pizza Shop" },
-];
-
-function ExamplesTeaser() {
-  return (
-    <section style={{
-      padding: "120px clamp(24px,6vw,72px)",
-      borderTop: `1px solid ${C.border}`,
-    }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <Label>Built from Scratch</Label>
-            <h2 style={{
-              fontFamily: "'Playfair Display',Georgia,serif",
-              fontSize: "clamp(30px,4.5vw,52px)", fontWeight: 800,
-              color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.025em", lineHeight: 1.1,
-            }}>
-              Not templates.<br />
-              <span style={{ color: C.red }}>Real websites.</span>
-            </h2>
-            <p style={{
-              fontFamily: "'Inter',sans-serif", fontSize: 15, color: C.t2,
-              lineHeight: 1.7, maxWidth: 500, margin: "0 auto",
-            }}>
-              Every site is designed and built bespoke. Here are a few — click through and use them yourself.
-            </p>
-          </div>
-        </Reveal>
-        <div className="examples-teaser-grid" style={{
-          display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2,
-        }}>
-          {EXAMPLE_PREVIEWS.map((ex, i) => (
-            <Reveal key={ex.slug} delay={0.06 * i}>
-              <a href={`/examples/${ex.slug}/index.html`} style={{
-                display: "block", textDecoration: "none",
-                background: C.card, overflow: "hidden",
-                transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
-                borderBottom: "3px solid transparent",
-              }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = C.card2;
-                  e.currentTarget.style.borderBottomColor = C.red;
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = C.card;
-                  e.currentTarget.style.borderBottomColor = "transparent";
-                  e.currentTarget.style.transform = "none";
-                }}
-              >
-                {/* Live iframe preview */}
-                <div style={{
-                  height: 180, position: "relative", overflow: "hidden",
-                  borderBottom: `1px solid ${C.border}`,
-                }}>
-                  <iframe
-                    src={`/examples/${ex.slug}/site.html`}
-                    title={`${ex.label} preview`}
-                    style={{
-                      width: "200%", height: "200%",
-                      border: "none", transform: "scale(0.5)",
-                      transformOrigin: "top left", pointerEvents: "none",
-                    }}
-                    loading="lazy" tabIndex={-1}
-                  />
-                  <div style={{ position: "absolute", inset: 0, cursor: "pointer" }} />
-                  <div style={{
-                    position: "absolute", top: 10, left: 10,
-                    padding: "4px 10px", background: C.red,
-                    fontFamily: "'Inter',sans-serif", fontSize: 9, fontWeight: 700,
-                    color: "#fff", letterSpacing: "0.1em", textTransform: "uppercase",
-                  }}>{ex.label}</div>
-                </div>
-              </a>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={0.3}>
-          <div style={{ textAlign: "center", marginTop: 40 }}>
-            <a href="/examples" style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              fontFamily: "'Inter',sans-serif", fontSize: 13, fontWeight: 700,
-              color: C.red, textDecoration: "none", letterSpacing: "0.08em",
-              textTransform: "uppercase", transition: "gap 0.3s",
-            }}
-              onMouseEnter={e => e.currentTarget.style.gap = "12px"}
-              onMouseLeave={e => e.currentTarget.style.gap = "8px"}
-            >
-              See all 9 examples <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════ FOUNDING LOCAL CALLOUT ═══════════════ */
-const FL_AMBER = "#B8860B";
-const FL_AMBER_FAINT = "rgba(184,134,11,0.08)";
-const FL_AMBER_BORDER = "rgba(184,134,11,0.25)";
-
-function FoundingLocalCallout() {
-  return (
-    <section style={{
-      padding: "100px clamp(24px,6vw,72px)",
-      borderTop: `1px solid ${C.border}`,
-      background: C.bg2, position: "relative",
-    }}>
-      <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-        <Reveal>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 10,
-            padding: "8px 18px", borderRadius: 40,
-            background: FL_AMBER_FAINT, border: `1px solid ${FL_AMBER_BORDER}`,
-            marginBottom: 28,
-          }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: "50%", background: FL_AMBER,
-              boxShadow: `0 0 8px ${FL_AMBER}`,
-            }} />
-            <span style={{
-              fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 600,
-              color: FL_AMBER, letterSpacing: "0.02em",
-            }}>Places remaining</span>
-          </div>
-
-          <h2 style={{
-            fontFamily: "'Playfair Display',Georgia,serif",
-            fontSize: "clamp(28px,4vw,44px)", fontWeight: 800,
-            color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.02em", lineHeight: 1.15,
-          }}>
-            Founding Local.<br />
-            <span style={{ color: C.red }}>£100 setup. £50/month.</span>
-          </h2>
-
-          <p style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 15, color: C.t2,
-            lineHeight: 1.8, maxWidth: 520, margin: "0 auto 12px",
-          }}>
-            A properly built website, hosted and maintained, for the first 10 local businesses
-            in Blackwood and the Valleys. The price is locked in for life.
-          </p>
-
-          <p style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t3,
-            lineHeight: 1.7, maxWidth: 460, margin: "0 auto 32px", fontStyle: "italic",
-          }}>
-            Custom site, your own domain, hosting, monthly update, monitoring, and a check-in call.
-            No lock-in. Cancel any time.
-          </p>
-
-          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="/founding-local" style={{
-              padding: "16px 32px", background: C.red, color: "#fff",
-              fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-              textDecoration: "none", transition: "all 0.4s",
-              boxShadow: "0 4px 30px rgba(200,16,46,0.2)",
-            }}
-              onMouseEnter={e => { e.target.style.background = C.redHov; e.target.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={e => { e.target.style.background = C.red; e.target.style.transform = "none"; }}
-            >Learn More</a>
-            <a href="mailto:hello@asherprice.co.uk?subject=Founding%20Local%20%E2%80%94%20interested" style={{
-              padding: "16px 32px", background: "transparent",
-              border: `1px solid ${C.border2}`, color: C.t1,
-              fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
-              letterSpacing: "0.04em", textTransform: "uppercase",
-              textDecoration: "none", transition: "all 0.4s",
-            }}
-              onMouseEnter={e => { e.target.style.borderColor = C.t2; e.target.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={e => { e.target.style.borderColor = C.border2; e.target.style.transform = "none"; }}
-            >Claim a Place</a>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════ CLIENT PROOF ═══════════════ */
-function ClientProof() {
-  return (
-    <section style={{
-      padding: "100px clamp(24px,6vw,72px)",
-      borderTop: `1px solid ${C.border}`,
-    }}>
-      <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-        <Reveal>
-          <Label>Live Work</Label>
-          <h2 style={{
-            fontFamily: "'Playfair Display',Georgia,serif",
-            fontSize: "clamp(26px,4vw,40px)", fontWeight: 800,
-            color: C.t1, margin: "0 0 20px 0", letterSpacing: "-0.02em", lineHeight: 1.15,
-          }}>
-            Not just demos.<br />
-            <span style={{ color: C.red }}>Real businesses.</span>
-          </h2>
-          <p style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 15, color: C.t2,
-            lineHeight: 1.8, maxWidth: 480, margin: "0 auto 40px",
-          }}>
-            The Westgate Bar in Blackwood is my first live client — a real
-            business with a website I built and maintain. More launching soon
-            through Founding Local.
-          </p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <div style={{
-            background: C.card, border: `1px solid ${C.border}`,
-            padding: "clamp(28px,4vw,44px)", position: "relative", overflow: "hidden",
-          }}>
-            <div style={{
-              position: "absolute", top: 0, left: 0, right: 0, height: 3,
-              background: `linear-gradient(90deg, ${C.red}, ${C.green})`,
-            }} />
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 32,
-              flexWrap: "wrap",
-            }}>
-              <div style={{ textAlign: "left" }}>
-                <div style={{
-                  fontFamily: "'Playfair Display',Georgia,serif",
-                  fontSize: 22, fontWeight: 700, color: C.t1, marginBottom: 6,
-                }}>The Westgate Bar</div>
-                <div style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t2, lineHeight: 1.6,
-                }}>
-                  Blackwood · Live since 2026<br />
-                  Custom website · Built and maintained by AP
-                </div>
-              </div>
-              <div style={{
-                width: 1, height: 48, background: C.border, flexShrink: 0,
-              }} />
-              <div style={{ textAlign: "center" }}>
-                <div style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 700,
-                  color: C.t3, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8,
-                }}>Coming next</div>
-                <div style={{
-                  fontFamily: "'Inter',sans-serif", fontSize: 13, color: C.t2, lineHeight: 1.6,
-                }}>
-                  Founding Local clients launching soon
-                </div>
-              </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <Btn variant="ghost" small as="a" href="https://westgatebar.co.uk" icon="↗">Visit westgatebar.co.uk</Btn>
             </div>
           </div>
-        </Reveal>
+        </article>
+
+        <aside style={{ border: `1px dashed ${AP.ruleStr}`, padding: "28px 26px",
+          display: "flex", flexDirection: "column", gap: 18, background: "rgba(255,255,255,0.015)" }}>
+          <Eyebrow color={AP.brass}>Next up</Eyebrow>
+          <h3 style={{ margin: 0, fontFamily: AP.display, fontSize: 30, lineHeight: 1.02,
+            fontWeight: 500, letterSpacing: "-0.025em", color: AP.off, textWrap: "balance" }}>
+            Founding Local is open.
+          </h3>
+          <div style={{ borderTop: `1px solid ${AP.rule}`, paddingTop: 14, display: "grid", gap: 14 }}>
+            <div style={{
+              fontFamily: AP.display, fontSize: 44, fontWeight: 600,
+              letterSpacing: "-0.03em", lineHeight: 1, color: AP.off,
+            }}>10 / 10</div>
+            <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.brass, letterSpacing: "0.14em" }}>
+              PLACES STILL AVAILABLE
+            </div>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: AP.off2 }}>
+              £100 setup, £50/mo, locked in for life. You could be next — the chat is always free.
+            </p>
+          </div>
+          <div style={{ marginTop: "auto", paddingTop: 4 }}>
+            <Btn variant="ghost" small as="a" href="#founding">Be the next one</Btn>
+          </div>
+        </aside>
       </div>
     </section>
   );
 }
 
-/* (Process section merged into Services above) */
+/* ───────── 12 · Contact ───────── */
+function Field({ label, name, type = "text", required, span = 1, as = "input", placeholder }) {
+  const Tag = as;
+  return (
+    <div style={{ gridColumn: `span ${span}` }}>
+      <label style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline",
+        fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.18em", color: AP.brass, marginBottom: 8 }}>
+        <span>{label}</span>
+        {required ? <span style={{ color: AP.red }}>*</span> : <span style={{ color: AP.dim, letterSpacing: 0 }}>(optional)</span>}
+      </label>
+      <Tag
+        name={name} type={type} placeholder={placeholder} required={required}
+        rows={as === "textarea" ? 5 : undefined}
+        style={{
+          width: "100%", background: "transparent",
+          border: "none", borderBottom: `1px solid ${AP.ruleStr}`,
+          padding: "8px 0 10px", color: AP.off,
+          fontFamily: as === "textarea" ? AP.body : AP.display,
+          fontSize: as === "textarea" ? 15 : 18, letterSpacing: "-0.01em",
+          outline: "none", resize: as === "textarea" ? "vertical" : "none",
+          lineHeight: 1.4,
+        }}
+      />
+    </div>
+  );
+}
 
-/* (WhyLocal merged into Services section above) */
-
-/* ═══════════════ CONTACT ═══════════════ */
-function Contact() {
+function Contact({ mobile }) {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
-  const [focused, setFocused] = useState(null);
-  const [name, setName] = useState("");
-  const [biz, setBiz] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [website, setWebsite] = useState("");
-  const [msg, setMsg] = useState("");
-  const handleSubmit = async () => {
-    if (!name.trim() || (!email.trim() && !phone.trim())) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (sending) return;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = (data.get("name") || "").toString().trim();
+    const biz = (data.get("biz") || "").toString().trim();
+    const email = (data.get("email") || "").toString().trim();
+    const phone = (data.get("phone") || "").toString().trim();
+    const website = (data.get("site") || "").toString().trim();
+    const message = (data.get("msg") || "").toString().trim();
+    if (!name || (!email && !phone)) return;
     setSending(true);
     try {
       const contact = [email, phone].filter(Boolean).join(" | ");
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, business: biz, contact, website, message: msg, source: "form" }),
+        body: JSON.stringify({ name, business: biz, contact, website, message, source: "form" }),
       });
       if (!res.ok) throw new Error("Request failed");
       setSent(true);
@@ -922,245 +1108,294 @@ function Contact() {
       alert("Something went wrong. Please try again or email hello@asherprice.co.uk directly.");
     }
   };
-  const inputStyle = (field) => ({
-    background: C.card, border: `1px solid ${focused === field ? C.red : C.border}`,
-    color: C.t1, fontFamily: "'Inter',sans-serif",
-    fontSize: 15, padding: "18px 22px", outline: "none",
-    transition: "all 0.3s", width: "100%", boxSizing: "border-box",
-    boxShadow: focused === field ? `0 0 20px ${C.redFaint}` : "none",
-  });
   return (
-    <section id="contact" style={{
-      padding: "140px clamp(24px,6vw,72px)",
-      borderTop: `1px solid ${C.border}`,
-      position: "relative",
-    }}>
-      <div style={{
-        position: "absolute", left: "50%", top: 0, width: 1, height: 80,
-        background: `linear-gradient(to bottom, ${C.red}, transparent)`,
-        transform: "translateX(-50%)",
-      }} />
-      <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
-        <Reveal>
-          <Label>Get Started</Label>
-          <h2 style={{
-            fontFamily: "'Playfair Display',Georgia,serif",
-            fontSize: "clamp(32px,5vw,52px)", fontWeight: 800,
-            color: C.t1, margin: "0 0 16px 0", letterSpacing: "-0.025em",
-          }}>Let's talk<span style={{ color: C.red }}>.</span></h2>
-          <p style={{
-            fontFamily: "'Inter',sans-serif", fontSize: 16,
-            color: C.t2, lineHeight: 1.7, marginBottom: 56,
-          }}>
-            Free, no-obligation conversation. Tell me what your business needs
-            and I'll give you an honest answer — even if it's "you don't need me."
+    <section id="contact" style={{ background: AP.slate, color: AP.off, padding: mobile ? "64px 22px" : "96px 36px" }}>
+      <SectionHeader
+        mobile={mobile}
+        index="09 · CONTACT"
+        welsh="Cysylltu"
+        title={<>Let's <span style={{ fontFamily: AP.italic, fontStyle: "italic", color: AP.red, fontWeight: 400 }}>talk</span>.</>}
+        right={<>Free, no-obligation conversation.<br/>I'll reply within 24 hours.</>}
+      />
+      <div style={{ marginTop: 40, display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "1fr 1.4fr",
+        gap: mobile ? 32 : 48 }}>
+        <aside style={{ borderTop: `1px solid ${AP.ruleStr}`, paddingTop: 24 }}>
+          <p style={{ margin: 0, fontSize: 18, lineHeight: 1.5, color: AP.off2, textWrap: "pretty" }}>
+            Tell me what your business needs and I'll give you an honest answer —
+            <em style={{ fontFamily: AP.italic }}> even if it's "you don't need me."</em>
           </p>
-        </Reveal>
-        <Reveal delay={0.15}>
-          {!sent ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, textAlign: "left" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <input placeholder="Your name" style={inputStyle("name")}
-                  value={name} onChange={e => setName(e.target.value)}
-                  onFocus={() => setFocused("name")} onBlur={() => setFocused(null)} />
-                <input placeholder="Business name" style={inputStyle("biz")}
-                  value={biz} onChange={e => setBiz(e.target.value)}
-                  onFocus={() => setFocused("biz")} onBlur={() => setFocused(null)} />
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <input placeholder="Email address" style={inputStyle("email")}
-                  value={email} onChange={e => setEmail(e.target.value)}
-                  onFocus={() => setFocused("email")} onBlur={() => setFocused(null)} />
-                <input placeholder="Phone number" style={inputStyle("phone")}
-                  value={phone} onChange={e => setPhone(e.target.value)}
-                  onFocus={() => setFocused("phone")} onBlur={() => setFocused(null)} />
-              </div>
-              <input placeholder="Website or Facebook page (optional)" style={inputStyle("website")}
-                value={website} onChange={e => setWebsite(e.target.value)}
-                onFocus={() => setFocused("website")} onBlur={() => setFocused(null)} />
-              <textarea placeholder="Tell me about your business and what you need..." rows={5}
-                style={{ ...inputStyle("msg"), resize: "vertical" }}
-                value={msg} onChange={e => setMsg(e.target.value)}
-                onFocus={() => setFocused("msg")} onBlur={() => setFocused(null)} />
-              <button onClick={handleSubmit} disabled={sending} style={{
-                padding: "20px 40px", background: C.red, color: "#fff",
-                fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700,
-                letterSpacing: "0.06em", textTransform: "uppercase",
-                border: "none", cursor: sending ? "default" : "pointer", marginTop: 8,
-                transition: "all 0.4s",
-                opacity: sending ? 0.7 : 1,
-                boxShadow: "0 4px 30px rgba(200,16,46,0.2)",
-              }}
-                onMouseEnter={e => { if (!sending) { e.target.style.background = C.redHov; e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 8px 40px rgba(200,16,46,0.3)"; } }}
-                onMouseLeave={e => { e.target.style.background = C.red; e.target.style.transform = "none"; e.target.style.boxShadow = "0 4px 30px rgba(200,16,46,0.2)"; }}
-              >{sending ? "Sending..." : "Send Message"}</button>
+          <div style={{ marginTop: 28, display: "grid", gap: 14, fontFamily: AP.mono, fontSize: 13 }}>
+            <div><span style={{ color: AP.brass, letterSpacing: "0.16em", fontSize: 10 }}>EMAIL</span><br/>
+              <a href="mailto:hello@asherprice.co.uk" style={{ color: AP.off, textDecoration: "none" }}>hello@asherprice.co.uk</a>
             </div>
-          ) : (
-            <div style={{
-              padding: 56, background: C.card,
-              border: `1px solid ${C.border}`,
-              position: "relative", overflow: "hidden",
-            }}>
-              <div style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: 3,
-                background: C.green,
-              }} />
-              <div style={{ fontSize: 36, marginBottom: 20, color: C.green }}>✓</div>
-              <p style={{
-                fontFamily: "'Playfair Display',Georgia,serif",
-                fontSize: 24, color: C.t1, margin: "0 0 8px 0", fontWeight: 700,
-              }}>Message received — diolch!</p>
-              <p style={{
-                fontFamily: "'Inter',sans-serif", fontSize: 15,
-                color: C.t2, margin: 0,
-              }}>I'll get back to you within 24 hours.</p>
+            <div><span style={{ color: AP.brass, letterSpacing: "0.16em", fontSize: 10 }}>FACEBOOK</span><br/>
+              <a href="https://www.facebook.com/asherprice.uk/" target="_blank" rel="noopener" style={{ color: AP.off, textDecoration: "none" }}>/asherprice.uk →</a>
             </div>
-          )}
-        </Reveal>
+            <div><span style={{ color: AP.brass, letterSpacing: "0.16em", fontSize: 10 }}>STUDIO</span><br/>
+              <span style={{ color: AP.off }}>Blackwood, NP12<br/>South Wales</span>
+            </div>
+          </div>
+          <div style={{ marginTop: 28, padding: "14px 16px", border: `1px solid ${AP.ruleStr}`,
+            fontFamily: AP.mono, fontSize: 12, color: AP.off, lineHeight: 1.55 }}>
+            <span style={{ color: AP.moss }}>● </span>
+            Founding Local is open — 10 places available.
+          </div>
+        </aside>
+
+        {sent ? (
+          <div style={{ borderTop: `1px solid ${AP.ruleStr}`, paddingTop: 24,
+            display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
+            <Eyebrow color={AP.moss}>Message received</Eyebrow>
+            <h3 style={{ margin: 0, fontFamily: AP.display, fontSize: mobile ? 40 : 56,
+              lineHeight: 0.95, fontWeight: 500, letterSpacing: "-0.035em", color: AP.off }}>
+              Message received — <span style={{ fontFamily: AP.italic, fontStyle: "italic", color: AP.red, fontWeight: 400 }}>diolch</span>.
+            </h3>
+            <p style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: AP.off2, maxWidth: 560 }}>
+              I'll get back to you within 24 hours — usually the same day. If it's urgent, ping me on Facebook or drop me a text.
+            </p>
+            <div><Btn variant="ghost" small onClick={() => setSent(false)}>Send another</Btn></div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit}
+            style={{ borderTop: `1px solid ${AP.ruleStr}`, paddingTop: 24 }}>
+            <div style={{ display: "grid",
+              gridTemplateColumns: mobile ? "1fr" : "1fr 1fr",
+              gap: mobile ? "24px" : "32px 40px" }}>
+              <Field label="Your name"     name="name"  required />
+              <Field label="Business name" name="biz"   required />
+              <Field label="Email"         name="email" type="email" required />
+              <Field label="Phone"         name="phone" type="tel" />
+              <Field label="Website or Facebook page" name="site" span={mobile ? 1 : 2} placeholder="https://…" />
+              <Field label="Tell me about your business and what you need" name="msg" as="textarea" span={mobile ? 1 : 2} required />
+            </div>
+            <div style={{ marginTop: 28,
+              display: "flex",
+              flexDirection: mobile ? "column" : "row",
+              justifyContent: "space-between",
+              alignItems: mobile ? "stretch" : "center",
+              gap: mobile ? 14 : 0,
+              paddingTop: 18, borderTop: `1px dashed ${AP.rule}` }}>
+              <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.04em" }}>
+                No newsletter. No follow-up spam.<br/>Just a reply from me.
+              </div>
+              <button type="submit" disabled={sending} style={{
+                padding: "14px 24px", background: AP.red, color: AP.off, border: "none",
+                fontFamily: AP.mono, fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase",
+                cursor: sending ? "default" : "pointer", opacity: sending ? 0.7 : 1,
+                display: "inline-flex", alignItems: "center", gap: 14, justifyContent: "space-between",
+              }}>
+                <span>{sending ? "Sending…" : "Send message"}</span>
+                <span>→</span>
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </section>
   );
 }
 
-/* ═══════════════ FOOTER ═══════════════ */
-function Footer() {
+/* ───────── 13 · Footer ───────── */
+function Footer({ mobile }) {
   return (
     <footer style={{
-      padding: "48px clamp(24px,6vw,72px)",
-      borderTop: `1px solid ${C.border}`,
+      background: AP.slate, color: AP.off,
+      padding: mobile ? "40px 22px 22px" : "72px 28px 28px",
+      borderTop: `1px solid ${AP.rule}`, display: "grid", gap: 40,
     }}>
+      <div style={{ display: "grid",
+        gridTemplateColumns: mobile ? "1fr" : "1fr 1fr 1fr 1fr",
+        gap: mobile ? 28 : 40, alignItems: "start" }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <Monogram size={56} />
+            <div>
+              <div style={{ fontFamily: AP.display, fontWeight: 600, fontSize: 22, letterSpacing: "-0.01em" }}>Asher Price</div>
+              <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.08em", marginTop: 2 }}>/ solo / est. mmxxiv</div>
+            </div>
+          </div>
+          <p style={{ margin: "20px 0 0", maxWidth: 280, fontSize: 14, lineHeight: 1.55, color: AP.off2 }}>
+            Websites, AI assistants and automation for local businesses across the South Wales Valleys.
+          </p>
+        </div>
+        <div>
+          <Eyebrow>Navigate</Eyebrow>
+          <div style={{ marginTop: 16, display: "grid", gap: 10, fontFamily: AP.mono, fontSize: 13 }}>
+            {[
+              ["Services", "#services"],
+              ["Showcase", "/showcase"],
+              ["Examples", "/examples"],
+              ["How it works", "#how-it-works"],
+              ["Get started", "#contact"],
+            ].map(([label, href]) => (
+              <a key={label} href={href} style={{ color: AP.off, textDecoration: "none" }}>— {label}</a>
+            ))}
+          </div>
+        </div>
+        <div>
+          <Eyebrow>Contact</Eyebrow>
+          <div style={{ marginTop: 16, display: "grid", gap: 10, fontFamily: AP.mono, fontSize: 13 }}>
+            <a href="mailto:hello@asherprice.co.uk" style={{ color: AP.off, textDecoration: "none" }}>hello@asherprice.co.uk</a>
+            <a href="https://www.facebook.com/asherprice.uk/" target="_blank" rel="noopener" style={{ color: AP.off, textDecoration: "none" }}>Facebook →</a>
+            <div style={{ color: AP.dim }}>Blackwood, NP12<br/>South Wales</div>
+          </div>
+        </div>
+        <div style={{ border: `1px solid ${AP.ruleStr}`, padding: "18px 18px 20px", position: "relative" }}>
+          <div style={{ position: "absolute", top: -10, left: 16, background: AP.slate, padding: "0 8px",
+            fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.16em", color: AP.brass }}>STATUS</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
+            <span style={{ width: 8, height: 8, background: AP.moss, boxShadow: `0 0 0 3px ${AP.moss}33` }}/>
+            <span style={{ fontFamily: AP.mono, fontSize: 12, color: AP.off }}>Accepting work</span>
+          </div>
+          <p style={{ margin: "12px 0 0", fontSize: 13, lineHeight: 1.5, color: AP.off2 }}>
+            Founding Local is open. I usually reply within a day.
+          </p>
+        </div>
+      </div>
+
       <div style={{
-        maxWidth: 1100, margin: "0 auto",
-        display: "flex", justifyContent: "space-between",
-        alignItems: "center", flexWrap: "wrap", gap: 20,
+        display: "flex",
+        flexDirection: mobile ? "column" : "row",
+        justifyContent: "space-between",
+        alignItems: mobile ? "flex-start" : "center",
+        gap: mobile ? 12 : 0,
+        paddingTop: 22, borderTop: `1px solid ${AP.rule}`,
+        fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.04em",
       }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{
-          width: 22, height: 22, border: `1.5px solid ${C.red}`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontFamily: "'Playfair Display',Georgia,serif",
-          fontSize: 9, fontWeight: 800, color: C.t2, letterSpacing: "1px",
-          opacity: 0.6,
-        }}>AP</div>
-        <span style={{
-          fontFamily: "'Inter',sans-serif", fontSize: 12,
-          color: C.t3, letterSpacing: "0.04em",
-        }}>© 2026 Asher Price · Blackwood, South Wales</span>
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <a href="https://www.facebook.com/asherprice.uk/" target="_blank" rel="noopener" aria-label="Asher Price on Facebook" style={{
-          display: "inline-flex", alignItems: "center", gap: 6,
-          fontFamily: "'Inter',sans-serif", fontSize: 12,
-          color: C.t3, textDecoration: "none", letterSpacing: "0.04em",
-          transition: "color 0.3s",
-        }}
-          onMouseEnter={e => e.currentTarget.style.color = C.red}
-          onMouseLeave={e => e.currentTarget.style.color = C.t3}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.87.24-1.46 1.49-1.46H17V4.46C16.74 4.42 15.82 4.34 14.75 4.34c-2.23 0-3.75 1.36-3.75 3.86V10.5H8.5v3H11V21h2.5z"/>
-          </svg>
-          Facebook
-        </a>
-        <a href="mailto:hello@asherprice.co.uk" style={{
-          fontFamily: "'Inter',sans-serif", fontSize: 12,
-          color: C.t3, textDecoration: "none", letterSpacing: "0.04em",
-          transition: "color 0.3s",
-        }}
-          onMouseEnter={e => e.target.style.color = C.red}
-          onMouseLeave={e => e.target.style.color = C.t3}
-        >hello@asherprice.co.uk</a>
-        <a href="/privacy-policy" style={{
-          fontFamily: "'Inter',sans-serif", fontSize: 12,
-          color: C.t3, textDecoration: "none", letterSpacing: "0.04em",
-          transition: "color 0.3s",
-        }}
-          onMouseEnter={e => e.target.style.color = C.red}
-          onMouseLeave={e => e.target.style.color = C.t3}
-        >Privacy Policy</a>
-      </div>
+        <span>© 2026 Asher Price · Blackwood, South Wales</span>
+        <span style={{ fontFamily: AP.italic, fontStyle: "italic", color: AP.brass, fontSize: 14 }}>
+          Gwneud pethau bychain.
+        </span>
+        <span><a href="/privacy-policy" style={{ color: AP.dim }}>Privacy policy</a></span>
       </div>
     </footer>
   );
 }
 
-/* ═══════════════ ANNOUNCEMENT BAR ═══════════════ */
-const BAR_HEIGHT = 38;
-
-function AnnouncementBar({ onDismiss }) {
+/* ───────── 14 · Placeholder chatbot widget (used only if you don't import ./Chatbot) ───────── */
+// Uncomment `<ChatbotWidget />` in App and delete `import Chatbot from "./Chatbot"` to use this placeholder.
+// eslint-disable-next-line no-unused-vars
+function ChatbotWidget() {
+  const [open, setOpen] = useState(false);
   return (
-    <div style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 300,
-      height: BAR_HEIGHT,
-      padding: "0 clamp(16px,4vw,48px)",
-      background: "rgba(184,134,11,0.12)", borderBottom: "1px solid rgba(184,134,11,0.18)",
-      backdropFilter: "blur(12px)",
-      display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
-    }}>
-      <a href="/founding-local" style={{
-        fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 600,
-        color: "#B8860B", textDecoration: "none", letterSpacing: "0.02em",
-        display: "inline-flex", alignItems: "center", gap: 6,
+    <div style={{ position: "fixed", bottom: 22, right: 22, zIndex: 50, fontFamily: AP.mono }}>
+      {open && (
+        <div style={{ width: 320, marginBottom: 12, background: AP.slate2, color: AP.off,
+          border: `1px solid ${AP.ruleStr}`, boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}>
+          <div style={{ padding: "12px 14px", borderBottom: `1px solid ${AP.rule}`,
+            display: "flex", alignItems: "center", gap: 10, fontSize: 11, letterSpacing: "0.14em" }}>
+            <span style={{ width: 8, height: 8, background: AP.moss }}/>
+            <span>ASK_AP · chatbot demo</span>
+            <span style={{ marginLeft: "auto", cursor: "pointer", color: AP.dim }} onClick={() => setOpen(false)}>×</span>
+          </div>
+          <div style={{ padding: 14, display: "grid", gap: 10, fontSize: 13, lineHeight: 1.5 }}>
+            <div style={{ color: AP.dim, fontSize: 10, letterSpacing: "0.12em" }}>AP · now</div>
+            <div style={{ padding: "10px 12px", background: AP.slate3, maxWidth: "88%" }}>
+              Shw mae. What can I build for you today? Try asking about pricing, timelines, or the Founding Local deal.
+            </div>
+          </div>
+          <div style={{ padding: "10px 12px", borderTop: `1px solid ${AP.rule}`, fontSize: 12, color: AP.dim }}>
+            <span style={{ color: AP.red }}>▍</span> type a question…
+          </div>
+        </div>
+      )}
+      <button onClick={() => setOpen((o) => !o)} style={{
+        width: 56, height: 56, background: AP.red, color: AP.off, border: "none",
+        display: "grid", placeItems: "center", cursor: "pointer",
+        boxShadow: "0 12px 30px rgba(163,19,42,0.4)",
       }}>
-        Founding Local: £100 setup + £50/mo — 10 of 10 places remaining
-        <span aria-hidden="true" style={{ fontSize: 14 }}>→</span>
-      </a>
-      <button onClick={onDismiss} style={{
-        background: "none", border: "none", cursor: "pointer", padding: 2,
-        color: "rgba(184,134,11,0.5)", fontSize: 16, lineHeight: 1,
-        position: "absolute", right: "clamp(12px,3vw,36px)", top: "50%", transform: "translateY(-50%)",
-      }}>×</button>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M4 5h16v11H9l-5 4V5z"/>
+        </svg>
+      </button>
     </div>
   );
 }
 
-/* ═══════════════ APP ═══════════════ */
-export default function App() {
-  const [barVisible, setBarVisible] = useState(() => {
-    try { return localStorage.getItem("fl-banner-dismissed") !== "1"; } catch { return true; }
-  });
-  const dismissBar = () => {
-    setBarVisible(false);
-    try { localStorage.setItem("fl-banner-dismissed", "1"); } catch {}
-  };
+/* ───────── Mobile menu overlay ───────── */
+function MobileMenu({ onClose }) {
+  const links = [
+    { label: "Services",     href: "#services" },
+    { label: "Showcase",     href: "/showcase" },
+    { label: "Examples",     href: "/examples" },
+    { label: "How it works", href: "#how-it-works" },
+    { label: "Founding Local", href: "#founding" },
+    { label: "Get started",  href: "#contact" },
+  ];
   return (
-    <div style={{ background: C.bg, color: C.t1, minHeight: "100vh", overflowX: "hidden", paddingTop: barVisible ? BAR_HEIGHT : 0 }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;800&display=swap');
-        *{margin:0;padding:0;box-sizing:border-box}
-        html{scroll-behavior:smooth}
-        body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-        ::selection{background:rgba(200,16,46,0.35);color:#fff}
-        ::-webkit-scrollbar{width:4px}
-        ::-webkit-scrollbar-track{background:${C.bg}}
-        ::-webkit-scrollbar-thumb{background:${C.border2};border-radius:2px}
-        ::-webkit-scrollbar-thumb:hover{background:${C.red}}
-        input::placeholder,textarea::placeholder{color:${C.t3}}
-        @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
-        @keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
-        @media(max-width:640px){.process-grid{grid-template-columns:repeat(2,1fr) !important}}
-        @media(max-width:640px){.examples-teaser-grid{grid-template-columns:1fr !important}}
-        @media(max-width:640px){.proof-strip-grid{grid-template-columns:repeat(2,1fr) !important}}
-        @media(max-width:640px){.why-me-grid{grid-template-columns:1fr !important}}
-        @media(max-width:640px){.services-grid{grid-template-columns:1fr !important}}
-        @media(min-width:641px) and (max-width:900px){.services-grid{grid-template-columns:repeat(2,1fr) !important}}
-        @media(max-width:900px){.examples-teaser-grid{grid-template-columns:repeat(2,1fr) !important}}
-        @media(max-width:640px){.desktop-nav{display:none !important}.mobile-menu-btn{display:flex !important}}
-        @media(min-width:641px){.mobile-menu-btn{display:none !important}}
-      `}</style>
-      <Grain />
-      {barVisible && <AnnouncementBar onDismiss={dismissBar} />}
-      <Navbar topOffset={barVisible ? BAR_HEIGHT : 0} />
-      <Hero />
-      <ProofStrip />
-      <Services />
-      <ExamplesTeaser />
-      <ShowcaseTeaser />
-      <FoundingLocalCallout />
-      <ClientProof />
-      <Contact />
-      <Footer />
-      <Chatbot />
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 300,
+      background: `${AP.slate}f5`, backdropFilter: "blur(20px)",
+      display: "flex", flexDirection: "column",
+      padding: "22px",
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 48 }}>
+        <Monogram size={36}/>
+        <button onClick={onClose} style={{
+          width: 40, height: 40, background: "transparent",
+          border: `1px solid ${AP.ruleStr}`, color: AP.off, cursor: "pointer",
+          display: "inline-flex", alignItems: "center", justifyContent: "center", padding: 0,
+        }} aria-label="Close menu">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="1.6"/>
+            <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" strokeWidth="1.6"/>
+          </svg>
+        </button>
+      </div>
+      <div style={{ display: "grid", gap: 4, borderTop: `1px solid ${AP.rule}` }}>
+        {links.map((x, i) => (
+          <a key={x.label} href={x.href} onClick={onClose} style={{
+            display: "flex", alignItems: "baseline", gap: 14,
+            padding: "22px 0", borderBottom: `1px solid ${AP.rule}`,
+            color: AP.off, textDecoration: "none",
+            fontFamily: AP.display, fontSize: 28, fontWeight: 500, letterSpacing: "-0.02em",
+          }}>
+            <span style={{ fontFamily: AP.mono, fontSize: 11, color: AP.brass, letterSpacing: "0.14em" }}>
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span>{x.label}</span>
+          </a>
+        ))}
+      </div>
+      <div style={{ marginTop: "auto", paddingTop: 32,
+        fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.08em" }}>
+        hello@asherprice.co.uk · Blackwood, NP12
+      </div>
     </div>
+  );
+}
+
+/* ───────── Root ───────── */
+export default function App() {
+  const mobile = useMobile();
+  const [menuOpen, setMenuOpen] = useState(false);
+  // Apply base body styles once
+  useEffect(() => {
+    document.body.style.background = AP.slate;
+    document.body.style.color = AP.off;
+    document.body.style.margin = "0";
+    document.body.style.fontFamily = AP.body;
+    document.documentElement.style.scrollBehavior = "smooth";
+  }, []);
+  return (
+    <>
+      <Announcement mobile={mobile}/>
+      <Nav mobile={mobile} onMenuOpen={() => setMenuOpen(true)}/>
+      <main>
+        <Hero mobile={mobile}/>
+        <Services mobile={mobile}/>
+        <Process mobile={mobile}/>
+        <Why mobile={mobile}/>
+        <Examples mobile={mobile}/>
+        <Showcase mobile={mobile}/>
+        <Founding mobile={mobile}/>
+        <ClientProof mobile={mobile}/>
+        <Contact mobile={mobile}/>
+      </main>
+      <Footer mobile={mobile}/>
+      <Chatbot />
+      {menuOpen && <MobileMenu onClose={() => setMenuOpen(false)}/>}
+    </>
   );
 }

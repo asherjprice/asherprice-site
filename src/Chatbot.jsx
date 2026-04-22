@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 
 const C = {
-  red: "#C8102E", redHov: "#E01A38",
-  bg: "#08090B", card: "#101218", card2: "#14161D",
-  border: "#1B1E26", border2: "#252830",
-  t1: "#F0EDEA", t2: "#9B9DA4", t3: "#5C5F68",
+  red: "#A3132A", redHov: "#C8102E",
+  bg: "#15171B", card: "#1B1E22", card2: "#23262B",
+  border: "rgba(232,228,219,0.12)", border2: "rgba(232,228,219,0.22)",
+  t1: "#E8E4DB", t2: "#D6D1C4", t3: "#7E8086",
 };
 
 /* ── Knowledge base ── */
