@@ -95,7 +95,7 @@ function SectionHeader({ index, welsh, title, right, invert = false, mobile }) {
   );
 }
 
-function Btn({ children, variant = "solid", as = "button", href, icon = "→", small, full, onClick }) {
+function Btn({ children, variant = "solid", as = "button", href, icon = "→", small, full, onClick, target, rel }) {
   const base = {
     display: "inline-flex", alignItems: "center", justifyContent: "space-between", gap: 14,
     padding: small ? "10px 14px" : "14px 20px",
@@ -109,7 +109,7 @@ function Btn({ children, variant = "solid", as = "button", href, icon = "→", s
     light:  { ...base, background: AP.off, color: AP.slate },
   };
   const style = variants[variant] || variants.solid;
-  if (as === "a") return <a href={href} style={style} onClick={onClick}><span>{children}</span><span aria-hidden>{icon}</span></a>;
+  if (as === "a") return <a href={href} style={style} onClick={onClick} target={target} rel={rel}><span>{children}</span><span aria-hidden>{icon}</span></a>;
   return <button style={style} onClick={onClick}><span>{children}</span><span aria-hidden>{icon}</span></button>;
 }
 
@@ -602,12 +602,12 @@ function Why({ mobile }) {
 
 /* ───────── 08 · Examples ───────── */
 const EXAMPLES_DATA = [
-  { slug: "cafe",     tag: "CAFÉ",       welsh: "Caffi",   title: "Rhymney Roasters",    meta: "Ordering · menu · loyalty",  hue: 32,  hero: "Proper coffee. Welsh cakes. Wifi." },
-  { slug: "barber",   tag: "BARBER",     welsh: "Barbwr",  title: "Valley Cuts",         meta: "Booking · gallery",          hue: 14,  hero: "Sharp fades. No waiting." },
-  { slug: "pub",      tag: "PUB",        welsh: "Tafarn",  title: "The Gwent Arms",      meta: "Events · menu · bookings",   hue: 355, hero: "Warm welcome. Cold pints." },
-  { slug: "plumber",  tag: "PLUMBER",    welsh: "Plymwr",  title: "Caerphilly Plumbing", meta: "Quote form · AI triage",     hue: 210, hero: "Fast, Gas-Safe, honest." },
-  { slug: "salon",    tag: "NAIL SALON", welsh: "Ewinedd", title: "Ysbryd Nails",        meta: "Booking · loyalty",          hue: 330, hero: "Ysbryd. Salon-grade nails." },
-  { slug: "pizza",    tag: "PIZZA",      welsh: "Pitsa",   title: "Forno Blackwood",     meta: "Ordering · delivery · SMS",  hue: 12,  hero: "Wood-fired, in 30 minutes." },
+  { slug: "vape",    tag: "VAPE SHOP",         welsh: "Siop Anwedd",     title: "Flavour Vapour",    meta: "Neon UI · flavour picker · stock" },
+  { slug: "indian",  tag: "INDIAN RESTAURANT", welsh: "Bwyty Indiaidd",  title: "Jaipur House",      meta: "Spice slider · menu · takeaway" },
+  { slug: "pizza",   tag: "PIZZA",             welsh: "Pitsa",           title: "Papa Nello's",      meta: "Build-your-own · delivery · SMS" },
+  { slug: "salon",   tag: "NAIL SALON",        welsh: "Ewinedd",         title: "Lux Nails",         meta: "Booking · reviews · loyalty" },
+  { slug: "plumber", tag: "PLUMBER",           welsh: "Plymwr",          title: "Emrys Plumbing",    meta: "Live quote · AI triage · 24h" },
+  { slug: "barber",  tag: "BARBER",            welsh: "Barbwr",          title: "Dai's Chair",       meta: "Ticket-strip booking · gallery" },
 ];
 
 function MiniSite({ ex }) {
@@ -781,7 +781,7 @@ function ShowcaseLoyalty() {
   return (
     <div style={{ padding: "14px 16px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
-        <div style={{ fontFamily: AP.display, fontSize: 14, fontWeight: 500 }}>Rhymney Roasters</div>
+        <div style={{ fontFamily: AP.display, fontSize: 14, fontWeight: 500 }}>Cwm Coffee Co.</div>
         <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.14em" }}>CARD № 0042</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
@@ -965,13 +965,18 @@ function ClientProof({ mobile }) {
         <article style={{ border: `1px solid ${AP.ruleStr}`, background: AP.slate2,
           display: "grid", gridTemplateRows: "auto 1fr auto" }}>
           <div style={{ aspectRatio: "21 / 9", position: "relative",
-            background: "linear-gradient(180deg, #2a1316 0%, #120607 100%)",
             overflow: "hidden", borderBottom: `1px solid ${AP.rule}` }}>
+            <img src="/westgate-hero.jpg" alt="The Westgate Bar, Blackwood"
+              loading="lazy" style={{
+                position: "absolute", inset: 0, width: "100%", height: "100%",
+                objectFit: "cover", objectPosition: "center",
+              }}/>
             <div style={{ position: "absolute", inset: 0,
-              backgroundImage: "repeating-linear-gradient(135deg, rgba(232,228,219,0.03) 0 10px, transparent 10px 24px)" }}/>
+              background: "linear-gradient(180deg, rgba(21,23,27,0.25) 0%, rgba(21,23,27,0.55) 55%, rgba(21,23,27,0.92) 100%)",
+            }}/>
             <div style={{ position: "absolute", top: 18, left: 22,
               fontFamily: AP.mono, fontSize: 10, color: AP.off, letterSpacing: "0.18em" }}>
-              [PHOTOGRAPH · THE WESTGATE BAR · BLACKWOOD]
+              westgateblackwood.co.uk — LIVE
             </div>
             <div style={{ position: "absolute", bottom: 22, left: 22, right: 22,
               display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
@@ -1004,7 +1009,7 @@ function ClientProof({ mobile }) {
               ))}
             </div>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <Btn variant="ghost" small as="a" href="https://westgatebar.co.uk" icon="↗">Visit westgatebar.co.uk</Btn>
+              <Btn variant="ghost" small as="a" href="https://westgateblackwood.co.uk" icon="↗" target="_blank" rel="noopener">Visit westgateblackwood.co.uk</Btn>
             </div>
           </div>
         </article>
