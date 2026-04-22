@@ -104,6 +104,7 @@ export async function onRequestPost(context) {
     </div>
   `.trim();
 
+  const failureMsg = "We couldn't send your message — please email hello@asherprice.co.uk directly and I'll get back to you.";
   try {
     const emailRes = await fetch(EMAIL_WORKER_URL, {
       method: "POST",
@@ -120,10 +121,12 @@ export async function onRequestPost(context) {
     });
 
     if (!emailRes.ok) {
-      console.error("Email worker error:", await emailRes.text());
+      console.error("Email worker error:", emailRes.status, await emailRes.text());
+      return json({ success: false, error: failureMsg }, 502);
     }
   } catch (err) {
     console.error("Email send error:", err);
+    return json({ success: false, error: failureMsg }, 502);
   }
 
   return json({ success: true });
