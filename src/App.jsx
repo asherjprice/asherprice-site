@@ -355,7 +355,7 @@ const SERVICES_DATA = [
   { n: "02", title: "AI Assistants",   welsh: "Cynorthwywyr", body: "Trained on your business. Answer enquiries and capture leads 24/7.",                         stat: ["24 / 7", "on the clock"]   },
   { n: "03", title: "Online Ordering", welsh: "Archebu",      body: "Customers order from your site. No Deliveroo commission.",                                    stat: ["0 %",    "commission"]       },
   { n: "04", title: "Booking Systems", welsh: "Bwcio",        body: "Pick a service, pick a time, done. Works for any appointment business.",                      stat: ["SMS",    "reminders in"]    },
-  { n: "05", title: "Loyalty Cards",   welsh: "Teyrngarwch",  body: "Digital stamp cards from your website. No app download needed.",                              stat: ["WALLET", "Apple · Google"]   },
+  { n: "05", title: "Loyalty Cards",   welsh: "Teyrngarwch",  body: "Digital stamp cards from your website. No app download needed.",                              stat: ["NO APP", "needed"]           },
   { n: "06", title: "Automation",      welsh: "Awtomeiddio",  body: "Invoicing, follow-ups, lead capture — if you do it twice, I automate it.",                    stat: ["÷ 2",    "repeat tasks"]     },
 ];
 
@@ -1044,25 +1044,36 @@ function ClientProof({ mobile }) {
 
 /* ───────── 12 · Contact ───────── */
 function Field({ label, name, type = "text", required, span = 1, as = "input", placeholder }) {
+  const [focused, setFocused] = useState(false);
   const Tag = as;
   return (
     <div style={{ gridColumn: `span ${span}` }}>
-      <label style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline",
-        fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.18em", color: AP.brass, marginBottom: 8 }}>
+      <label style={{
+        display: "flex", justifyContent: "space-between", alignItems: "baseline",
+        fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.18em",
+        color: focused ? AP.red : AP.brass, marginBottom: 8,
+        transition: "color 160ms",
+      }}>
         <span>{label}</span>
-        {required ? <span style={{ color: AP.red }}>*</span> : <span style={{ color: AP.dim, letterSpacing: 0 }}>(optional)</span>}
+        {required
+          ? <span style={{ color: AP.red }}>REQUIRED *</span>
+          : <span style={{ color: AP.dim, letterSpacing: "0.14em" }}>OPTIONAL</span>}
       </label>
       <Tag
-        name={name} type={type} placeholder={placeholder} required={required}
+        name={name} type={type} placeholder={placeholder || "— type here"} required={required}
         rows={as === "textarea" ? 5 : undefined}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         style={{
-          width: "100%", background: "transparent",
-          border: "none", borderBottom: `1px solid ${AP.ruleStr}`,
-          padding: "8px 0 10px", color: AP.off,
+          width: "100%", boxSizing: "border-box",
+          background: AP.slate, color: AP.off,
+          border: `1px solid ${focused ? AP.red : AP.ruleStr}`,
+          padding: as === "textarea" ? "14px 16px" : "14px 16px",
           fontFamily: as === "textarea" ? AP.body : AP.display,
           fontSize: as === "textarea" ? 15 : 18, letterSpacing: "-0.01em",
           outline: "none", resize: as === "textarea" ? "vertical" : "none",
           lineHeight: 1.4,
+          transition: "border-color 160ms, background 160ms",
         }}
       />
     </div>
@@ -1148,11 +1159,31 @@ function Contact({ mobile }) {
             <div><Btn variant="ghost" small onClick={() => setSent(false)}>Send another</Btn></div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit}
-            style={{ borderTop: `1px solid ${AP.ruleStr}`, paddingTop: 24 }}>
+          <form onSubmit={handleSubmit} style={{
+            position: "relative",
+            background: AP.slate2,
+            border: `1px solid ${AP.ruleStr}`,
+            padding: mobile ? "24px 22px 22px" : "36px 36px 28px",
+          }}>
+            <div style={{
+              position: "absolute", top: -10, left: 20, padding: "0 10px",
+              background: AP.slate2,
+              fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.18em", color: AP.brass,
+            }}>
+              ENQUIRY · FORM
+            </div>
+            <div style={{
+              display: "flex", justifyContent: "space-between", alignItems: "baseline",
+              paddingBottom: 20, marginBottom: 24,
+              borderBottom: `1px solid ${AP.rule}`,
+              fontFamily: AP.mono, fontSize: 10, letterSpacing: "0.16em", color: AP.dim,
+            }}>
+              <span>Fill in what applies — minimum: name + email <span style={{ color: AP.red }}>*</span></span>
+              <span style={{ color: AP.moss }}>● ACCEPTING BRIEFS</span>
+            </div>
             <div style={{ display: "grid",
               gridTemplateColumns: mobile ? "1fr" : "1fr 1fr",
-              gap: mobile ? "24px" : "32px 40px" }}>
+              gap: mobile ? 20 : "24px 28px" }}>
               <Field label="Your name"     name="name"  required />
               <Field label="Business name" name="biz"   required />
               <Field label="Email"         name="email" type="email" required />
@@ -1166,15 +1197,16 @@ function Contact({ mobile }) {
               justifyContent: "space-between",
               alignItems: mobile ? "stretch" : "center",
               gap: mobile ? 14 : 0,
-              paddingTop: 18, borderTop: `1px dashed ${AP.rule}` }}>
-              <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.04em" }}>
-                No newsletter. No follow-up spam.<br/>Just a reply from me.
+              paddingTop: 20, borderTop: `1px dashed ${AP.rule}` }}>
+              <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.04em", lineHeight: 1.6 }}>
+                No newsletter. No follow-up spam.<br/>Just a reply from me, usually same day.
               </div>
               <button type="submit" disabled={sending} style={{
-                padding: "14px 24px", background: AP.red, color: AP.off, border: "none",
+                padding: "16px 24px", background: AP.red, color: AP.off, border: "none",
                 fontFamily: AP.mono, fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase",
                 cursor: sending ? "default" : "pointer", opacity: sending ? 0.7 : 1,
                 display: "inline-flex", alignItems: "center", gap: 14, justifyContent: "space-between",
+                minWidth: mobile ? "auto" : 220,
               }}>
                 <span>{sending ? "Sending…" : "Send message"}</span>
                 <span>→</span>
@@ -1203,7 +1235,7 @@ function Footer({ mobile }) {
             <Monogram size={56} />
             <div>
               <div style={{ fontFamily: AP.display, fontWeight: 600, fontSize: 22, letterSpacing: "-0.01em" }}>Asher Price</div>
-              <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.08em", marginTop: 2 }}>/ solo / est. mmxxiv</div>
+              <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.08em", marginTop: 2 }}>/ solo / est. 2026</div>
             </div>
           </div>
           <p style={{ margin: "20px 0 0", maxWidth: 280, fontSize: 14, lineHeight: 1.55, color: AP.off2 }}>

@@ -285,7 +285,7 @@ export function Footer({ mobile }) {
             <Monogram size={56} />
             <div>
               <div style={{ fontFamily: AP.display, fontWeight: 600, fontSize: 22, letterSpacing: "-0.01em" }}>Asher Price</div>
-              <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.08em", marginTop: 2 }}>/ solo / est. mmxxiv</div>
+              <div style={{ fontFamily: AP.mono, fontSize: 10, color: AP.dim, letterSpacing: "0.08em", marginTop: 2 }}>/ solo / est. 2026</div>
             </div>
           </div>
           <p style={{ margin: "20px 0 0", maxWidth: 280, fontSize: 14, lineHeight: 1.55, color: AP.off2 }}>

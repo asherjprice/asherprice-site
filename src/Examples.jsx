@@ -208,9 +208,9 @@ const DEMOS = [
     n: "04", tag: "LOYALTY CARD",    welsh: "Teyrngarwch", title: "Digital stamps",
     lead: "Replace paper cards with a tap-and-go digital version. Customers don't lose them. You see who's close to a reward.",
     bullets: [
-      "Apple Wallet + Google Wallet compatible",
+      "Works on any phone — no app download, nothing to install",
       "One-tap stamp from your phone at the till",
-      "Reward when they hit the target — auto-emailed",
+      "Reward auto-fires by email or SMS when they hit the target",
       "See who's active, who's lapsed, who's close to a reward",
     ],
     Demo: DemoLoyalty,
