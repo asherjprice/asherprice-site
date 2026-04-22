@@ -351,7 +351,7 @@ function Hero({ mobile }) {
 
 /* ───────── 05 · Services ───────── */
 const SERVICES_DATA = [
-  { n: "01", title: "Websites",        welsh: "Gwefannau",    body: "Bespoke, mobile-first, built to convert. No templates.",                                      stat: ["5–14", "days typical"] },
+  { n: "01", title: "Websites",        welsh: "Gwefannau",    body: "Bespoke, mobile-first, built to convert. No templates.",                                      stat: ["5–14", "days typical"], link: { href: "/why-a-website.html", label: "Why a business needs one" } },
   { n: "02", title: "AI Assistants",   welsh: "Cynorthwywyr", body: "Trained on your business. Answer enquiries and capture leads 24/7.",                         stat: ["24 / 7", "on the clock"]   },
   { n: "03", title: "Online Ordering", welsh: "Archebu",      body: "Customers order from your site. No Deliveroo commission.",                                    stat: ["0 %",    "commission"]       },
   { n: "04", title: "Booking Systems", welsh: "Bwcio",        body: "Pick a service, pick a time, done. Works for any appointment business.",                      stat: ["SMS",    "reminders in"]    },
@@ -429,8 +429,14 @@ function ServiceRow({ item, i, open, onToggle, mobile }) {
               <div style={{ fontFamily: AP.mono, fontSize: 11, color: AP.dim, letterSpacing: "0.08em", marginTop: 4 }}>{item.stat[1]}</div>
             </div>
           </div>
-          <div style={{ alignSelf: "end" }}>
+          <div style={{ alignSelf: "end", display: "grid", gap: 10 }}>
             <Btn variant="ghost" small as="a" href="#showcase">See a live demo</Btn>
+            {item.link && (
+              <a href={item.link.href} style={{
+                fontFamily: AP.mono, fontSize: 11, color: AP.brass, letterSpacing: "0.04em",
+                textDecoration: "none",
+              }}>→ {item.link.label}</a>
+            )}
           </div>
         </div>
       )}
@@ -1207,6 +1213,8 @@ function Footer({ mobile }) {
               ["Showcase", "/showcase"],
               ["Examples", "/examples"],
               ["How it works", "#how-it-works"],
+              ["Founding Local", "/founding-local"],
+              ["Why a website?", "/why-a-website.html"],
               ["Get started", "#contact"],
             ].map(([label, href]) => (
               <a key={label} href={href} style={{ color: AP.off, textDecoration: "none" }}>— {label}</a>

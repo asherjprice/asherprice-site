@@ -8,13 +8,13 @@
     <link rel="canonical" href="https://asherprice.co.uk/why-a-website.html" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <title>Why Your Business Needs a Website in 2026 | Asher Price</title>
     <meta name="description" content="If you're a local business in South Wales relying on Facebook alone, you're invisible to most of your customers. Here's the real cost of not having a website — and what it fixes." />
     <meta name="author" content="Asher Price" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="theme-color" content="#08090B" />
+    <meta name="theme-color" content="#15171B" />
     <meta name="geo.region" content="GB-CAY" />
     <meta name="geo.placename" content="Blackwood, Caerphilly" />
 
@@ -51,26 +51,31 @@
 
     <style>
       :root {
-        --bg: #08090B;
-        --bg2: #0C0D10;
-        --card: #101218;
-        --card2: #14161D;
-        --border: #1B1E26;
-        --border2: #252830;
-        --red: #C8102E;
-        --redHov: #E01A38;
-        --redFaint: rgba(200,16,46,0.06);
-        --green: #1B6B3A;
-        --greenFaint: rgba(27,107,58,0.08);
+        --bg: #15171B;
+        --bg2: #1B1E22;
+        --card: #1B1E22;
+        --card2: #23262B;
+        --border: rgba(232,228,219,0.12);
+        --border2: rgba(232,228,219,0.22);
+        --red: #A3132A;
+        --redHov: #C8102E;
+        --redDeep: #7A0E20;
+        --redFaint: rgba(163,19,42,0.08);
+        --brass: #B79862;
+        --moss: #7A8564;
         --cream: #F5F0E8;
-        --t1: #E8E4DC;
-        --t2: #A09888;
-        --t3: #6B6358;
+        --t1: #E8E4DB;
+        --t2: #D6D1C4;
+        --t3: #7E8086;
+        --display: 'Space Grotesk', system-ui, sans-serif;
+        --mono: 'JetBrains Mono', ui-monospace, monospace;
+        --italic: 'Fraunces', Georgia, serif;
+        --body: 'Inter Tight', system-ui, sans-serif;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html { scroll-behavior: smooth; }
-      body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--t1); -webkit-font-smoothing: antialiased; line-height: 1.6; }
-      ::selection { background: rgba(200,16,46,0.35); color: #fff; }
+      body { font-family: var(--body); background: var(--bg); color: var(--t1); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+      ::selection { background: rgba(163,19,42,0.4); color: #fff; }
       a { color: var(--red); }
 
       .wrap { max-width: 780px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 40px); }
@@ -78,11 +83,11 @@
       /* NAV */
       .topnav { padding: 0 clamp(24px,6vw,72px); height: 76px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
       .topnav .brand-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-      .topnav .ap-mark { width: 36px; height: 36px; border: 2px solid var(--red); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 800; color: var(--t1); letter-spacing: 1.5px; }
+      .topnav .ap-mark { width: 36px; height: 36px; border: 2px solid var(--red); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 15px; font-weight: 800; color: var(--t1); letter-spacing: 1.5px; }
       .topnav .brand-row { display: flex; align-items: center; gap: 10px; }
-      .topnav .brand-name { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 800; color: var(--t1); letter-spacing: -0.02em; }
+      .topnav .brand-name { font-family: var(--display); font-size: 20px; font-weight: 800; color: var(--t1); letter-spacing: -0.02em; }
       .topnav .divider { width: 1px; height: 16px; background: var(--border2); display: inline-block; }
-      .topnav .eyebrow-tag { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600; color: var(--t3); letter-spacing: 0.15em; text-transform: uppercase; }
+      .topnav .eyebrow-tag { font-family: var(--body); font-size: 9px; font-weight: 600; color: var(--t3); letter-spacing: 0.15em; text-transform: uppercase; }
       .topnav .back { font-size: 13px; color: var(--t2); text-decoration: none; letter-spacing: 0.05em; transition: color 0.3s; }
       .topnav .back:hover { color: var(--red); }
       @media(max-width:520px) { .topnav .eyebrow-tag, .topnav .divider { display: none; } }
@@ -90,15 +95,15 @@
       /* HERO */
       .hero { padding: clamp(80px, 14vw, 160px) 0 clamp(60px, 10vw, 100px); border-bottom: 1px solid var(--border); }
       .hero .eyebrow { font-size: 12px; font-weight: 600; color: var(--red); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 24px; }
-      .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(40px, 7vw, 72px); color: var(--cream); line-height: 1.05; margin-bottom: 28px; font-weight: 700; }
+      .hero h1 { font-family: var(--display); font-size: clamp(40px, 7vw, 72px); color: var(--cream); line-height: 1.05; margin-bottom: 28px; font-weight: 700; }
       .hero h1 em { font-style: italic; color: var(--red); }
       .hero .lead { font-size: clamp(17px, 2vw, 20px); color: var(--t2); max-width: 620px; line-height: 1.55; }
 
       /* CONTENT */
       section.body { padding: clamp(60px, 10vw, 100px) 0; border-bottom: 1px solid var(--border); }
-      section.body h2 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4.5vw, 42px); color: var(--cream); line-height: 1.15; margin-bottom: 24px; font-weight: 700; }
+      section.body h2 { font-family: var(--display); font-size: clamp(28px, 4.5vw, 42px); color: var(--cream); line-height: 1.15; margin-bottom: 24px; font-weight: 700; }
       section.body h2 em { color: var(--red); font-style: italic; }
-      section.body h3 { font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.5vw, 24px); color: var(--cream); margin: 36px 0 12px; font-weight: 600; }
+      section.body h3 { font-family: var(--display); font-size: clamp(20px, 2.5vw, 24px); color: var(--cream); margin: 36px 0 12px; font-weight: 600; }
       section.body p { font-size: 16px; color: var(--t2); margin-bottom: 18px; }
       section.body p strong { color: var(--t1); font-weight: 600; }
       section.body ul { list-style: none; padding: 0; margin: 20px 0; }
@@ -108,12 +113,12 @@
 
       /* STAT CALLOUT */
       .stat { margin: 40px 0; padding: 32px; background: var(--bg2); border-left: 3px solid var(--red); }
-      .stat .big { font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 56px); color: var(--red); line-height: 1; margin-bottom: 10px; font-weight: 800; }
+      .stat .big { font-family: var(--display); font-size: clamp(36px, 6vw, 56px); color: var(--red); line-height: 1; margin-bottom: 10px; font-weight: 800; }
       .stat .label { font-size: 14px; color: var(--t1); font-weight: 500; margin-bottom: 8px; }
       .stat .source { font-size: 12px; color: var(--t3); }
 
       /* PULL QUOTE */
-      .pullquote { margin: 40px 0; padding: 28px 32px; font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(20px, 3vw, 28px); color: var(--cream); line-height: 1.35; border-left: 3px solid var(--green); font-weight: 500; }
+      .pullquote { margin: 40px 0; padding: 28px 32px; font-family: var(--display); font-style: italic; font-size: clamp(20px, 3vw, 28px); color: var(--cream); line-height: 1.35; border-left: 3px solid var(--green); font-weight: 500; }
 
       /* COMPARE TABLE */
       .compare { margin: 32px 0; border: 1px solid var(--border); background: var(--card); }
@@ -145,14 +150,14 @@
       @media(max-width:560px) { .form-row-2 { grid-template-columns: 1fr; } }
       .form-block input, .form-block textarea {
         background: var(--card); border: 1px solid var(--border); color: var(--t1);
-        font-family: 'Inter', sans-serif; font-size: 15px; padding: 16px 20px;
+        font-family: var(--body); font-size: 15px; padding: 16px 20px;
         outline: none; transition: border-color 0.3s, box-shadow 0.3s; width: 100%;
       }
       .form-block input:focus, .form-block textarea:focus { border-color: var(--red); box-shadow: 0 0 18px var(--redFaint); }
       .form-block textarea { resize: vertical; min-height: 120px; }
       .form-block input::placeholder, .form-block textarea::placeholder { color: var(--t3); }
       .form-submit {
-        padding: 18px 36px; background: var(--red); color: #fff; font-family: 'Inter', sans-serif;
+        padding: 18px 36px; background: var(--red); color: #fff; font-family: var(--body);
         font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
         border: none; cursor: pointer; margin-top: 6px; transition: all 0.3s;
         box-shadow: 0 4px 30px rgba(200,16,46,0.2);
@@ -161,13 +166,13 @@
       .form-submit:disabled { opacity: 0.6; cursor: default; transform: none; }
       .form-success { padding: 40px; background: var(--card); border: 1px solid var(--border); border-top: 3px solid var(--green); text-align: center; }
       .form-success .check { font-size: 36px; color: var(--green); margin-bottom: 16px; }
-      .form-success h3 { font-family: 'Playfair Display', serif; color: var(--cream); margin-bottom: 8px; }
+      .form-success h3 { font-family: var(--display); color: var(--cream); margin-bottom: 8px; }
       .form-success p { color: var(--t2); font-size: 15px; }
 
       /* CTA */
       .cta { padding: clamp(80px, 12vw, 120px) 0; }
       .cta-inner { max-width: 620px; margin: 0 auto; text-align: center; }
-      .cta h2 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 48px); color: var(--cream); line-height: 1.1; margin-bottom: 18px; font-weight: 700; }
+      .cta h2 { font-family: var(--display); font-size: clamp(32px, 5vw, 48px); color: var(--cream); line-height: 1.1; margin-bottom: 18px; font-weight: 700; }
       .cta h2 em { color: var(--red); font-style: italic; }
       .cta .lead-p { font-size: 16px; color: var(--t2); margin: 0 auto 8px; }
       .cta .sub { margin-top: 24px; font-size: 13px; color: var(--t3); }
