@@ -351,7 +351,7 @@ function Hero({ mobile }) {
 
 /* ───────── 05 · Services ───────── */
 const SERVICES_DATA = [
-  { n: "01", title: "Websites",        welsh: "Gwefannau",    body: "Bespoke, mobile-first, built to convert. No templates.",                                      stat: ["1–2 WK", "typical build"] },
+  { n: "01", title: "Websites",        welsh: "Gwefannau",    body: "Bespoke, mobile-first, built to convert. No templates.",                                      stat: ["5–14", "days typical"] },
   { n: "02", title: "AI Assistants",   welsh: "Cynorthwywyr", body: "Trained on your business. Answer enquiries and capture leads 24/7.",                         stat: ["24 / 7", "on the clock"]   },
   { n: "03", title: "Online Ordering", welsh: "Archebu",      body: "Customers order from your site. No Deliveroo commission.",                                    stat: ["0 %",    "commission"]       },
   { n: "04", title: "Booking Systems", welsh: "Bwcio",        body: "Pick a service, pick a time, done. Works for any appointment business.",                      stat: ["SMS",    "reminders in"]    },
@@ -477,7 +477,7 @@ function Services({ mobile }) {
 /* ───────── 06 · Process ───────── */
 const PROCESS_STEPS = [
   { n: "01", welsh: "Sgwrs",   title: "Chat",   body: "Free, no-pressure conversation about your business.",          tag: "usually 20 min" },
-  { n: "02", welsh: "Adeilad", title: "Build",  body: "I design and build. You see progress throughout.",              tag: "7–14 days"       },
+  { n: "02", welsh: "Adeilad", title: "Build",  body: "I design and build. You see progress throughout.",              tag: "5–14 days"       },
   { n: "03", welsh: "Lansio",  title: "Launch", body: "I handle DNS, hosting — everything. You watch it go live.",     tag: "same-day cutover" },
   { n: "04", welsh: "Tyfu",    title: "Grow",   body: "Ongoing support, updates, and improvements.",                   tag: "monthly, month-to-month" },
 ];
@@ -605,44 +605,24 @@ const EXAMPLES_DATA = [
 ];
 
 function MiniSite({ ex }) {
-  const bg = `oklch(0.22 0.03 ${ex.hue})`;
-  const accent = `oklch(0.62 0.17 ${ex.hue})`;
   return (
-    <div style={{ width: "100%", aspectRatio: "4 / 3", background: bg, color: AP.off,
+    <div style={{ width: "100%", aspectRatio: "4 / 3", background: AP.slate3,
       position: "relative", overflow: "hidden", borderBottom: `1px solid ${AP.ruleStr}` }}>
-      <div style={{ height: 20, background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center",
-        gap: 4, padding: "0 8px", borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
-        <span style={{ width: 6, height: 6, background: "#ff5f57", borderRadius: 10 }}/>
-        <span style={{ width: 6, height: 6, background: "#febc2e", borderRadius: 10 }}/>
-        <span style={{ width: 6, height: 6, background: "#28c840", borderRadius: 10 }}/>
-        <span style={{ marginLeft: 8, fontFamily: AP.mono, fontSize: 8, color: "rgba(232,228,219,0.5)" }}>
-          {ex.title.toLowerCase().replace(/\s+/g, "")}.co.uk
+      <div style={{ height: 22, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center",
+        gap: 5, padding: "0 10px", borderBottom: `1px solid rgba(255,255,255,0.06)`,
+        position: "absolute", top: 0, left: 0, right: 0, zIndex: 2 }}>
+        <span style={{ width: 7, height: 7, background: "#ff5f57", borderRadius: 10 }}/>
+        <span style={{ width: 7, height: 7, background: "#febc2e", borderRadius: 10 }}/>
+        <span style={{ width: 7, height: 7, background: "#28c840", borderRadius: 10 }}/>
+        <span style={{ marginLeft: 10, fontFamily: AP.mono, fontSize: 9, color: "rgba(232,228,219,0.6)" }}>
+          {`asherprice.co.uk/examples/${ex.slug}`}
         </span>
       </div>
-      <div style={{ padding: "12px 14px", display: "grid", gap: 8 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontFamily: AP.display, fontWeight: 700, fontSize: 13, letterSpacing: "-0.02em" }}>{ex.title.split(" ")[0]}</div>
-          <div style={{ display: "flex", gap: 6, fontFamily: AP.mono, fontSize: 6, color: "rgba(232,228,219,0.5)" }}>
-            <span>menu</span><span>book</span><span>find us</span>
-          </div>
-        </div>
-        <div style={{ fontFamily: AP.display, fontWeight: 500, fontSize: 28, lineHeight: 0.95,
-          letterSpacing: "-0.035em", marginTop: 10, textWrap: "balance" }}>{ex.hero}</div>
-        <div style={{ height: 1, background: "rgba(255,255,255,0.12)", margin: "4px 0" }}/>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
-          {[0, 1, 2].map((j) => (
-            <div key={j} style={{ aspectRatio: "1", background: "rgba(232,228,219,0.08)",
-              border: "1px solid rgba(232,228,219,0.12)", display: "grid", placeItems: "center",
-              fontFamily: AP.mono, fontSize: 7, color: "rgba(232,228,219,0.4)" }}>img</div>
-          ))}
-        </div>
-        <button style={{ marginTop: 2, padding: "6px 8px", border: "none", background: accent,
-          color: "#0c0b08", fontFamily: AP.mono, fontSize: 8, letterSpacing: "0.14em",
-          textAlign: "left", textTransform: "uppercase" }}>
-          {ex.tag === "BARBER" || ex.tag === "NAIL SALON" ? "Book now →" :
-           ex.tag === "PLUMBER" ? "Request a quote →" : "Order now →"}
-        </button>
-      </div>
+      <img src={`/examples-screenshots/${ex.slug}.jpg`} alt={`${ex.title} demo site`}
+        loading="lazy" style={{
+          width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center",
+          display: "block",
+        }}/>
     </div>
   );
 }
